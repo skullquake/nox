@@ -1,5 +1,16 @@
 try{
 	var t0=new Date();
+	//usrdata=undefined;
+	var usrdata=typeof(usrdata)=='undefined'?{
+		session:{
+			username:'foo',
+			created:new Date().getTime()
+		},
+		pagestate:{
+			currentpage:"/"
+		}
+	}:usrdata;
+	console.log(JSON.stringify(usrdata,0,' '));
 	Duktape.modSearch=function(id){
 		res=readFile('./lib/'+id+'.js');
 		res=new TextDecoder("utf-8").decode(res);
@@ -26,14 +37,18 @@ try{
 			)
 			.replace(
 				"<%- contents %>",
-				"Lorem ipsum"
+				"Base64 Image <br/><br/><%- contents %>"
+			)
+			.replace(
+				"<%- contents %>",
+				'<img src="data:image/jpeg;base64,'+Duktape.enc('base64',readFile('./res/img/a.png'))+'"></img>'
 			)
 		)
 	;
 	var t1=new Date();
 	console.log("Template time: "+(t1-t0)/1000+" s");
-	writeHttpResponse(
-		response,
+	_response.setHeader("Content-type","text/html");
+	_response.write(
 		ret
 	);
 }catch(e){

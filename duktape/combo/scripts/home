@@ -9,5 +9,5 @@ curl \
 	-c $COOKIEFILE\
 	-b $COOKIEFILE\
 	$URL \
-	1>/dev/null
+	2>/dev/null
 #-H "Cookie: foo=bar;"\

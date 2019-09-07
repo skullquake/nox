@@ -34,6 +34,4 @@ namespace app::duktape::wrappers::mongoose_cpp{
 	void StreamResponse::write(std::string a){
 		*(this->mStreamResponse)<<a;
 	}
-	/*
-	*/
 }

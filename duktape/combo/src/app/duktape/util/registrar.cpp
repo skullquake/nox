@@ -12,10 +12,30 @@
 #include"app/duktape/wrappers/io.h"
 #include"app/duktape/wrappers/mongoose-cpp/Response.h"
 #include"app/duktape/wrappers/SQLiteCpp/Database.h"
+#include<vector>
+#include<iostream>
 namespace app::duktape::util{
+	void test(std::vector<unsigned char> v,::Mongoose::StreamResponse &r){
+		for(auto t=v.begin(); t!=v.end(); ++t){
+			r<<*t;
+		}
+	}
+	//add String.fromBufferRaw (see duk cli);[todo move to utils]
+	static duk_ret_t string_frombufferraw(duk_context *ctx) {
+		duk_buffer_to_string(ctx, 0);
+		return 1;
+	}
 	void _register(duk_context* ctx){
 		if(ctx!=NULL){
 			try{
+				//add String.fromBufferRaw (see duk cli);[todo move to utils]
+				duk_eval_string(ctx,"(function(v){if (typeof String === 'undefined') { String = {}; }Object.defineProperty(String, 'fromBufferRaw', {value:v, configurable:true});})");
+				duk_push_c_function(ctx, string_frombufferraw, 1 /*nargs*/);
+				(void) duk_pcall(ctx, 1);
+				duk_pop(ctx);
+
+				dukglue_register_function(ctx,&test,"test");
+
 				duk_push_c_function(ctx,::app::duktape::wrappers::fileio_read_file,1);
 				duk_put_global_string(ctx,"readFile");
 				duk_push_c_function(ctx,::app::duktape::wrappers::fileio_write_file,2);

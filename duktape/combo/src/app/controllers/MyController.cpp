@@ -34,6 +34,7 @@ namespace app::controllers{
 				if(
 					session->getCtx()==NULL
 				){
+					std::cout<<"Creating root context...";
 					session->setCtx(duk_create_heap_default());
 					ctx=session->ctx;
 					dukglue_push(ctx,&(*this));
@@ -43,10 +44,12 @@ namespace app::controllers{
 					dukglue_push(ctx,this->getServer());
 					duk_put_global_string(ctx,"server");
 					app::duktape::util::_register(ctx);
+					std::cout<<"done"<<std::endl;
 				}else{
 					ctx=session->getCtx();
 				}
 				/* new ctx */
+				std::cout<<"Creating child context...";
 				duk_context *new_ctx;
 				duk_push_thread(ctx);
 				new_ctx=duk_get_context(ctx,-1);
@@ -61,6 +64,7 @@ namespace app::controllers{
 
 				dukglue_push(new_ctx,&request);
 				duk_put_global_string(new_ctx,"request");
+				std::cout<<"done"<<std::endl;
 				app::duktape::wrappers::push_file_as_string(new_ctx,src.c_str());
 				if(duk_peval(new_ctx)!=0){
 					std::cerr<<"Error: "<<std::string(duk_safe_to_string(new_ctx,-1))<<std::endl;
