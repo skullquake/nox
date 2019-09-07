@@ -1,0 +1,13 @@
+try{
+	console.log(response.hasHeader);
+	/*
+	console.log(response.setHeader);
+	console.log(response.getData);
+	console.log(response.getBody);
+	console.log(response.getCookie);
+	console.log(response.setCode);
+	*/
+	console.log(response.getBody());
+}catch(e){
+	console.error(e);
+}

@@ -1,0 +1,20 @@
+--------------------------------------------------------------------------------
+todo:
+	cjs
+		wrappers
+			cjs include/src directory structure
+			cjs registrar
+		cjs ctx
+			srv
+			session
+				parent ctx
+				child ctx
+		cjs endpoint
+		cjs directory structure
+		cjs require
+		cjs js libs
+			class scaffolder
+			wrapper scaffolder
+
+Sat, Sep  7, 2019 12:49:49 PM
+--------------------------------------------------------------------------------
