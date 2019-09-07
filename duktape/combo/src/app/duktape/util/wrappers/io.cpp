@@ -1,4 +1,5 @@
 #include"app/duktape/wrappers/io.h"
+#include <errno.h>
 namespace app::duktape::wrappers{
 	void push_file_as_string(duk_context *ctx, const char *filename) {
 		FILE *f;

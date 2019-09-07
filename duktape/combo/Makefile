@@ -29,7 +29,8 @@ CXXFLAGS=\
 	-I./include/aquila/synth\
 	-I./include/aquila/tools\
 	-I./include/aquila/transform\
-	-I./include/aquila/wrappers
+	-I./include/aquila/wrappers\
+	-DNO_WEBSOCKET
 CFLAGS=$(CXXFLAGS)
 ifneq (,$(findstring mingw,$(MACHINE)))
 LDFLAGS=\

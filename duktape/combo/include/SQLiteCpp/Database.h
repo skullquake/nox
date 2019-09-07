@@ -242,10 +242,12 @@ public:
      *
      * @throw SQLite::Exception in case of error
      */
+    /*
     inline Column execAndGet(const std::string& aQuery)
     {
         return execAndGet(aQuery.c_str());
     }
+    */
 
     /**
      * @brief Shortcut to test if a table exists.

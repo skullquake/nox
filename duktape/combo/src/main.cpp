@@ -1,4 +1,4 @@
-#include<windows.h>
+//#include<windows.h>
 #include<unistd.h>
 #include<signal.h>
 #include"mongoose-cpp/Server.h"
@@ -12,6 +12,7 @@ int main(int argc,char** argv){
 	server.setOption("document_root","./pub");
 	server.start(); 
 	while(1){
-		Sleep(10000);
+		//Sleep(10000);
+		sleep(10000);
 	}
 }
