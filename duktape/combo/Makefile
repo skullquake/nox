@@ -24,16 +24,17 @@ CXXFLAGS=\
 	-DNO_WEBSOCKET
 CFLAGS=$(CXXFLAGS)
 LDFLAGS=\
-	-lpthread\
-	-lc\
-	-ldl
+
 ifneq (,$(findstring mingw,$(MACHINE)))
 LDFLAGS+=\
 	-ldl\
 	-lws2_32\
 	-lstdc++
 else
-LDFLAGS+=
+LDFLAGS+=\
+	-lpthread\
+	-lc\
+	-ldl
 endif
 
 BIN=./bin/a.$(BINEXT)
