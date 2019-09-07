@@ -1,0 +1,13 @@
+#/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
+COOKIEFILE=./res/cookies/cookie.txt
+mkdir -p `dirname $COOKIEFILE`
+URL="http://localhost:8080/"
+curl \
+	-v\
+	--cookie "foo=bar"\
+	-c $COOKIEFILE\
+	-b $COOKIEFILE\
+	-w "@./res/curl/curl-format.txt"\
+	-o /dev/null\
+	$URL \
