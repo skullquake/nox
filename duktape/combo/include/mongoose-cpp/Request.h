@@ -39,6 +39,8 @@ namespace Mongoose
              */
             bool hasVariable(string key);
 
+	    std::string getQueryString();
+
             /**
              * Get All variable present in GET or POST data
              *

@@ -158,6 +158,10 @@ namespace Mongoose{
 		delete[] buffer;
 		return true;
 	}
+
+	std::string Request::getQueryString(){
+		return connection->query_string==NULL?std::string():std::string(connection->query_string);
+	}
 	string Request::get(string key,string fallback){
 		const char *dataField;
 		string output;

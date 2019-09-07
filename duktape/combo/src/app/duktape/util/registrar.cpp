@@ -80,6 +80,7 @@ namespace app::duktape::util{
 				//dukglue_push(ctx,&request);
 				//duk_put_global_string(ctx,"request");
 				dukglue_register_method(ctx,&::Mongoose::Request::get,"get");//fix - fallback
+				dukglue_register_method(ctx,&::Mongoose::Request::getQueryString,"getQueryString");
 				dukglue_register_method(ctx,&::Mongoose::Request::getAllVariable,"getAllVariable");//fix - completely not working in js
 				dukglue_register_method(ctx,&::Mongoose::Request::hasCookie,"hasCookie");
 				dukglue_register_method(ctx,&::Mongoose::Request::getHeaderKeyValue,"getHeaderKeyValue");
