@@ -37,11 +37,16 @@ try{
 			)
 			.replace(
 				"<%- contents %>",
-				"Base64 Image <br/><br/><%- contents %>"
+				"Base64 Image [/inline] <br/><br/><%- contentsB64 %><br/>"+
+				"Binary Image [/duk] <br/><br/><%- contentsBIN %>"
 			)
 			.replace(
-				"<%- contents %>",
+				"<%- contentsB64 %>",
 				'<img src="data:image/jpeg;base64,'+Duktape.enc('base64',readFile('./res/img/a.png'))+'"></img>'
+			)
+			.replace(
+				"<%- contentsBIN %>",
+				'<img src="/duk?src=./res/cjs/resbin.js"></img>'
 			)
 		)
 	;
