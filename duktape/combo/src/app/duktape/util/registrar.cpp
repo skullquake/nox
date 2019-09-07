@@ -45,6 +45,18 @@ namespace app::duktape::util{
 				dukglue_register_method(ctx,&::Mongoose::StreamResponse::setCookie,"setCookie");
 				dukglue_register_method(ctx,&::Mongoose::StreamResponse::setCode,"setCode");
 
+				//proxy
+				//
+
+				dukglue_register_constructor<::app::duktape::wrappers::mongoose_cpp::StreamResponse,::Mongoose::StreamResponse*>(ctx,"_StreamResponse");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::mongoose_cpp::StreamResponse::hasHeader,"hasHeader");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::mongoose_cpp::StreamResponse::setHeader,"setHeader");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::mongoose_cpp::StreamResponse::getData,"getData");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::mongoose_cpp::StreamResponse::getBody,"getBody");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::mongoose_cpp::StreamResponse::setCookie,"setCookie");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::mongoose_cpp::StreamResponse::setCode,"setCode");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::mongoose_cpp::StreamResponse::write,"write");
+
 				//dukglue_push(ctx,&request);
 				//duk_put_global_string(ctx,"request");
 				dukglue_register_method(ctx,&::Mongoose::Request::get,"get");//fix - fallback

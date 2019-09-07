@@ -10,6 +10,7 @@
 #include"dukglue/dukglue.h"
 #include<iostream>
 #include"app/duktape/wrappers/io.h"
+#include"app/duktape/wrappers/mongoose-cpp/Response.h"
 using namespace Mongoose;
 namespace app::controllers{
 	MyController::MyController()
@@ -28,6 +29,7 @@ namespace app::controllers{
 		response<<"hello";
 	}
 	void MyController::duk(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
+	//void MyController::duk(::Mongoose::Request &request, ::app::duktape::wrappers::mongoose_cpp::StreamResponse &response){
 		//extract pars
 		std::string src=request.get("src");
 		if(src.length()>0){
@@ -55,6 +57,13 @@ namespace app::controllers{
 				new_ctx=duk_get_context(ctx,-1);
 				dukglue_push(new_ctx,&response);
 				duk_put_global_string(new_ctx,"response");
+
+				//build and push proxy
+				app::duktape::wrappers::mongoose_cpp::StreamResponse responseProxy(&response);
+				dukglue_push(new_ctx,&responseProxy);
+				duk_put_global_string(new_ctx,"_response");
+
+
 				dukglue_push(new_ctx,&request);
 				duk_put_global_string(new_ctx,"request");
 				app::duktape::wrappers::push_file_as_string(new_ctx,src.c_str());

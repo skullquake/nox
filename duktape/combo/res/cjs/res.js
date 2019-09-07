@@ -1,16 +1,15 @@
 try{
-	/*
-	console.log(response.hasHeader);
-	console.log(response.setHeader);
-	console.log(response.getData);
-	console.log(response.getBody);
-	console.log(response.getCookie);
-	console.log(response.setCode);
-	console.log(response.getBody());
-	*/
+	console.log("_response.hasHeader(\"foo\"):");
+	console.log(_response.hasHeader("foo"));
+	_response.setHeader("bar","baz");
+	console.log("getData():");
+	//console.log(_response.getData());//breaks on get: todo: handler
+	_response.setCookie("qux","klutz");
+
+	//now using _response.write()...
 	var nrow=8;
 	var ncol=8;
-	writeHttpResponse(response,'\
+	_response.write('\
 <!DOCTYPE html>\n\
 <html>\n\
 	<head>\n\
@@ -28,41 +27,42 @@ try{
 '
 	);
 	for(var i=0;i<ncol;i++){
-		writeHttpResponse(response,"\
+		_response.write("\
 					<td>\n\
 						Col"+i+"\n\
 					</td>\n\
 "
 		);
 	}
-		writeHttpResponse(response,"\
+		_response.write("\
 			</tr>\n\
 "
 		);
 	for(var i=0;i<nrow;i++){
-		writeHttpResponse(response,"\
+		_response.write("\
 			<tr>\n\
 "
 		);
 		for(var j=0;j<ncol;j++){
-			writeHttpResponse(response,"\
+			_response.write("\
 					<td>\n\
 						"+i*ncol+j+"\n\
 					</td>\n\
 "
 			);
 		}
-		writeHttpResponse(response,"\
+		_response.write("\
 			</tr>\n\
 "
 		);
 	}
-	writeHttpResponse(response,"\
+	_response.write("\
 		</table>\n\
 	</body>\n\
 </html>\n\
 "
 	);
+
 }catch(e){
 	console.error(e);
 }
