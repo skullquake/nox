@@ -8,9 +8,9 @@ try{
 		}
 		new Error('module not found: '+id);
 	}
-	var tpl_page=new TextDecoder("utf-8").decode(readFile('./res/lodash/page.html'));
-	var tpl_menu=new TextDecoder("utf-8").decode(readFile('./res/lodash/menu.html'));
-	var tpl_contents=new TextDecoder("utf-8").decode(readFile('./res/lodash/contents.html'));
+	var tpl_page=new TextDecoder("utf-8").decode(readFile('./res/tpl/page.html'));
+	var tpl_menu=new TextDecoder("utf-8").decode(readFile('./res/tpl/menu.html'));
+	var tpl_contents=new TextDecoder("utf-8").decode(readFile('./res/tpl/contents.html'));
 	var ret=
 		tpl_page
 		.replace(

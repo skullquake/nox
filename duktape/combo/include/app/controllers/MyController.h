@@ -8,9 +8,8 @@ namespace app::controllers{
 		public: 
 			MyController();
 			~MyController();
-			void hello(Mongoose::Request &request, Mongoose::StreamResponse &);
+			void home(Mongoose::Request &request, Mongoose::StreamResponse &);
 			void duk(Mongoose::Request &request, Mongoose::StreamResponse &);
-			//void duk(Mongoose::Request &request,::app::duktape::wrappers::mongoose_cpp::StreamResponse &);
 			void setup();
 		private:
 	};
