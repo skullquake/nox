@@ -20,25 +20,20 @@ CXXFLAGS=\
 	-I./include/mongoose\
 	-I./include/jsoncpp\
 	-I./include/lua\
-	-I./include/aquila\
-	-I./include/aquila/filter\
-	-I./include/aquila/ml\
-	-I./include/aquila/source\
-	-I./include/aquila/source/generator\
-	-I./include/aquila/source/window\
-	-I./include/aquila/synth\
-	-I./include/aquila/tools\
-	-I./include/aquila/transform\
-	-I./include/aquila/wrappers\
+	-I./include/sqlite3\
 	-DNO_WEBSOCKET
 CFLAGS=$(CXXFLAGS)
-ifneq (,$(findstring mingw,$(MACHINE)))
 LDFLAGS=\
+	-lpthread\
+	-lc\
+	-ldl
+ifneq (,$(findstring mingw,$(MACHINE)))
+LDFLAGS+=\
 	-ldl\
 	-lws2_32\
 	-lstdc++
 else
-LDFLAGS=
+LDFLAGS+=
 endif
 
 BIN=./bin/a.$(BINEXT)

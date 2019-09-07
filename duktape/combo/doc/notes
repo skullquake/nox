@@ -1,4 +1,18 @@
 --------------------------------------------------------------------------------
+cross compilation:
+	issues around sqlite3 around threads:
+		LDFLAGS+=-lpthread
+	issues around sqlite3 ???
+        	LDFLAGS+=-lc
+	issues around sqlite dynamic loading
+		LDFLAGS+=-ldl
+
+for now jsoncpp has been removed 
+	./include|src/jsoncpp > ./tmp/include|src/jsoncpp
+	./include|src/mongoose-cpp/*json* > ./tmp/include|src/mongoose-cpp/
+
+Sat Sep  7 10:38:43 EDT 2019
+--------------------------------------------------------------------------------
 todo:
 	cjs
 		wrappers
