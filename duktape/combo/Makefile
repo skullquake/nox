@@ -72,5 +72,4 @@ $(BUILDDIR)/%.o: %.c
 run:
 	$(BIN)
 clean:
-	$(foreach D,$(LIBFOLDERS),make -C ./lib/$D clean;)
-	rm -r ./bin/*
+	rm -r $(BIN) ./bin/src
