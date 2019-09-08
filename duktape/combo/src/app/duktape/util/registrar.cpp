@@ -124,7 +124,8 @@ namespace app::duktape::util{
 				       
 				//expose sqlitecpp issues in namespace
 				dukglue_register_constructor<::app::duktape::wrappers::SQLiteCpp::Database,const char*>(ctx,"Database");
-				dukglue_register_method(ctx,static_cast<bool (app::duktape::wrappers::SQLiteCpp::Database::*)(const char*)>(&app::duktape::wrappers::SQLiteCpp::Database::tableExists),"tableExists");
+				//dukglue_register_method(ctx,static_cast<bool (app::duktape::wrappers::SQLiteCpp::Database::*)(const char*)>(&app::duktape::wrappers::SQLiteCpp::Database::tableExists),"tableExists");
+				dukglue_register_method(ctx,&app::duktape::wrappers::SQLiteCpp::Database::_tableExists,"tableExists");
 				dukglue_register_method(ctx,&app::duktape::wrappers::SQLiteCpp::Database::_execAndGet,"execAndGet");
 				dukglue_register_method(ctx,&app::duktape::wrappers::SQLiteCpp::Database::_exec,"exec");
 				//dukglue_register_method(ctx,&SQLiteCpp::Database::getLastInsertRowid,"getLastInsertRowid");

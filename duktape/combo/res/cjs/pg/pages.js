@@ -226,7 +226,7 @@ module.exports={
 					tpl_contents
 					.replace(
 						"<%- title %>",
-						"Test Page"
+						"User"
 					)
 					.replace(
 						'<%- contents %>',
@@ -251,21 +251,6 @@ module.exports={
 					.replace("<%- header %>","Controls")
 					.replace("<%- title %>","Session Data Manipulation")
 					.replace("<%- text %>",
-						(
-							'<div>'+
-							'	<h6>'+
-							'		<%- value >'+
-							'	</h6>'+
-							'</div>'
-						)
-						.replace(
-							'<%- value >',
-							usrdata.data.value
-						)+
-						'<div class="btn-group">'+
-						'	<a class="btn btn-default" href="/?cmd=decrement">Decrement</a>'+
-						'	<a class="btn btn-default" href="/?cmd=increment">Increment</a>'+
-						'</div>'+
 						(
 							(
 								'<form action="/" method="get">'+

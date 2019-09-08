@@ -12,6 +12,7 @@ namespace app::duktape::wrappers::SQLiteCpp{
 			std::vector<std::vector<std::string>> _execAndGet(std::string);
 			void _exec(const char*);
 			const char* getName();
+			bool _tableExists(std::string);
 		private:
 			std::string name_;
 	};

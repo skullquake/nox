@@ -3,6 +3,8 @@
 #include"mongoose-cpp/Server.h"
 #include"mongoose-cpp/WebController.h"
 #include"app/duktape/wrappers/mongoose-cpp/Response.h"
+#include"duktape/duktape.h"
+#include"dukglue/dukglue.h"
 namespace app::controllers{
 	class MyController:public Mongoose::WebController{
 		public: 
@@ -12,6 +14,7 @@ namespace app::controllers{
 			void duk(Mongoose::Request &request, Mongoose::StreamResponse &);
 			void setup();
 		private:
+			duk_context* ctx;
 	};
 }
 #endif

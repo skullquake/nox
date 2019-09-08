@@ -1,4 +1,5 @@
 module.exports={
+	db:null,
 	prep:function(usrdata){
 		//todo: update and not recreate
 		return {
@@ -115,6 +116,13 @@ module.exports={
 		};
 		return usrdata;
 	},
-	db:null
+	initdb:function(){
+		if(this.db==null){
+			this.db.connect("./db/sqlite/test.db3");
+		}
+		var table='test';
+		db.exec("CREATE TABLE IF NOT EXISTS "+table+"(id INTEGER PRIMARY KEY, value TEXT)");
+		//this.db.exec("INSERT INTO "+table+" VALUES ("+(idx+1)+",'"+Math.random()+"')");
+	}
 
 }

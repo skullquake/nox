@@ -26,8 +26,10 @@ namespace app::duktape::wrappers::SQLiteCpp{
 			std::cerr<<e.what()<<std::endl;
 		}
 	}
-
 	const char* Database::getName(){
 		return this->name_.c_str();
+	}
+	bool Database::_tableExists(std::string a){
+		return ::SQLite::Database::tableExists(a);
 	}
 }

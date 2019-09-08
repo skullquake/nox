@@ -16,6 +16,41 @@ namespace app::controllers{
 	MyController::MyController()
 	             : ::Mongoose::WebController()
 	{
+		this->ctx=NULL;
+		//initialization scripts
+		std::string src="./res/cjs/srv/init.js";
+		if(src.length()>0){
+			try{
+				duk_context* ctx=NULL;
+				if(
+					this->ctx==NULL
+				){
+					std::cout<<"Creating server root context...";
+					this->ctx=duk_create_heap_default();
+					ctx=this->ctx;
+					dukglue_push(ctx,&(*this));
+					duk_put_global_string(ctx,"controller");
+					dukglue_push(ctx,this->getServer());
+					duk_put_global_string(ctx,"server");
+					app::duktape::util::_register(ctx);
+					std::cout<<"done"<<std::endl;
+				}else{
+					ctx=this->ctx;
+				}
+				std::cout<<"Executing server startup scripts...";
+				app::duktape::wrappers::push_file_as_string(ctx,src.c_str());
+				if(duk_peval(ctx)!=0){
+					std::cerr<<"Error: "<<std::string(duk_safe_to_string(ctx,-1))<<std::endl;
+				}
+				duk_pop(ctx);
+				duk_destroy_heap(ctx);
+				this->ctx=NULL;
+				std::cout<<"done"<<std::endl;
+			}catch(std::exception e){
+				std::cerr<<e.what()<<std::endl;
+			}
+		}else{
+		}
 	}
 	MyController::~MyController(){
 	}
