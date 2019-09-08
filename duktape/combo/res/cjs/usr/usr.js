@@ -1,10 +1,12 @@
 module.exports={
 	prep:function(usrdata){
+		//todo: update and not recreate
 		return {
 			session:{
 				username:'foo',
 				created:new Date().getTime(),
-				modified:new Date().getTime()
+				modified:new Date().getTime(),
+				nativeid:request.getCookie('sessid','')//from native session
 			},
 			state:{
 				url:"/",
@@ -39,6 +41,15 @@ module.exports={
 				break;
 			case "login":
 				usrdata.state.page="login";
+				break;
+			case "test":
+				usrdata.state.page="test";
+				break;
+			case "usrrst":
+				//reset user session data
+				var lastpage=usrdata.state.page;
+				usrdata=this.prep(usrdata);
+				usrdata.state.page=lastpage;
 				break;
 			case "increment":
 				usrdata.data.value=usrdata.data.value+1;
