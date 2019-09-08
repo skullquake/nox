@@ -3,7 +3,6 @@ module.exports={
 		//todo: update and not recreate
 		return {
 			session:{
-				username:'foo',
 				created:new Date().getTime(),
 				modified:new Date().getTime(),
 				nativeid:request.getCookie('sessid','')//from native session
@@ -15,8 +14,8 @@ module.exports={
 			},
 			data:{
 				value:0,
-				fname:'foo',
-				lname:'bar'
+				fname:'Jarmaine',
+				lname:'Doe'
 			}
 		};
 	},
@@ -68,7 +67,6 @@ module.exports={
 				usrdata.data.fname=fname;
 				usrdata.data.lname=lname;
 				usrdata.session.modified=new Date().getTime();
-				usrdata.state.page="login";
 				break;
 			default:
 				console.log("invalid command");
