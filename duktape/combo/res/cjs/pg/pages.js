@@ -4,34 +4,83 @@ module.exports={
 			if(this[usrdata.state.page]!=null){
 				try{
 					//this[usrdata.state.page](usrdata);
-					this['_buildpage'](usrdata,this[usrdata.state.page]);
+					//bump clearance
+					if(
+						usrdata.state.clearancelevel
+						>=
+						this._menuitems[usrdata.state.page].clearancelevel
+					){
+						this['_buildpage'](usrdata,this[usrdata.state.page]);
+					}else{
+						this['_buildpage'](usrdata,this['login']);
+					}
 				}catch(e){
 					console.log('Navigation error:');
 					console.log(e);
-					this.home(usrdata);
+					this['_buildpage'](usrdata,this['login']);
 				}
 			}else{
 				console.log('Navigation error: page not defined');
-				this.home(usrdata);
+				this['_buildpage'](usrdata,this['login']);
 			}
 		}else{
 			console.log('Navigation error: usrdata.state.page NULL');
-			this.home(usrdata);
+			this['_buildpage'](usrdata,this['login']);
 		}
 	},
 	_menuitems:{
-		"Home":"/?cmd=home",
-		"Login":"/?cmd=login",
-		"Test":"/?cmd=test",
-		"Reset User Data":"/?cmd=usrrst",
-		"Database":"/?cmd=dbls"
+		"home":{
+			"clearancelevel":1,
+			"url":"/?cmd=home",
+			"title":"Home"
+		},
+		"test":{
+			"clearancelevel":1,
+			"url":"/?cmd=test",
+			"title":"Test"
+		},
+		"usrrst":{
+			"clearancelevel":1,
+			"url":"/?cmd=usrrst",
+			"title":"Reset User Datat"
+		},
+		"Database":{
+			"clearancelevel":1,
+			"url":"/?cmd=dbls",
+			"title":"Database"
+		},
+		"login":{
+			"clearancelevel":0,
+			"clearancelogic":"exact",
+			"url":"/?cmd=login",
+			"title":"Login"
+		},
+		"logout":{
+			"clearancelevel":1,
+			"url":"/?cmd=logout",
+			"title":"Logout"
+		}
+
 	},
 	_buildmenu:function(usrdata){
 		var ret='';
-		var rootctx=this;
+		var ctx=this;
 		Object.keys(this._menuitems).forEach(
 			function(m,midx){
-				ret+='<li><a class="nav-link" href="'+rootctx._menuitems[m]+'">'+m+'</a></li>'
+				if(
+					usrdata.state.clearancelevel>=ctx._menuitems[m].clearancelevel
+				){
+					if(ctx._menuitems[m].clearancelogic!=null){
+						if(ctx._menuitems[m].clearancelogic=="exact"){
+							if(usrdata.state.clearancelevel==ctx._menuitems[m].clearancelevel){
+								ret+='<li><a class="nav-link" href="'+ctx._menuitems[m].url+'">'+ctx._menuitems[m].title+'</a></li>'
+							}else{
+							}
+						}
+					}else{
+						ret+='<li><a class="nav-link" href="'+ctx._menuitems[m].url+'">'+ctx._menuitems[m].title+'</a></li>'
+					}
+				}
 			}
 		);
 		return ret;
@@ -47,7 +96,7 @@ module.exports={
 					tpl_menu
 					.replace(
 						"<%- contents %>",
-						this._buildmenu()
+						this._buildmenu(usrdata)
 					)
 				)
 				.replace(
@@ -130,17 +179,17 @@ module.exports={
 								'	<div class="row">'+
 								'		<div class="col-md-12">'+
 								'			<form action="/" method="get">'+
-								'				First name: <input class="form-control" type="text" name="fname" value="<%- fname %>"><br>'+
-								'				Last name: <input class="form-control" type="text" name="lname" value="<%- lname %>"><br>'+
-								'				<input type="submit" class="btn btn-default" value="Submit">'+
-								'				<input type="hidden" name="cmd" value="submit" />'+
+								'				Login : <input class="form-control" type="text" name="login" value="<%- login %>"><br>'+
+								'				Password : <input class="form-control" type="password" name="pass" value="<%- pass %>"><br>'+
+								'				<input type="submit" class="btn btn-default" value="Login">'+
+								'				<input type="hidden" name="cmd" value="login" />'+
 								'			</form>'+
 								'		</div>'+
 								'	</div>'+
 								'</div>'
 							)
-							.replace("<%- fname %>",usrdata.data.fname)
-							.replace("<%- lname %>",usrdata.data.lname)
+							.replace("<%- login %>",usrdata.data.login)
+							.replace("<%- pass %>",usrdata.data.pass)
 						)
 					)
 			;

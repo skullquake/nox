@@ -8,14 +8,18 @@ module.exports={
 				nativeid:request.getCookie('sessid','')//from native session
 			},
 			state:{
-				url:"/",
-				page:"home",
-				lastaction:{}
+				"url":"/",
+				"page":"home",
+				"lastaction":{
+				},
+				"clearancelevel":0
 			},
 			data:{
 				value:0,
 				fname:'Jarmaine',
-				lname:'Doe'
+				lname:'Doe',
+				login:'',
+				pass:''
 			}
 		};
 	},
@@ -39,7 +43,17 @@ module.exports={
 				usrdata.state.page="home";
 				break;
 			case "login":
-				usrdata.state.page="login";
+				usrdata.data.login=getQueryVariable(request.getQueryString(),'login');
+				usrdata.data.pass=getQueryVariable(request.getQueryString(),'pass');
+				if(usrdata.data.pass=="1234"){
+					usrdata.state.clearancelevel=1;
+					usrdata.state.page="home";
+				}else{
+				}
+
+				break;
+			case "logout":
+				usrdata.state.clearancelevel=0;
 				break;
 			case "test":
 				usrdata.state.page="test";
