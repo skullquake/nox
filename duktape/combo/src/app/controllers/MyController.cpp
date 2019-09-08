@@ -26,7 +26,7 @@ namespace app::controllers{
 		addRoute("PUT","/duk",MyController,duk);
 	}
 	void MyController::home(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
-		std::string src="./res/cjs/pg/home.js";
+		std::string src="./res/cjs/hdl/root.js";
 		if(src.length()>0){
 			try{
 				Mongoose::Session* session=this->getSessions()->getPtr(request,response);

@@ -69,7 +69,7 @@ $(BUILDDIR)/%.o: %.c
 .phony:\
 	run\
 	clean
-run:
+run: $(BIN)
 	$(BIN)
 clean:
 	rm -r $(BIN) ./bin/src
