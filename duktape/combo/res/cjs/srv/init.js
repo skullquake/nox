@@ -12,13 +12,22 @@ try{
 	if(db!=null){
 		db.connect("./db/sqlite/test.db3");
 		var table='test';
-		if(db.db.tableExists('test')){
+		if(db.db.tableExists(table)){
 			console.log("srv.js: Table "+table+" already exists");
 		}else{
 			console.log("srv.js: Creating table "+table);
 			db.exec("CREATE TABLE IF NOT EXISTS "+table+"(id INTEGER PRIMARY KEY, value TEXT)");
 			console.log("srv.js: done");
 		}
+		table="usr";
+		if(db.db.tableExists(table)){
+			console.log("srv.js: Table "+table+" already exists");
+		}else{
+			console.log("srv.js: Creating table "+table);
+			db.exec("CREATE TABLE IF NOT EXISTS "+table+"(fname TEXT, lname TEXT, login TEXT, pass TEXT)");
+			console.log("srv.js: done");
+		}
+
 	}else{
 		console.log("srv.js: failed to load cjs/db/db.js");
 	}

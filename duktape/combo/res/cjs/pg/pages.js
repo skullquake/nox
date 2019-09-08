@@ -67,6 +67,16 @@ module.exports={
 			"url":"/?cmd=dbins",
 			"title":"Database Insert"
 		},
+		"dbusr":{
+			"clearancelevel":1,
+			"url":"/?cmd=dbusr",
+			"title":"Users"
+		},
+		"dbusrdel":{
+			"clearancelevel":1,
+			"url":"/?cmd=dbusrdel",
+			"title":"Delete Users"
+		},
 		"login":{
 			"clearancelevel":0,
 			"clearancelogic":"exact",
@@ -77,8 +87,13 @@ module.exports={
 			"clearancelevel":1,
 			"url":"/?cmd=logout",
 			"title":"Logout"
-		}
-
+		},
+		"signup":{
+			"clearancelevel":0,
+			"clearancelogic":"exact",
+			"url":"/?cmd=pg_signup",
+			"title":"Signup"
+		},
 	},
 	_buildmenu:function(usrdata){
 		var ret='';
@@ -219,6 +234,48 @@ module.exports={
 			);
 		}
 	},
+	signup:function(usrdata,tpl_contents){
+		try{
+			var ret=
+				tpl_contents
+					.replace(
+						"<%- title %>",
+						"Signup"
+					)
+					.replace(
+						'<%- contents %>',
+						(
+							(
+								'<div class="container">'+
+								'	<div class="row">'+
+								'		<div class="col-md-12">'+
+								'			<form action="/" method="get">'+
+								'				Name:		<input class="form-control" type="text" name="fname" value="<%- fname %>"><br>'+
+								'				Surname:	<input class="form-control" type="text" name="lname" value="<%- lname %>"><br>'+
+								'				Login :		<input class="form-control" type="text" name="login" value="<%- login %>"><br>'+
+								'				Password :	<input class="form-control" type="password" name="pass" value="<%- pass %>"><br>'+
+								'				<input type="submit" class="btn btn-default" value="Signup">'+
+								'				<input type="hidden" name="cmd" value="signup" />'+
+								'			</form>'+
+								'		</div>'+
+								'	</div>'+
+								'</div>'
+							)
+							.replace("<%- fname %>",usrdata.data.fname)
+							.replace("<%- lname %>",usrdata.data.lname)
+							.replace("<%- login %>",usrdata.data.login)
+							.replace("<%- pass %>",usrdata.data.pass)
+						)
+					)
+			;
+			return ret;
+		}catch(e){
+			writeHttpResponse(
+				response,
+				e.toString()
+			);
+		}
+	},
 	usr:function(usrdata,tpl_contents){
 		try{
 			var tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
@@ -326,7 +383,62 @@ module.exports={
 			return (e.toString());
 			console.error(e.toString());
 		}
+	},
+	dbusr:function(usrdata,tpl_contents){
+		var ret=''
+		try{
+			ret=tpl_contents
+				.replace(
+					"<%- title %>",
+					"Database - Users"
+				)
+				.replace(
+					'<%- contents %>',
+					'<div class="container"><div class="row"><div class="col-md-12"><%- contents %></div></div></div>'
+				)
+				.replace(
+					'<%- contents %>',
+					//todo move to controller script/restructure
+					function(){
+						var str_contents=''
+						//table data stored in usrdata.data.select
+						if(usrdata.data!=null&&usrdata.data.select!=null){
+							try{
+								str_contents+='<table class="table table-striped table-sm">\n';
+								usrdata.data.select.forEach(
+									function(row,rowidx){
+										str_contents+='\t<tr>\n';
+										var line='';
+										row.forEach(
+											function(col,colidx){
+												line+=(col);
+												colidx==row.length-1?null:line+='\t';
+												str_contents+='\t\t<td>\n';
+												str_contents+='\t\t\t'+col+'\n';
+												str_contents+='\t\t</td>\n';
+											}
+										);
+										str_contents+='\t</tr>\n';
+									}
+								);
+								str_contents+='</table>\n';
+							}catch(e){
+								str_contents='<div class="alert alert-danger">usrdata.data.select NULL</div>';
+							}
+						}else{
+							str_contents='<div class="alert alert-danger">usrdata.data.select NULL</div>';
+						}
+						return str_contents
+					}()
+				)
+			;
+			return ret;
+		}catch(e){
+			return (e.toString());
+			console.error(e.toString());
+		}
 	}
+
 
 }
 
