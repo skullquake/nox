@@ -17,8 +17,8 @@ module.exports={
 			},
 			data:{
 				value:0,
-				fname:'Jarmaine',
-				lname:'Doe',
+				fname:'',
+				lname:'',
 				login:'',
 				pass:''
 			}
@@ -64,7 +64,8 @@ module.exports={
 				}
 				break;
 			case "logout":
-				usrdata.state.clearancelevel=0;
+				//usrdata.state.clearancelevel=0;
+				usrdata=this.prep(usrdata);
 				break;
 			case "pg_signup":
 				usrdata.data.fname=getQueryVariable(request.getQueryString(),'fname')!=null?getQueryVariable(request.getQueryString(),'fname'):usrdata.data.fname;
