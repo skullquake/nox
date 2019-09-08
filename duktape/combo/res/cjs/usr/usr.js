@@ -80,11 +80,7 @@ module.exports={
 				break;
 			case "logout":
 				//usrdata.state.clearancelevel=0;
-<<<<<<< HEAD
 				usrdata=this.prep();
-=======
-				usrdata=this.prep(usrdata);
->>>>>>> b81c80b41a5412e99bcf71d316dcf22878d44141
 				break;
 			case "pg_signup":
 				usrdata.data.fname=getQueryVariable(request.getQueryString(),'fname')!=null?getQueryVariable(request.getQueryString(),'fname'):usrdata.data.fname;
