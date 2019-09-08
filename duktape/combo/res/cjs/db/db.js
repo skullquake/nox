@@ -33,6 +33,32 @@ module.exports={
 		}
 		return ret;
 	},
-	exec:function(usrdata,tpl_contents){
+	exec:function(sql){
+		var ret=false;
+		try{
+			try{
+				if(this.db!=null){
+					if(sql!=null){
+						try{
+							this.db.exec(sql);
+							ret=true;
+						}catch(e){
+							console.error(e);
+						}finally{
+						}
+					}else{
+						console.error("sql null");
+					}
+				}else{
+					console.error("table "+table+" does not exist");
+				}
+			}catch(e){
+				console.error("db null");
+			}
+		}catch(e){
+			console.error(e);
+
+		}
+		return ret;
 	}
 }

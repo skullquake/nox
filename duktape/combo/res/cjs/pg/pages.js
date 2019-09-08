@@ -42,10 +42,10 @@ module.exports={
 			"url":"/?cmd=home",
 			"title":"Home"
 		},
-		"test":{
+		"usr":{
 			"clearancelevel":1,
-			"url":"/?cmd=test",
-			"title":"Test"
+			"url":"/?cmd=usr",
+			"title":"User"
 		},
 		"usrrst":{
 			"clearancelevel":1,
@@ -56,6 +56,16 @@ module.exports={
 			"clearancelevel":1,
 			"url":"/?cmd=dbls",
 			"title":"Database"
+		},
+		"dbdel":{
+			"clearancelevel":1,
+			"url":"/?cmd=dbdel",
+			"title":"Database Delete"
+		},
+		"dbins":{
+			"clearancelevel":1,
+			"url":"/?cmd=dbins",
+			"title":"Database Insert"
 		},
 		"login":{
 			"clearancelevel":0,
@@ -131,13 +141,13 @@ module.exports={
 	_buildtable:function(jsondata){
 		var ret='';
 		ret+=
-			'<table class="table table-striped table-sm">'+
-			'	<tr>'+
-			'		<td>'+
-			'			test'+
-			'		<td>'+
-			'	</tr>'+
-			'</table>'
+			'<table class="table table-striped table-sm">\n'+
+			'	<tr>\n'+
+			'		<td>\n'+
+			'			test\n'+
+			'		<td>\n'+
+			'	</tr>\n'+
+			'</table>\n'
 		;
 		return ret;
 	},
@@ -209,7 +219,7 @@ module.exports={
 			);
 		}
 	},
-	test:function(usrdata,tpl_contents){
+	usr:function(usrdata,tpl_contents){
 		try{
 			var tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
 			var ret=
@@ -298,24 +308,24 @@ module.exports={
 						//table data stored in usrdata.data.select
 						if(usrdata.data!=null&&usrdata.data.select!=null){
 							try{
-								str_contents+='<table class="table table-striped table-sm">';
+								str_contents+='<table class="table table-striped table-sm">\n';
 								usrdata.data.select.forEach(
 									function(row,rowidx){
-										str_contents+='<tr>';
+										str_contents+='\t<tr>\n';
 										var line='';
 										row.forEach(
 											function(col,colidx){
 												line+=(col);
 												colidx==row.length-1?null:line+='\t';
-												str_contents+='<td>';
-												str_contents+=col;
-												str_contents+='</td>';
+												str_contents+='\t\t<td>\n';
+												str_contents+='\t\t\t'+col+'\n';
+												str_contents+='\t\t</td>\n';
 											}
 										);
-										str_contents+='</tr>';
+										str_contents+='\t</tr>\n';
 									}
 								);
-								str_contents+='</table>';
+								str_contents+='</table>\n';
 							}catch(e){
 								str_contents='<div class="alert alert-danger">usrdata.data.select NULL</div>';
 							}

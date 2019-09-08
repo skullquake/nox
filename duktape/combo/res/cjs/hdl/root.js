@@ -1,7 +1,6 @@
 try{
 	var t0=new Date();
 	Duktape.modSearch=function(id){
-		console.log('a');
 		//res=readFile('res/'+id+'.js');//regular
 		res=readFile('res/'+id.split('?')[0]);//cachebusted
 		res=new TextDecoder("utf-8").decode(res);

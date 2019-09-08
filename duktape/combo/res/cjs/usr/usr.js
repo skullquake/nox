@@ -43,8 +43,8 @@ module.exports={
 				usrdata.state.page="home";
 				break;
 			case "login":
-				usrdata.data.login=getQueryVariable(request.getQueryString(),'login');
-				usrdata.data.pass=getQueryVariable(request.getQueryString(),'pass');
+				usrdata.data.login=getQueryVariable(request.getQueryString(),'login')!=null?getQueryVariable(request.getQueryString(),'login'):usrdata.data.login;
+				usrdata.data.pass=getQueryVariable(request.getQueryString(),'pass')!=null?getQueryVariable(request.getQueryString(),'pass'):usrdata.data.pass;
 				if(usrdata.data.pass=="1234"){
 					usrdata.state.clearancelevel=1;
 					usrdata.state.page="home";
@@ -55,8 +55,8 @@ module.exports={
 			case "logout":
 				usrdata.state.clearancelevel=0;
 				break;
-			case "test":
-				usrdata.state.page="test";
+			case "usr":
+				usrdata.state.page="usr";
 				break;
 			case "usrrst":
 				//reset user session data
@@ -84,8 +84,31 @@ module.exports={
 				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
 				this.db.connect("./db/sqlite/test.db3");
 				usrdata.state.page='dbls';
-				usrdata.data.select=this.db.select('test','SELECT * FROM test LIMIT 8');
+				usrdata.data.select=this.db.select('test','SELECT * FROM test LIMIT 32');
 				usrdata.session.modified=new Date().getTime();
+				break;
+			case "dbdel":
+				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				this.db.connect("./db/sqlite/test.db3");
+				var table='test';
+				this.db.exec("DELETE FROM test");
+				usrdata.data.select=this.db.select('test','SELECT * FROM test LIMIT 32');
+				usrdata.session.modified=new Date().getTime();
+				//_response.setHeader("Content-Location","/xas?cmd=dbhtml");
+				//_response.setHeader("Location","/");
+				break;
+
+			case "dbins":
+				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				this.db.connect("./db/sqlite/test.db3");
+				var table='test';
+				var idx=parseInt(this.db.select('test','SELECT COUNT(*) FROM test')[0]);
+				idx++;
+				this.db.exec("INSERT INTO "+table+" VALUES ("+(idx+1)+",'"+Math.random()+"')");
+				usrdata.data.select=this.db.select('test','SELECT * FROM test LIMIT 32');
+				usrdata.session.modified=new Date().getTime();
+				//_response.setHeader("Content-Location","/xas?cmd=dbhtml");
+				//_response.setHeader("Location","/");
 				break;
 			default:
 				console.log("invalid command");
