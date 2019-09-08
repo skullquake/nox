@@ -24,8 +24,7 @@ module.exports={
 		"Login":"/?cmd=login",
 		"Test":"/?cmd=test",
 		"Reset User Data":"/?cmd=usrrst",
-		"foo":"/?cmd=usrrst",
-		"bar":"/?cmd=usrrst",
+		"Database":"/?cmd=dbls"
 	},
 	_buildmenu:function(usrdata){
 		var ret='';
@@ -72,6 +71,22 @@ module.exports={
 		}
 
 	},
+	_buildtable:function(jsondata){
+		var ret='';
+		ret+=
+			'<table class="table table-striped table-sm">'+
+			'	<tr>'+
+			'		<td>'+
+			'			test'+
+			'		<td>'+
+			'	</tr>'+
+			'</table>'
+		;
+		return ret;
+	},
+	_dbselect:function(s){
+		//todo: move to db folder
+	},
 	home:function(usrdata,tpl_contents){
 		try{
 			var ret=
@@ -105,11 +120,28 @@ module.exports={
 				tpl_contents
 					.replace(
 						"<%- title %>",
-						"LOGIN "
+						"Login"
 					)
 					.replace(
 						'<%- contents %>',
-						''
+						(
+							(
+								'<div class="container">'+
+								'	<div class="row">'+
+								'		<div class="col-md-12">'+
+								'			<form action="/" method="get">'+
+								'				First name: <input class="form-control" type="text" name="fname" value="<%- fname %>"><br>'+
+								'				Last name: <input class="form-control" type="text" name="lname" value="<%- lname %>"><br>'+
+								'				<input type="submit" class="btn btn-default" value="Submit">'+
+								'				<input type="hidden" name="cmd" value="submit" />'+
+								'			</form>'+
+								'		</div>'+
+								'	</div>'+
+								'</div>'
+							)
+							.replace("<%- fname %>",usrdata.data.fname)
+							.replace("<%- lname %>",usrdata.data.lname)
+						)
 					)
 			;
 			return ret;
@@ -189,5 +221,61 @@ module.exports={
 			);
 		}
 	},
+	dbls:function(usrdata,tpl_contents){
+		var ret=''
+		try{
+			ret=tpl_contents
+				.replace(
+					"<%- title %>",
+					"Database - Select Test"
+				)
+				.replace(
+					'<%- contents %>',
+					'<div class="container"><div class="row"><div class="col-md-12"><%- contents %></div></div></div>'
+				)
+				.replace(
+					'<%- contents %>',
+					//todo move to controller script/restructure
+					function(){
+						var str_contents=''
+						try{
+							var db=new Database("./db/sqlite/test.db3");
+							var table="test";
+							if(db.tableExists(table)){
+								var result=db.execAndGet('SELECT * FROM test LIMIT 10');
+								str_contents+='<table class="table table-striped table-sm">';
+								result.forEach(
+									function(row,rowidx){
+										str_contents+='<tr>';
+										var line='';
+										row.forEach(
+											function(col,colidx){
+												line+=(col);
+												colidx==row.length-1?null:line+='\t';
+												str_contents+='<td>';
+												str_contents+=col;
+												str_contents+='</td>';
+											}
+										);
+										str_contents+='</tr>';
+									}
+								);
+								str_contents+='</table>';
+							}else{
+								console.error("table "+table+" does not exist");
+							}
+						}catch(e){
+						}
+						return str_contents
+					}()
+				)
+			;
+			return ret;
+		}catch(e){
+			return (e.toString());
+			console.error(e.toString());
+		}
+	}
+
 }
 

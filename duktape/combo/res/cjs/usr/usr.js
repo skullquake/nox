@@ -68,6 +68,10 @@ module.exports={
 				usrdata.data.lname=lname;
 				usrdata.session.modified=new Date().getTime();
 				break;
+			case "dbls":
+				usrdata.state.page='dbls';
+				usrdata.session.modified=new Date().getTime();
+				break;
 			default:
 				console.log("invalid command");
 		};
