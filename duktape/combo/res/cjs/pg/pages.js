@@ -17,7 +17,15 @@ module.exports={
 				}catch(e){
 					console.log('Navigation error:');
 					console.log(e);
-					this['_buildpage'](usrdata,this['login']);
+					if(
+						usrdata.state.clearancelevel
+						>=
+						this._menuitems['home'].clearancelevel
+					){
+						this['_buildpage'](usrdata,this['home']);
+					}else{
+						this['_buildpage'](usrdata,this['login']);
+					}
 				}
 			}else{
 				console.log('Navigation error: page not defined');
@@ -42,9 +50,9 @@ module.exports={
 		"usrrst":{
 			"clearancelevel":1,
 			"url":"/?cmd=usrrst",
-			"title":"Reset User Datat"
+			"title":"Reset User Data"
 		},
-		"Database":{
+		"dbls":{
 			"clearancelevel":1,
 			"url":"/?cmd=dbls",
 			"title":"Database"

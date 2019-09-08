@@ -76,8 +76,6 @@ module.exports={
 				//fname=&lname=
 				var fname=getQueryVariable(request.getQueryString(),'fname');
 				var lname=getQueryVariable(request.getQueryString(),'lname');
-				console.log(fname);
-				console.log(lname);
 				usrdata.data.fname=fname;
 				usrdata.data.lname=lname;
 				usrdata.session.modified=new Date().getTime();
