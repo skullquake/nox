@@ -2,7 +2,7 @@ module.exports={
 	db:null,
 	connect:function(p){
 		this.db=new Database(p);
-	}
+	},
 	select:function(table,sql){
 		var ret=null;
 		try{
@@ -10,22 +10,8 @@ module.exports={
 				if(this.db!=null){
 					if(table!=null){
 						if(sql!=null){
-							var table="test";
-							if(db.tableExists(table)){
-								ret=[];
-								var result=db.execAndGet('SELECT * FROM test');
-								result.forEach(
-									function(row,rowidx){
-										var row=[];
-										row.forEach(
-											function(col,colidx){
-												row.push(col);
-												colidx==row.length-1?null:line+='\t';
-											}
-										);
-										ret.push(row);
-									}
-								);
+							if(this.db.tableExists(table)){
+								ret=this.db.execAndGet(sql);
 							}else{
 								console.error("table "+table+" does not exist");
 							}
@@ -46,7 +32,7 @@ module.exports={
 
 		}
 		return ret;
-	}
+	},
 	exec:function(usrdata,tpl_contents){
 	}
 }

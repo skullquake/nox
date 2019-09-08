@@ -238,13 +238,11 @@ module.exports={
 					//todo move to controller script/restructure
 					function(){
 						var str_contents=''
-						try{
-							var db=new Database("./db/sqlite/test.db3");
-							var table="test";
-							if(db.tableExists(table)){
-								var result=db.execAndGet('SELECT * FROM test LIMIT 10');
+						//table data stored in usrdata.data.select
+						if(usrdata.data!=null&&usrdata.data.select!=null){
+							try{
 								str_contents+='<table class="table table-striped table-sm">';
-								result.forEach(
+								usrdata.data.select.forEach(
 									function(row,rowidx){
 										str_contents+='<tr>';
 										var line='';
@@ -261,10 +259,11 @@ module.exports={
 									}
 								);
 								str_contents+='</table>';
-							}else{
-								console.error("table "+table+" does not exist");
+							}catch(e){
+								str_contents='<div class="alert alert-danger">usrdata.data.select NULL</div>';
 							}
-						}catch(e){
+						}else{
+							str_contents='<div class="alert alert-danger">usrdata.data.select NULL</div>';
 						}
 						return str_contents
 					}()
