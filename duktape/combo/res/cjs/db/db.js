@@ -3,7 +3,8 @@ module.exports={
 	connect:function(p){
 		this.db=new Database(p);
 	},
-	select:function(table,sql){
+	select:function(table,sql,hdr){
+		hdr=hdr==null?false:hdr;
 		var ret=null;
 		try{
 			try{
@@ -11,7 +12,7 @@ module.exports={
 					if(table!=null){
 						if(sql!=null){
 							if(this.db.tableExists(table)){
-								ret=this.db.execAndGet(sql);
+								ret=this.db.execAndGet(sql,hdr);
 							}else{
 								console.error("table "+table+" does not exist");
 							}

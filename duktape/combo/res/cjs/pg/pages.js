@@ -57,6 +57,7 @@ module.exports={
 			"url":"/?cmd=dbls",
 			"title":"Database"
 		},
+		/*
 		"dbdel":{
 			"clearancelevel":1,
 			"url":"/?cmd=dbdel",
@@ -67,20 +68,23 @@ module.exports={
 			"url":"/?cmd=dbins",
 			"title":"Database Insert"
 		},
+		*/
 		"dbusr":{
 			"clearancelevel":1,
 			"url":"/?cmd=dbusr",
 			"title":"Users"
 		},
+		/*
 		"dbusrdel":{
 			"clearancelevel":1,
 			"url":"/?cmd=dbusrdel",
 			"title":"Delete Users"
 		},
-		"login":{
+		*/
+		"pg_login":{
 			"clearancelevel":0,
 			"clearancelogic":"exact",
-			"url":"/?cmd=login",
+			"url":"/?cmd=pg_login",
 			"title":"Login"
 		},
 		"logout":{
@@ -118,7 +122,9 @@ module.exports={
 		);
 		return ret;
 	},
-	_buildpage:function(usrdata,cb){
+	_buildpage:function(usrdata,cb,pd){
+		
+		console.log(usrdata.state.pagestate==null?null:usrdata.state.pagestate[usrdata.state.page]==null?null:usrdata.state.pagestate[usrdata.state.page]);
 		try{
 			var tpl_page=new TextDecoder("utf-8").decode(readFile('./res/tpl/page.html'));
 			var tpl_menu=new TextDecoder("utf-8").decode(readFile('./res/tpl/_menu.html'));
@@ -134,7 +140,11 @@ module.exports={
 				)
 				.replace(
 					"<%- contents %>",
-					cb(usrdata,new TextDecoder("utf-8").decode(readFile('./res/tpl/contents.html')))
+					cb(
+						usrdata,
+						new TextDecoder("utf-8").decode(readFile('./res/tpl/contents.html')),
+						usrdata.state.pagestate==null?null:usrdata.state.pagestate[usrdata.state.page]==null?null:usrdata.state.pagestate[usrdata.state.page]
+					)
 				)
 				.replace(
 					"<%- script %>",
@@ -166,10 +176,7 @@ module.exports={
 		;
 		return ret;
 	},
-	_dbselect:function(s){
-		//todo: move to db folder
-	},
-	home:function(usrdata,tpl_contents){
+	home:function(usrdata,tpl_contents,pd){
 		try{
 			var ret=
 			tpl_contents
@@ -196,7 +203,8 @@ module.exports={
 			);
 		}
 	},
-	login:function(usrdata,tpl_contents){
+	login:function(usrdata,tpl_contents,pd){
+		console.log(pd);
 		try{
 			var ret=
 				tpl_contents
@@ -217,12 +225,20 @@ module.exports={
 								'				<input type="submit" class="btn btn-default" value="Login">'+
 								'				<input type="hidden" name="cmd" value="login" />'+
 								'			</form>'+
+								'			<%- feedback %>'+
 								'		</div>'+
 								'	</div>'+
 								'</div>'
 							)
 							.replace("<%- login %>",usrdata.data.login)
 							.replace("<%- pass %>",usrdata.data.pass)
+							.replace("<%- feedback %>",pd==null?'':pd.error?
+								'<br/><div class="alert alert-danger"><%- contents %></div>'
+								.replace(
+									'<%- contents %>',
+									pd.message
+								)
+							:'')
 						)
 					)
 			;
@@ -234,7 +250,7 @@ module.exports={
 			);
 		}
 	},
-	signup:function(usrdata,tpl_contents){
+	signup:function(usrdata,tpl_contents,pd){
 		try{
 			var ret=
 				tpl_contents
@@ -257,6 +273,7 @@ module.exports={
 								'				<input type="submit" class="btn btn-default" value="Signup">'+
 								'				<input type="hidden" name="cmd" value="signup" />'+
 								'			</form>'+
+								'			<%- feedback %>'+
 								'		</div>'+
 								'	</div>'+
 								'</div>'
@@ -265,6 +282,14 @@ module.exports={
 							.replace("<%- lname %>",usrdata.data.lname)
 							.replace("<%- login %>",usrdata.data.login)
 							.replace("<%- pass %>",usrdata.data.pass)
+							.replace("<%- feedback %>",pd==null?'':pd.error?
+								'<br/><div class="alert alert-danger"><%- contents %></div>'
+								.replace(
+									'<%- contents %>',
+									pd.message
+								)
+							:'')
+
 						)
 					)
 			;
@@ -276,7 +301,7 @@ module.exports={
 			);
 		}
 	},
-	usr:function(usrdata,tpl_contents){
+	usr:function(usrdata,tpl_contents,pd){
 		try{
 			var tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
 			var ret=
@@ -330,7 +355,7 @@ module.exports={
 			);
 		}
 	},
-	dbls:function(usrdata,tpl_contents){
+	dbls:function(usrdata,tpl_contents,pd){
 		var ret=''
 		try{
 			ret=tpl_contents
@@ -384,7 +409,7 @@ module.exports={
 			console.error(e.toString());
 		}
 	},
-	dbusr:function(usrdata,tpl_contents){
+	dbusr:function(usrdata,tpl_contents,pd){
 		var ret=''
 		try{
 			ret=tpl_contents

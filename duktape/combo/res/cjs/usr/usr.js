@@ -13,7 +13,8 @@ module.exports={
 				"page":"home",
 				"lastaction":{
 				},
-				"clearancelevel":0
+				"clearancelevel":0,
+				"pagestate":{}
 			},
 			data:{
 				value:0,
@@ -39,9 +40,16 @@ module.exports={
 		usrdata.state.lastaction.method=request.getMethod();
 		usrdata.state.lastaction.cmd=request.get('cmd','');
 		usrdata.state.lastaction.querystring=request.getQueryString();
-		switch(request.get('cmd','')){
+		var cmd=request.get('cmd','')
+		switch(cmd){
 			case "home":
 				usrdata.state.page="home";
+				break;
+			case "pg_login":
+				usrdata.data.login='';
+				usrdata.data.pass='';
+				usrdata.state.pagestate['login']={};
+				usrdata.state.page="login";
 				break;
 			case "login":
 				usrdata.data.login=getQueryVariable(request.getQueryString(),'login')!=null?getQueryVariable(request.getQueryString(),'login'):usrdata.data.login;
@@ -50,22 +58,33 @@ module.exports={
 				this.db.connect("./db/sqlite/test.db3");
 				var table='usr';
 				var sql="SELECT COUNT(*) FROM "+table+" WHERE login LIKE '"+usrdata.data.login+"' and pass LIKE '"+usrdata.data.pass+"'";
-				console.log(sql);
 				var count=parseInt(this.db.select(table,sql)[0]);
-				console.log(count);
+				usrdata.state.pagestate[cmd]={};
 				if(count>0){
-					console.log('a');
+					var sql="SELECT * FROM "+table+" WHERE login LIKE '"+usrdata.data.login+"' and pass LIKE '"+usrdata.data.pass+"' LIMIT 1";
+					var usrdatadb=this.db.select(table,sql,true);
+					for(var i=0;i<usrdatadb[0].length;i++){
+						usrdata.data[usrdatadb[0][i]]=usrdatadb[1][i];
+					}
+					console.log(usrdata);
 					usrdata.state.clearancelevel=1;
 					usrdata.state.page="home";
+					usrdata.state.pagestate[cmd].error=false;
+					usrdata.state.pagestate[cmd].message=null;
 				}else{
-					console.log('b');
+					usrdata.state.pagestate[cmd].error=true;
+					usrdata.state.pagestate[cmd].message='Invalid Credentials';
+					usrdata.state.page=cmd;
 					usrdata.state.clearancelevel=0;
-					usrdata.state.page="login";
 				}
 				break;
 			case "logout":
 				//usrdata.state.clearancelevel=0;
+<<<<<<< HEAD
+				usrdata=this.prep();
+=======
 				usrdata=this.prep(usrdata);
+>>>>>>> b81c80b41a5412e99bcf71d316dcf22878d44141
 				break;
 			case "pg_signup":
 				usrdata.data.fname=getQueryVariable(request.getQueryString(),'fname')!=null?getQueryVariable(request.getQueryString(),'fname'):usrdata.data.fname;
@@ -129,10 +148,16 @@ module.exports={
 						console.log("signing in...");
 						usrdata.state.clearancelevel=1;
 						usrdata.state.page="home";
+						usrdata.state.pagestate[cmd]={};
 					}catch(e){
 						console.log(e);
 					}
 				}else{
+					usrdata.state.pagestate[cmd]={};
+					usrdata.state.pagestate[cmd].error=true;
+					usrdata.state.pagestate[cmd].message='User already exists';
+					usrdata.state.page=cmd;
+					usrdata.state.clearancelevel=0;
 					console.log("user exists: not creating");
 				}
 				break;
@@ -145,18 +170,64 @@ module.exports={
 				usrdata=this.prep(usrdata);
 				usrdata.state.page=lastpage;
 				break;
-			case "increment":
-				usrdata.data.value=usrdata.data.value+1;
-				usrdata.session.modified=new Date().getTime();
-				break;
-			case "decrement":
-				usrdata.data.value=usrdata.data.value-1;
-				usrdata.session.modified=new Date().getTime();
-				break;
 			case "submit":
 				//fname=&lname=
 				var fname=getQueryVariable(request.getQueryString(),'fname');
 				var lname=getQueryVariable(request.getQueryString(),'lname');
+				if(this.db==null){
+					this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+					this.db.connect("./db/sqlite/test.db3");
+				}
+				var table='usr';
+				var sqltpl="UPDATE <%- table %> SET <%- field %> = <%- fieldvalue %> WHERE <%- key %> = <%- value %>";
+				var sql=''
+				sql=sqltpl
+					.replace(
+						'<%- table %>',
+						table
+					)
+					.replace(
+						'<%- field %>',
+						'fname'
+					)
+					.replace(
+						'<%- fieldvalue %>',
+						"'"+fname+"'"
+					)
+					.replace(
+						'<%- key %>',
+						'login'
+					)
+					.replace(
+						'<%- value %>',
+						"'"+usrdata.data.login+"'"
+					)
+				;
+				this.db.exec(sql);
+				sql=sqltpl
+					.replace(
+						'<%- table %>',
+						table
+					)
+					.replace(
+						'<%- field %>',
+						'lname'
+					)
+					.replace(
+						'<%- fieldvalue %>',
+						"'"+lname+"'"
+					)
+					.replace(
+						'<%- key %>',
+						'login'
+					)
+					.replace(
+						'<%- value %>',
+						"'"+usrdata.data.login+"'"
+					)
+				;
+				this.db.exec(sql);
+
 				usrdata.data.fname=fname;
 				usrdata.data.lname=lname;
 				usrdata.session.modified=new Date().getTime();
@@ -165,37 +236,21 @@ module.exports={
 				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
 				this.db.connect("./db/sqlite/test.db3");
 				usrdata.state.page='dbls';
-				usrdata.data.select=this.db.select('test','SELECT * FROM test LIMIT 32');
+				usrdata.data.select=
+				this.db.db.execAndGet(
+					"SELECT"+
+					"	*"+
+					"FROM"+
+					"	sqlite_master",
+					true
+				);
 				usrdata.session.modified=new Date().getTime();
-				break;
-			case "dbdel":
-				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
-				this.db.connect("./db/sqlite/test.db3");
-				var table='test';
-				this.db.exec("DELETE FROM test");
-				usrdata.data.select=this.db.select('test','SELECT * FROM test LIMIT 32');
-				usrdata.session.modified=new Date().getTime();
-				//_response.setHeader("Content-Location","/xas?cmd=dbhtml");
-				//_response.setHeader("Location","/");
-				break;
-
-			case "dbins":
-				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
-				this.db.connect("./db/sqlite/test.db3");
-				var table='test';
-				var idx=parseInt(this.db.select('test','SELECT COUNT(*) FROM test')[0]);
-				idx++;
-				this.db.exec("INSERT INTO "+table+" VALUES ("+(idx+1)+",'"+Math.random()+"')");
-				usrdata.data.select=this.db.select('test','SELECT * FROM test LIMIT 32');
-				usrdata.session.modified=new Date().getTime();
-				//_response.setHeader("Content-Location","/xas?cmd=dbhtml");
-				//_response.setHeader("Location","/");
 				break;
 			case "dbusr":
 				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
 				this.db.connect("./db/sqlite/test.db3");
 				usrdata.state.page='dbusr';
-				usrdata.data.select=this.db.select('test','SELECT * FROM usr');
+				usrdata.data.select=this.db.select('test','SELECT * FROM usr',true);
 				usrdata.session.modified=new Date().getTime();
 				break;
 			case "dbusrdel":
@@ -203,7 +258,7 @@ module.exports={
 				this.db.connect("./db/sqlite/test.db3");
 				var table='test';
 				this.db.exec("DELETE FROM usr");
-				usrdata.data.select=this.db.select('test','SELECT * FROM usr');
+				usrdata.data.select=this.db.select('test','SELECT * FROM usr',true);
 				break;
 
 			default:
