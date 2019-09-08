@@ -69,6 +69,11 @@ module.exports={
 				usrdata.session.modified=new Date().getTime();
 				break;
 			case "dbls":
+				/*
+				this.db=require('cjs/usr/usr.js?cachebust="'+new Date().getTime());
+				db.connect("./db/sqlite/test.db3");
+				console.log(db.select('SELECT * FROM test LIMIT 8'));
+				*/
 				usrdata.state.page='dbls';
 				usrdata.session.modified=new Date().getTime();
 				break;
@@ -76,6 +81,7 @@ module.exports={
 				console.log("invalid command");
 		};
 		return usrdata;
-	}
+	},
+	db:null
 
 }

@@ -2,7 +2,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 COOKIEFILE=./res/cookies/cookie.txt
 mkdir -p `dirname $COOKIEFILE`
-URL="http://localhost:8080/duk?src=./res/cjs/db/sqliteppinsert.js"
+URL="http://localhost:8080/duk?src=./res/cjs/db/tst/sqliteppinsert.js"
 curl \
 	--cookie "foo=bar"\
 	-c $COOKIEFILE\
