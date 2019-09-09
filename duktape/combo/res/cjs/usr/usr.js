@@ -283,18 +283,95 @@ module.exports={
 				this.db.exec("DELETE FROM usr");
 				usrdata.data.select=this.db.select('test','SELECT * FROM usr',true);
 				break;
-			case "cprtst":
+			case "apod":
+				var data;
+				var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				if(db!=null){
+					db.connect("./db/sqlite/nasa.db3");
+					var table='apod';
+					if(db.db.tableExists(table)){
+						console.log("usr.js: Table "+table+" already exists");
+					}else{
+						console.log("usr.js: Creating table "+table);
+						db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date TEXT, value TEXT)");
+						console.log("usr.js: done");
+					}
+				}else{
+					console.log("usr.js: failed to load cjs/db/db.js");
+				}
 				var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
 				var url='https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
 				var par={};
 				var hdr={};
 				var ck={};
 				var t=3000;
+				data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
+				try{
+					console.log("clearing "+table);
+					this.db.exec("DELETE FROM apod");
+					console.log("done clearing "+apod);
+					sql=	
+						(
+							"INSERT INTO <%- table %>("+
+							"	date,"+
+							"	value,"+
+							") "+
+							"VALUES ("+
+							"	'<%- date %>',"+
+							"	'<%- value %>'"+
+							")"
+						)
+						.replace(
+							'<%- table %>',
+							table
+						)
+						.replace(
+							'<%- date %>',
+							new String(new Date().getTime())
+						)
+						.replace(
+							'<%- value %>',
+							JSON.stringify(data)
+						)
+					;
+					console.log(sql);
+					this.db.exec(sql);
+				}catch(e){
+					console.log(e);
+				}
 				usrdata.state.pagestate[cmd]={};
-				usrdata.state.pagestate[cmd].data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
-				console.log(usrdata.state.pagestate[cmd]);
-				usrdata.state.page='cprtst';
+				usrdata.state.pagestate[cmd].data=data;
+				usrdata.state.page='apod';
 				break;
+			case "insight_weather":
+				var data;
+				var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				if(db!=null){
+					db.connect("./db/sqlite/nasa.db3");
+					var table="insight_weather";
+					if(db.db.tableExists(table)){
+						console.log("usr.js: Table "+table+" already exists");
+					}else{
+						console.log("usr.js: Creating table "+table);
+						db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date TEXT, value TEXT)");
+						console.log("usr.js: done");
+					}
+				}else{
+					console.log("usr.js: failed to load cjs/db/db.js");
+				}
+
+				var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
+				var url='https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0';
+				var par={};
+				var hdr={};
+				var ck={};
+				var t=3000;
+				data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
+				usrdata.state.pagestate[cmd]={};
+				usrdata.state.pagestate[cmd].data=data;
+				usrdata.state.page='insight_weather';
+				break;
+
 			default:
 				console.log("invalid command");
 		};

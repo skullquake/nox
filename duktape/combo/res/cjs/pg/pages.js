@@ -79,12 +79,16 @@ module.exports={
 			"url":"/?cmd=mgses",
 			"title":"Sessions"
 		},
-		"cprtst":{
+		"apod":{
 			"clearancelevel":1,
-			"url":"/?cmd=cprtst",
-			"title":"CPR Test"
+			"url":"/?cmd=apod",
+			"title":"APOD"
 		},
-
+		"insight_weather":{
+			"clearancelevel":1,
+			"url":"/?cmd=insight_weather",
+			"title":"Insight Weather"
+		},
 		/*
 		"dbusrdel":{
 			"clearancelevel":1,
@@ -510,7 +514,7 @@ module.exports={
 			console.error(e.toString());
 		}
 	},
-	cprtst:function(usrdata,tpl_contents,pd,ctx){
+	apod:function(usrdata,tpl_contents,pd,ctx){
 		var ret=''
 		try{
 			ret=tpl_contents
@@ -544,7 +548,33 @@ module.exports={
 			return (e.toString());
 			console.error(e.toString());
 		}
+	},
+	insight_weather:function(usrdata,tpl_contents,pd,ctx){
+		var ret=''
+		try{
+			ret=tpl_contents
+				.replace(
+					"<%- title %>",
+					"CPR Test - <code>https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0</code>"
+				)
+				.replace(
+					'<%- contents %>',
+					(
+						'<code><pre><%- contents %></pre></code>'
+						.replace(
+							'<%- contents %>',
+							JSON.stringify(pd,0,'\t')
+						)
+					)
+				)
+			;
+			return ret;
+		}catch(e){
+			return (e.toString());
+			console.error(e.toString());
+		}
 	}
+
 
 
 
