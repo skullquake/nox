@@ -4,6 +4,7 @@
 
 #ifndef APP_DUKTAPE_WRAPPERS_CPR_REQ_H
 #define APP_DUKTAPE_WRAPPERS_CPR_REQ_H
+#include<string>
 #include<map>
 namespace app::duktape::wrappers::cpr{
 	class Req{
