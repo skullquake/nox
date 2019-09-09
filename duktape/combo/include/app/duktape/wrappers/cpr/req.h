@@ -27,7 +27,7 @@ namespace app::duktape::wrappers::cpr{
 
 			std::map<std::string,std::string> getResponseHeaders();
 			std::string getResponseBody();
-			std::map<std::string,std::string> getResponseCookie();
+			std::string getResponseCookie();
 			int getResponseError();
 			int getResponseStatusCode();
 			double getResponseElapsed();
@@ -38,7 +38,7 @@ namespace app::duktape::wrappers::cpr{
 			std::map<std::string,std::string> m_reqp;
 			std::map<std::string,std::string> m_reqck;
 			std::map<std::string,std::string> m_reshdr;
-			std::map<std::string,std::string> m_resck;
+			std::string m_resck;
 			std::string m_resb;
 			int  m_resstatus;
 			int  m_reserror;

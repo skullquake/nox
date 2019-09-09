@@ -76,6 +76,7 @@ bool Req::execRequest(){
 			this->m_reshdr[it->first]=it->second;
 		}
 		this->m_resb=r.text;
+		this->m_resck=r.cookies.GetEncoded();
 		//for(auto it=r.cookies.begin();it!=r.cookies.end();it++){
 		//	this->m_resck[it->first]=it->second;
 		//}
@@ -129,7 +130,7 @@ std::string Req::getResponseBody(){
 	std::cout<<"app::duktape::wrappers::cpr::getResponseBody()"<<std::endl;
 	return this->m_resb;
 }
-std::map<std::string,std::string> Req::getResponseCookie(){
+std::string Req::getResponseCookie(){
 	std::cout<<"app::duktape::wrappers::cpr::getResponseCookie()"<<std::endl;
 	return this->m_resck;
 }
