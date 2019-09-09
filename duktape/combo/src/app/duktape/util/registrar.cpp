@@ -13,6 +13,8 @@
 #include"app/duktape/wrappers/mongoose-cpp/Response.h"
 #include"app/duktape/wrappers/SQLiteCpp/Database.h"
 #include"app/duktape/wrappers/cpr/parameters.h"
+#include"app/duktape/wrappers/cpr/get.h"
+//#include"cpr/response.h"
 #include<vector>
 #include<iostream>
 namespace app::duktape::util{
@@ -151,6 +153,14 @@ namespace app::duktape::util{
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Parameters::AddParameter,"AddParameter");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Parameters::getContent,"getContent");
 				//dukglue_register_property(ctx,&::app::duktape::wrappers::cpr::Parameters::getContent,"content");
+				//dukglue_register_constructor<::app::duktape::wrappers::cpr::Url>(ctx,"cpr_url");
+				//
+				//cpr::Get
+				dukglue_register_function(ctx,&::app::duktape::wrappers::cpr::Get,"cpr_Get");
+				//dukglue_register_function(ctx,&test,"test");
+				//cpr::Response
+				dukglue_register_constructor<::cpr::Response>(ctx,"cpr_response");
+				
 
 
 
