@@ -14,6 +14,7 @@
 #include"app/duktape/wrappers/SQLiteCpp/Database.h"
 #include"app/duktape/wrappers/cpr/parameters.h"
 #include"app/duktape/wrappers/cpr/get.h"
+#include"app/duktape/wrappers/cpr/req.h"
 //#include"cpr/response.h"
 #include<vector>
 #include<iostream>
@@ -160,7 +161,25 @@ namespace app::duktape::util{
 				//dukglue_register_function(ctx,&test,"test");
 				//cpr::Response
 				dukglue_register_constructor<::cpr::Response>(ctx,"cpr_response");
-				
+				//request utility wrapper
+				dukglue_register_constructor<::app::duktape::wrappers::cpr::Req>(ctx,"cpr_req");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestHeaders,"setRequestHeaders");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestHeaders,"getRequestHeaders");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestUrl,"setRequestUrl");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestUrl,"getRequestUrl");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestParameters,"setRequestParameters");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestParameters,"getRequestParameters");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestMethod,"setRequestMethod");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestMethod,"getRequestMethod");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestCookie,"setRequestCookie");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestCookie,"getRequestCookie");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestTimeout,"setRequestTimeout");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestTimeout,"getRequestTimeout");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::execRequest,"execRequest");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseHeaders,"getResponseHeaders");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseBody,"getResponseBody");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseCookie,"getResponseCookie");
+
 
 
 
