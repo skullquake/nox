@@ -66,7 +66,6 @@ module.exports={
 					for(var i=0;i<usrdatadb[0].length;i++){
 						usrdata.data[usrdatadb[0][i]]=usrdatadb[1][i];
 					}
-					console.log(usrdata);
 					usrdata.state.clearancelevel=1;
 					usrdata.state.page="home";
 					usrdata.state.pagestate[cmd].error=false;
@@ -111,7 +110,7 @@ module.exports={
 								"	login,"+
 								"	pass"+
 								") "+
-								"VALUES ("+
+								" VALUES ("+
 								"	'<%- fname %>',"+
 								"	'<%- lname %>',"+
 								"	'<%- login %>',"+
@@ -139,7 +138,6 @@ module.exports={
 								usrdata.data.pass
 							)
 						;
-						console.log(sql);
 						this.db.exec(sql);
 						console.log("signing in...");
 						usrdata.state.clearancelevel=1;
@@ -286,6 +284,7 @@ module.exports={
 			case "apod":
 				var data;
 				var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				var sql;
 				if(db!=null){
 					db.connect("./db/sqlite/nasa.db3");
 					var table='apod';
@@ -293,49 +292,57 @@ module.exports={
 						console.log("usr.js: Table "+table+" already exists");
 					}else{
 						console.log("usr.js: Creating table "+table);
-						db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date TEXT, value TEXT)");
+						db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date INTEGER, value TEXT)");
 						console.log("usr.js: done");
 					}
 				}else{
 					console.log("usr.js: failed to load cjs/db/db.js");
 				}
-				var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
-				var url='https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
-				var par={};
-				var hdr={};
-				var ck={};
-				var t=3000;
-				data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
 				try{
-					console.log("clearing "+table);
-					this.db.exec("DELETE FROM apod");
-					console.log("done clearing "+apod);
-					sql=	
-						(
-							"INSERT INTO <%- table %>("+
-							"	date,"+
-							"	value,"+
-							") "+
-							"VALUES ("+
-							"	'<%- date %>',"+
-							"	'<%- value %>'"+
-							")"
-						)
-						.replace(
-							'<%- table %>',
-							table
-						)
-						.replace(
-							'<%- date %>',
-							new String(new Date().getTime())
-						)
-						.replace(
-							'<%- value %>',
-							JSON.stringify(data)
-						)
-					;
-					console.log(sql);
-					this.db.exec(sql);
+					this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+					this.db.connect("./db/sqlite/nasa.db3");
+					sql="SELECT value FROM apod WHERE date BETWEEN datetime('now', 'localtime', 'start of day') AND datetime('now', 'localtime')";
+					var result=this.db.db.execAndGet(sql,false);
+					if(result.length==0){
+						console.log("usr.js: Caching Apod...");
+						var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
+						var url='https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
+						var par={};
+						var hdr={};
+						var ck={};
+						var t=3000;
+						data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
+						sql=	
+							(
+								"INSERT INTO <%- table %> ("+
+								"	date,"+
+								"	value"+
+								") "+
+								" VALUES ("+
+								"	<%- date %>,"+
+								"	<%- value %>"+
+								")"
+							)
+							.replace(
+								'<%- table %>',
+								table
+							)
+							.replace(
+								'<%- date %>',
+								"datetime('now', 'localtime')"//new String(new Date().getTime())
+							)
+							.replace(
+								'<%- value %>',
+								"'"+JSON.stringify(data)+"'"
+							)
+						;
+						db.exec(sql);
+						console.log("usr.js: Done");
+					}else{
+						console.log("usr.js: Using Cached Apod...");
+						data=JSON.parse(result[0]);
+					}
+
 				}catch(e){
 					console.log(e);
 				}
