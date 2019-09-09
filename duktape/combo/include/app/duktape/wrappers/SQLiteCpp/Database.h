@@ -9,6 +9,7 @@ namespace app::duktape::wrappers::SQLiteCpp{
 	class Database:public ::SQLite::Database{
 		public:
 			Database(const char*);
+			~Database();
 			std::vector<std::vector<std::string>> _execAndGet(std::string,bool);
 			void _exec(const char*);
 			const char* getName();

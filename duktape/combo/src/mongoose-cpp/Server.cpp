@@ -111,9 +111,11 @@ namespace Mongoose{
 	}
 	void Server::stop(){
 		stopped=true;
+		/* ockert
 		while (!destroyed){
 			Utils::sleep(100);
 		}
+		*/
 	}
 	void Server::registerController(Controller *controller){
 		controller->setSessions(&sessions);
@@ -214,5 +216,8 @@ namespace Mongoose{
 		if (delta){
 			cout<<"Requests: "<<requests<<", Requests/s: "<<(requests*1.0/delta)<<endl;
 		}
+	}
+	bool Server::isRunning(){
+		return !this->stopped;
 	}
 }

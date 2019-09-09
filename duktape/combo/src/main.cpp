@@ -4,6 +4,7 @@
 #include"mongoose-cpp/Server.h"
 #include"mongoose-cpp/WebController.h"
 #include"app/controllers/MyController.h"
+#include<iostream>
 int main(int argc,char** argv){
 	app::controllers::MyController myController;
 	Mongoose::Server server(8080);
@@ -13,6 +14,9 @@ int main(int argc,char** argv){
 	server.start(); 
 	while(1){
 		//Sleep(10000);
-		sleep(10000);
+		//sleep(10000);
+		sleep(1);
+		//std::cout<<"main():wait..."<<std::endl;
+		if(!server.isRunning())break;
 	}
 }

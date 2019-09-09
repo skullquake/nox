@@ -285,9 +285,9 @@ module.exports={
 				var data;
 				var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
 				var sql;
+				var table='apod';
 				if(db!=null){
-					db.connect("./db/sqlite/nasa.db3");
-					var table='apod';
+					db.connect("./db/sqlite/test.db3");
 					if(db.db.tableExists(table)){
 						console.log("usr.js: Table "+table+" already exists");
 					}else{
@@ -300,11 +300,11 @@ module.exports={
 				}
 				try{
 					this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
-					this.db.connect("./db/sqlite/nasa.db3");
-					sql="SELECT value FROM apod WHERE date BETWEEN datetime('now', 'localtime', 'start of day') AND datetime('now', 'localtime')";
+					this.db.connect("./db/sqlite/test.db3");
+					sql="SELECT value FROM "+table+" WHERE date BETWEEN datetime('now', 'localtime', 'start of day') AND datetime('now', 'localtime')";
 					var result=this.db.db.execAndGet(sql,false);
 					if(result.length==0){
-						console.log("usr.js: Caching Apod...");
+						console.log("usr.js: Caching "+table+"...");
 						var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
 						var url='https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
 						var par={};
@@ -339,7 +339,7 @@ module.exports={
 						db.exec(sql);
 						console.log("usr.js: Done");
 					}else{
-						console.log("usr.js: Using Cached Apod...");
+						console.log("usr.js: Using Cached "+table+"...");
 						data=JSON.parse(result[0]);
 					}
 
@@ -351,29 +351,71 @@ module.exports={
 				usrdata.state.page='apod';
 				break;
 			case "insight_weather":
+
 				var data;
 				var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				var sql;
+				var table='insight_weather';
 				if(db!=null){
-					db.connect("./db/sqlite/nasa.db3");
-					var table="insight_weather";
+					db.connect("./db/sqlite/test.db3");
 					if(db.db.tableExists(table)){
 						console.log("usr.js: Table "+table+" already exists");
 					}else{
 						console.log("usr.js: Creating table "+table);
-						db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date TEXT, value TEXT)");
+						db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date INTEGER, value TEXT)");
 						console.log("usr.js: done");
 					}
 				}else{
 					console.log("usr.js: failed to load cjs/db/db.js");
 				}
+				try{
+					this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+					this.db.connect("./db/sqlite/test.db3");
+					sql="SELECT value FROM "+table+" WHERE date BETWEEN datetime('now', 'localtime', 'start of day') AND datetime('now', 'localtime')";
+					var result=this.db.db.execAndGet(sql,false);
+					if(result.length==0){
+						console.log("usr.js: Caching "+table+"...");
+						var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
+						var url='https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0';
+						var par={};
+						var hdr={};
+						var ck={};
+						var t=3000;
+						data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
+						sql=	
+							(
+								"INSERT INTO <%- table %> ("+
+								"	date,"+
+								"	value"+
+								") "+
+								" VALUES ("+
+								"	<%- date %>,"+
+								"	<%- value %>"+
+								")"
+							)
+							.replace(
+								'<%- table %>',
+								table
+							)
+							.replace(
+								'<%- date %>',
+								"datetime('now', 'localtime')"//new String(new Date().getTime())
+							)
+							.replace(
+								'<%- value %>',
+								"'"+JSON.stringify(data)+"'"
+							)
+						;
+						db.exec(sql);
+						console.log("usr.js: Done");
+					}else{
+						console.log("usr.js: Using Cached "+table+"...");
+						data=JSON.parse(result[0]);
+					}
 
-				var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
-				var url='https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0';
-				var par={};
-				var hdr={};
-				var ck={};
-				var t=3000;
-				data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
+				}catch(e){
+					console.log(e);
+				}
 				usrdata.state.pagestate[cmd]={};
 				usrdata.state.pagestate[cmd].data=data;
 				usrdata.state.page='insight_weather';

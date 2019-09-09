@@ -16,6 +16,7 @@
 #include"app/duktape/wrappers/cpr/get.h"
 #include"app/duktape/wrappers/cpr/req.h"
 //#include"cpr/response.h"
+#include"app/duktape/wrappers/fsutils/fs.h"
 #include<vector>
 #include<iostream>
 namespace app::duktape::util{
@@ -121,6 +122,7 @@ namespace app::duktape::util{
 				dukglue_register_method(ctx,&::Mongoose::Server::poll,"poll");
 				dukglue_register_method(ctx,&::Mongoose::Server::handles,"handles");
 				dukglue_register_method(ctx,&::Mongoose::Server::getSessions,"getSessions");
+				dukglue_register_method(ctx,&::Mongoose::Server::isRunning,"running");
 
 				//expose ::Mongoose::Sessions [container for sessions]
 				dukglue_register_method(ctx,&::Mongoose::Sessions::getSessions,"getSessions");
@@ -128,6 +130,7 @@ namespace app::duktape::util{
 				       
 				//expose sqlitecpp issues in namespace
 				dukglue_register_constructor<::app::duktape::wrappers::SQLiteCpp::Database,const char*>(ctx,"Database");
+				//dukglue_register_method(ctx,&app::duktape::wrappers::SQLiteCpp::Database::~Database,"~Database");
 				//dukglue_register_method(ctx,static_cast<bool (app::duktape::wrappers::SQLiteCpp::Database::*)(const char*)>(&app::duktape::wrappers::SQLiteCpp::Database::tableExists),"tableExists");
 				dukglue_register_method(ctx,&app::duktape::wrappers::SQLiteCpp::Database::_tableExists,"tableExists");
 				dukglue_register_method(ctx,&app::duktape::wrappers::SQLiteCpp::Database::_execAndGet,"execAndGet");
@@ -181,7 +184,9 @@ namespace app::duktape::util{
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseCookie,"getResponseCookie");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseError,"getResponseError");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseErrorMessage,"getResponseErrorMessage");
-
+				//fsutils
+				dukglue_register_constructor<::app::duktape::wrappers::fsutils::Fs>(ctx,"fsutils_fs");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::fsutils::Fs::test,"test");
 
 
 

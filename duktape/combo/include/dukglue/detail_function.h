@@ -24,7 +24,7 @@ namespace dukglue
 				// this is not recommended due to the ugly syntax it requires.
 				static duk_ret_t call_native_function(duk_context* ctx)
 				{
-                    auto bakedArgs = dukglue::detail::get_stack_values<Ts...>(ctx);
+					auto bakedArgs = dukglue::detail::get_stack_values<Ts...>(ctx);
 					actually_call(ctx, bakedArgs);
 					return std::is_void<RetType>::value ? 0 : 1;
 				}
@@ -68,7 +68,7 @@ namespace dukglue
 
 					duk_pop_2(ctx);
 
-          static_assert(sizeof(RetType(*)(Ts...)) == sizeof(void*), "Function pointer and data pointer are different sizes");
+					static_assert(sizeof(RetType(*)(Ts...)) == sizeof(void*), "Function pointer and data pointer are different sizes");
 					RetType(*funcToCall)(Ts...) = reinterpret_cast<RetType(*)(Ts...)>(fp_void);
 
 					actually_call(ctx, funcToCall, dukglue::detail::get_stack_values<Ts...>(ctx));

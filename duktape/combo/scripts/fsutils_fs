@@ -1,0 +1,13 @@
+#/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
+COOKIEFILE=./res/cookies/cookie.txt
+mkdir -p `dirname $COOKIEFILE`
+URL="http://localhost:8080/duk?src=./res/cjs/fsutils/fs/fs.js"
+curl \
+	--cookie "foo=bar"\
+	-c $COOKIEFILE\
+	-b $COOKIEFILE\
+	$URL \
+	2>/dev/null
+#-H "Cookie: foo=bar;"\
+	#-v

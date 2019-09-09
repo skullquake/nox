@@ -53,12 +53,51 @@ namespace app::controllers{
 		}
 	}
 	MyController::~MyController(){
+		this->ctx=NULL;
+		//initialization scripts
+		std::string src="./res/cjs/srv/deinit.js";
+		if(src.length()>0){
+			try{
+				duk_context* ctx=NULL;
+				if(
+					this->ctx==NULL
+				){
+					//std::cout<<"Creating server root context...";
+					this->ctx=duk_create_heap_default();
+					ctx=this->ctx;
+					dukglue_push(ctx,&(*this));
+					duk_put_global_string(ctx,"controller");
+					dukglue_push(ctx,this->getServer());
+					duk_put_global_string(ctx,"server");
+					app::duktape::util::_register(ctx);
+					//std::cout<<"done"<<std::endl;
+				}else{
+					ctx=this->ctx;
+				}
+				//std::cout<<"Executing server shutdown scripts...";
+				app::duktape::wrappers::push_file_as_string(ctx,src.c_str());
+				if(duk_peval(ctx)!=0){
+					std::cerr<<"Error: "<<std::string(duk_safe_to_string(ctx,-1))<<std::endl;
+				}
+				duk_pop(ctx);
+				duk_destroy_heap(ctx);
+				this->ctx=NULL;
+				//std::cout<<"done"<<std::endl;
+			}catch(std::exception e){
+				std::cerr<<e.what()<<std::endl;
+			}
+		}else{
+		}
+
 	}
 	void MyController::setup(){
 		addRoute("GET","/",MyController,home);
 		addRoute("GET","/duk",MyController,duk);
 		addRoute("POST","/duk",MyController,duk);
 		addRoute("PUT","/duk",MyController,duk);
+		addRoute("GET","/xas",MyController,xas);
+		addRoute("POST","/xas",MyController,xas);
+		addRoute("PUT","/xas",MyController,xas);
 	}
 	void MyController::home(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
 		std::string src="./res/cjs/hdl/root.js";
@@ -166,7 +205,8 @@ namespace app::controllers{
 			response.setCode(400);
 			response<<"No Script Specified"<<std::endl;
 		}
-
-
+	}
+	void MyController::xas(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
+		response<<"XAS";
 	}
 }

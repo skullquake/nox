@@ -12,6 +12,7 @@ namespace app::controllers{
 			~MyController();
 			void home(Mongoose::Request &request, Mongoose::StreamResponse &);
 			void duk(Mongoose::Request &request, Mongoose::StreamResponse &);
+			void xas(Mongoose::Request &request, Mongoose::StreamResponse &);//general
 			void setup();
 		private:
 			duk_context* ctx;

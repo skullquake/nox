@@ -131,7 +131,10 @@ namespace Mongoose
              */
             Sessions* getSessions();
 
-
+            /**
+             * get !stopped
+             */
+            bool isRunning();
         protected:
             volatile bool stopped;
             volatile bool destroyed;
