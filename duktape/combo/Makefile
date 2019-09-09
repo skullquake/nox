@@ -21,9 +21,11 @@ CXXFLAGS=\
 	-I./include/jsoncpp\
 	-I./include/lua\
 	-I./include/sqlite3\
+	-I./include/cpr\
 	-DNO_WEBSOCKET
 CFLAGS=$(CXXFLAGS)
 LDFLAGS=\
+	-lcurl
 
 ifneq (,$(findstring mingw,$(MACHINE)))
 LDFLAGS+=\
