@@ -178,11 +178,12 @@ module.exports={
 					ret+='	<tr>\n';
 						r.forEach(
 							function(c){
-								console.log(c);
 					ret+='		<td>\n';
 								try{
-					ret+='			'+c.size+'\n';
-								}catch(e){}
+					ret+='			'+c+'\n';
+								}catch(e){
+					ret+='			'+e+'\n';
+								}
 					ret+='		<td>\n';
 							}
 						)
@@ -197,7 +198,6 @@ module.exports={
 		}else{
 		}
 		console.log('end _buildtable:function(jsondata)')
-		console.log(ret);
 		return ret;
 	},
 	home:function(usrdata,tpl_contents,pd){
@@ -228,7 +228,6 @@ module.exports={
 		}
 	},
 	login:function(usrdata,tpl_contents,pd){
-		console.log(pd);
 		try{
 			var ret=
 				tpl_contents

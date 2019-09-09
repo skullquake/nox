@@ -255,22 +255,25 @@ module.exports={
 				usrdata.state.pagestate[cmd].data=[];
 				var h=[];
 				h.push("Session Id");
+				h.push("Session Data");
 				var BreakException = {};
 				usrdata.state.pagestate[cmd].data.push(h);
+				var sessions=server.getSessions().getSessions();
 				try{
-					Object.keys(server.getSessions().getSessions()).forEach(
+					Object.keys(sessions).forEach(
 						function(s){
-							console.log(s);
 							var r=[];
 							try{
 								r.push(s);
-							}catch(e){}
+								r.push(JSON.stringify(sessions[s].getValues()));
+							}catch(e){
+								console.log(e);
+							}
 							usrdata.state.pagestate[cmd].data.push(r);
 						}
 					);
 				}catch(e){
 				}
-				console.log(usrdata.state.pagestate[cmd].data);
 				usrdata.state.page='mgses';
 				break;
 			case "dbusrdel":
@@ -284,6 +287,18 @@ module.exports={
 			default:
 				console.log("invalid command");
 		};
+		//updating of Mongoose::Session kv pair test (visible in Navigation/Sessions)
+		//	note not all is pushed, as this results in recursion because the native
+		//	session stuff gets put in the duktape client session stuff for viz
+		var nativesessiondata={};
+		nativesessiondata.session=usrdata.session;
+		nativesessiondata.state={};
+		nativesessiondata.state.lastaction=usrdata.state.lastaction;
+		nativesessiondata.state.lastaction.clearancelevel=usrdata.state.clearancelevel;
+		nativesessiondata.data={};
+		nativesessiondata.data.fname=usrdata.data.fname;
+		nativesessiondata.data.lname=usrdata.data.lname;
+		session.setValue('usrdata',JSON.stringify(nativesessiondata));
 		return usrdata;
 	},
 	initdb:function(){
