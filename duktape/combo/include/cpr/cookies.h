@@ -17,8 +17,8 @@ class Cookies {
     std::string& operator[](const std::string& key);
     std::string GetEncoded() const;
 
-  private:
     std::map<std::string, std::string> map_;
+  private:
 };
 
 } // namespace cpr

@@ -79,6 +79,11 @@ module.exports={
 			"url":"/?cmd=mgses",
 			"title":"Sessions"
 		},
+		"cprtst":{
+			"clearancelevel":1,
+			"url":"/?cmd=cprtst",
+			"title":"CPR Test"
+		},
 
 		/*
 		"dbusrdel":{
@@ -497,6 +502,41 @@ module.exports={
 				.replace(
 					'<%- contents %>',
 					ctx._buildtable(pd.data)
+				)
+			;
+			return ret;
+		}catch(e){
+			return (e.toString());
+			console.error(e.toString());
+		}
+	},
+	cprtst:function(usrdata,tpl_contents,pd,ctx){
+		var ret=''
+		try{
+			ret=tpl_contents
+				.replace(
+					"<%- title %>",
+					"CPR Test - <code>https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY</code>"
+				)
+				.replace(
+					'<%- contents %>',
+					(
+						'<div><%- explanation %></div>'+
+						'<img src="<%- url %>"></img>'+
+						'<div><%- copyright %></div>'
+					)
+					.replace(
+						'<%- copyright %>',
+						pd.data.copyright
+					)
+					.replace(
+						'<%- explanation %>',
+						pd.data.explanation
+					)
+					.replace(
+						'<%- url %>',
+						pd.data.url
+					)
 				)
 			;
 			return ret;

@@ -283,7 +283,18 @@ module.exports={
 				this.db.exec("DELETE FROM usr");
 				usrdata.data.select=this.db.select('test','SELECT * FROM usr',true);
 				break;
-
+			case "cprtst":
+				var cpr=require('cjs/cpr/cpr.js?cachebust="'+new Date().getTime());
+				var url='https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY';
+				var par={};
+				var hdr={};
+				var ck={};
+				var t=3000;
+				usrdata.state.pagestate[cmd]={};
+				usrdata.state.pagestate[cmd].data=JSON.parse(cpr.get(url,par,hdr,ck,t).bod);
+				console.log(usrdata.state.pagestate[cmd]);
+				usrdata.state.page='cprtst';
+				break;
 			default:
 				console.log("invalid command");
 		};
