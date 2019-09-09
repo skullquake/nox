@@ -209,11 +209,34 @@ namespace app::controllers{
 			response<<"No Script Specified"<<std::endl;
 		}
 	}
-	void MyController::xas(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
 #ifdef NO_JSONCPP
+	void MyController::xas(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
 		response<<"XAS[JSONCPP:OFF]";
-#else
-		response<<"XAS[JSONCPP:ON]";
-#endif
 	}
+#else
+	void r(Json::Value&,std::vector<std::string>,int);
+	void MyController::xas(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
+		response<<"XAS[JSONCPP:ON]";
+		std::vector<std::string> v{"foo","bar","baz","qux","klutz"}; 
+		Json::Value j;
+		r(j,v,10);
+		Json::StyledWriter styledWriter;
+		response<<styledWriter.write(j);
+	}
+	void r(Json::Value& j,std::vector<std::string> v,int i){
+		if(i<0){
+			for(std::string x:v) 
+				j[x]=x;
+			return;
+		}else{
+			for(std::string x:v){
+				j[x]=Json::Value();
+				r(j[x],v,--i);
+			}
+		}
+
+	}
+#endif
+
 }
+
