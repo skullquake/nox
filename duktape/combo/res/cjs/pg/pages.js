@@ -74,6 +74,12 @@ module.exports={
 			"url":"/?cmd=dbusr",
 			"title":"Users"
 		},
+		"mgses":{
+			"clearancelevel":1,
+			"url":"/?cmd=mgses",
+			"title":"Sessions"
+		},
+
 		/*
 		"dbusrdel":{
 			"clearancelevel":1,
@@ -123,8 +129,7 @@ module.exports={
 		return ret;
 	},
 	_buildpage:function(usrdata,cb,pd){
-		
-		console.log(usrdata.state.pagestate==null?null:usrdata.state.pagestate[usrdata.state.page]==null?null:usrdata.state.pagestate[usrdata.state.page]);
+		console.log('_buildpage:function(usrdata,cb,pd)')
 		try{
 			var tpl_page=new TextDecoder("utf-8").decode(readFile('./res/tpl/page.html'));
 			var tpl_menu=new TextDecoder("utf-8").decode(readFile('./res/tpl/_menu.html'));
@@ -143,7 +148,8 @@ module.exports={
 					cb(
 						usrdata,
 						new TextDecoder("utf-8").decode(readFile('./res/tpl/contents.html')),
-						usrdata.state.pagestate==null?null:usrdata.state.pagestate[usrdata.state.page]==null?null:usrdata.state.pagestate[usrdata.state.page]
+						usrdata.state.pagestate==null?null:usrdata.state.pagestate[usrdata.state.page]==null?null:usrdata.state.pagestate[usrdata.state.page],
+						this
 					)
 				)
 				.replace(
@@ -156,24 +162,42 @@ module.exports={
 				ret
 			);
 		}catch(e){
-			writeHttpResponse(
-				response,
-				e.toString()
-			);
+			console.error(e)
 		}
-
+		console.log('end _buildpage:function(usrdata,cb,pd)')
 	},
 	_buildtable:function(jsondata){
+		console.log('_buildtable:function(jsondata)')
 		var ret='';
-		ret+=
-			'<table class="table table-striped table-sm">\n'+
-			'	<tr>\n'+
-			'		<td>\n'+
-			'			test\n'+
-			'		<td>\n'+
-			'	</tr>\n'+
-			'</table>\n'
-		;
+		if(jsondata!=null){
+			try{
+				ret+=
+					'<table class="table table-striped table-sm">\n';
+				jsondata.forEach(
+					function(r){
+					ret+='	<tr>\n';
+						r.forEach(
+							function(c){
+								console.log(c);
+					ret+='		<td>\n';
+								try{
+					ret+='			'+c.size+'\n';
+								}catch(e){}
+					ret+='		<td>\n';
+							}
+						)
+					ret+='	</tr>\n';
+					}
+				);
+				ret+='</table>\n';
+				;
+			}catch(e){
+				ret=e.toString();
+			}
+		}else{
+		}
+		console.log('end _buildtable:function(jsondata)')
+		console.log(ret);
 		return ret;
 	},
 	home:function(usrdata,tpl_contents,pd){
@@ -409,7 +433,7 @@ module.exports={
 			console.error(e.toString());
 		}
 	},
-	dbusr:function(usrdata,tpl_contents,pd){
+	dbusr:function(usrdata,tpl_contents,pd,ctx){
 		var ret=''
 		try{
 			ret=tpl_contents
@@ -462,7 +486,27 @@ module.exports={
 			return (e.toString());
 			console.error(e.toString());
 		}
+	},
+	mgses:function(usrdata,tpl_contents,pd,ctx){
+		var ret=''
+		try{
+			ret=tpl_contents
+				.replace(
+					"<%- title %>",
+					"Mongoose - Sessions [in progress]"
+				)
+				.replace(
+					'<%- contents %>',
+					ctx._buildtable(pd.data)
+				)
+			;
+			return ret;
+		}catch(e){
+			return (e.toString());
+			console.error(e.toString());
+		}
 	}
+
 
 
 }

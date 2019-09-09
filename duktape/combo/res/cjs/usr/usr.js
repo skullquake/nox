@@ -249,6 +249,30 @@ module.exports={
 				usrdata.data.select=this.db.select('test','SELECT * FROM usr',true);
 				usrdata.session.modified=new Date().getTime();
 				break;
+			case "mgses":
+				//todo - prep session data and set page state data
+				usrdata.state.pagestate[cmd]={};
+				usrdata.state.pagestate[cmd].data=[];
+				var h=[];
+				h.push("Session Id");
+				var BreakException = {};
+				usrdata.state.pagestate[cmd].data.push(h);
+				try{
+					Object.keys(server.getSessions().getSessions()).forEach(
+						function(s){
+							console.log(s);
+							var r=[];
+							try{
+								r.push(s);
+							}catch(e){}
+							usrdata.state.pagestate[cmd].data.push(r);
+						}
+					);
+				}catch(e){
+				}
+				console.log(usrdata.state.pagestate[cmd].data);
+				usrdata.state.page='mgses';
+				break;
 			case "dbusrdel":
 				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
 				this.db.connect("./db/sqlite/test.db3");
