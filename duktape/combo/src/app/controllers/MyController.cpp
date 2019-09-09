@@ -11,6 +11,9 @@
 #include<iostream>
 #include"app/duktape/wrappers/io.h"
 #include"app/duktape/wrappers/mongoose-cpp/Response.h"
+#ifndef NO_JSONCPP
+#include"jsoncpp/json.h"
+#endif
 using namespace Mongoose;
 namespace app::controllers{
 	MyController::MyController()
@@ -207,6 +210,10 @@ namespace app::controllers{
 		}
 	}
 	void MyController::xas(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
-		response<<"XAS";
+#ifdef NO_JSONCPP
+		response<<"XAS[JSONCPP:OFF]";
+#else
+		response<<"XAS[JSONCPP:ON]";
+#endif
 	}
 }

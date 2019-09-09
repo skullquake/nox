@@ -1,13 +1,22 @@
+JSONCPP=OFF
+YAML=OFF
+CPR=ON
+
+FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 CXX=g++
 CC=gcc
 BUILDDIR=bin
 SOURCEDIR=./src
-SOURCES:=$(shell find $(SOURCEDIR) -name "*.cpp" -o -name "*.c" )
 MACHINE=$(shell $(CXX) -dumpmachine)
 ifneq (,$(findstring mingw,$(MACHINE)))
 	BINEXT=exe
 else
 	BINEXT=out
+endif
+ifeq ($(JSONCPP),ON)
+	SOURCES=$(shell find $(SOURCEDIR) -name "*.cpp" -o -name "*.c" )
+else
+	SOURCES=$(call FILTER_OUT,jsoncpp,$(shell find $(SOURCEDIR) -name "*.cpp" -o -name "*.c" ))
 endif
 OBJECTS=$(addprefix $(BUILDDIR)/,$(patsubst %.c,%.o ,$(patsubst %.cpp,%.o,$(SOURCES))))
 CXXFLAGS=\
@@ -18,11 +27,18 @@ CXXFLAGS=\
 	-I./include/duktape/extras/module-duktape\
 	-I./include/mongoose-cpp\
 	-I./include/mongoose\
-	-I./include/jsoncpp\
 	-I./include/lua\
 	-I./include/sqlite3\
 	-I./include/cpr\
 	-DNO_WEBSOCKET
+ifeq ($(JSONCPP),ON)
+	CXXFLAGS+=\
+		-I./include/jsoncpp
+else
+	CXXFLAGS+=\
+		-DNO_JSONCPP
+endif
+
 CFLAGS=$(CXXFLAGS)
 LDFLAGS=\
 	-lcurl
@@ -70,8 +86,11 @@ $(BUILDDIR)/%.o: %.c
 
 .phony:\
 	run\
-	clean
+	clean\
+	test
 run: $(BIN)
 	$(BIN)
 clean:
 	rm -r $(BIN) ./bin/src
+test:
+	@echo $(OBJECTS)
