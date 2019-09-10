@@ -1,9 +1,0 @@
-try{
-	_response.setHeader("Content-type","image/png");
-	test([].slice.call(readFile('./res/img/a.png')),response);
-}catch(e){
-	writeHttpResponse(
-		response,
-		e.toString()
-	);
-}

@@ -16,7 +16,7 @@ module.exports={
 					}
 				}catch(e){
 					console.log('Navigation error:');
-					console.log(e);
+					console.log(e.toString());
 					if(
 						usrdata.state.clearancelevel
 						>=
@@ -89,6 +89,17 @@ module.exports={
 			"url":"/?cmd=insight_weather",
 			"title":"Insight Weather"
 		},
+		"pgcapfin":{
+			"clearancelevel":1,
+			"url":"/?cmd=pgcapfin",
+			"title":"Capfin"
+		},
+		"pgcapfincreate":{
+			"clearancelevel":1,
+			"url":"/?cmd=pgcapfin",
+			"title":"Capfin Create",
+			"hidden":true
+		},
 		/*
 		"dbusrdel":{
 			"clearancelevel":1,
@@ -130,7 +141,8 @@ module.exports={
 							}
 						}
 					}else{
-						ret+='<li><a class="nav-link" href="'+ctx._menuitems[m].url+'">'+ctx._menuitems[m].title+'</a></li>'
+						if(!ctx._menuitems[m].hidden)
+							ret+='<li><a class="nav-link" href="'+ctx._menuitems[m].url+'">'+ctx._menuitems[m].title+'</a></li>'
 					}
 				}
 			}
@@ -573,7 +585,155 @@ module.exports={
 			return (e.toString());
 			console.error(e.toString());
 		}
-	}
+	},
+	pgcapfin:function(usrdata,tpl_contents,pd,ctx){
+		console.log(pd);
+		var tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
+		try{
+			var ret=
+				tpl_contents
+					.replace(
+						"<%- title %>",
+						"Capfin - Leads"
+					)
+					.replace(
+						'<%- contents %>',
+						(
+							(
+								(
+									'<div class="container">'+
+									'	<div class="row">'+
+									'		<div class="col-md-12">'+
+									'			<%- contents %>'+
+									'		</div>'+
+									'	</div>'+
+									'</div>'
+								)
+								.replace("<%- contents %>",tpl_card)
+								.replace("<%- header %>",
+									"Submissions"+
+									(
+										'<div class="pull-right"><%- contents %></div>'
+										.replace(
+											'<%- contents %>',
+											(
+												('<a class="btn btn-default" href="/?cmd=capfincreate">New</a>')+
+												//(pd.data!=null&&pd.data.size!=null?'<a class="btn btn-default" href="/?cmd=capfindrop">Drop</a>':'')
+												'<a class="btn btn-default" href="/?cmd=capfindrop">Drop</a>'
+											)
+										)
+									)
+									
+								)
+								.replace("<%- title %>","")
+								.replace("<%- text %>",
+									(
+										'<%- contents %>'+
+										'<%- feedback %>'
+									)
+									.replace(
+										"<%- contents %>",
+										pd==null?
+											''
+										:
+											pd.data==null?'':ctx._buildtable(pd.data)
+									)
+									.replace(
+										"<%- feedback %>",
+										(
+											(
+											pd==null?
+												'':
+												pd.error?
+													'<br/><div class="alert alert-danger"><%- contents %></div>'
+													.replace(
+														'<%- contents %>',
+														pd.message
+													)
+												:
+											''
+											)+
+											(
+											pd==null?
+												'':
+												pd.info?
+													'<br/><div class="alert alert-'+pd.info.lvl+'"><%- contents %></div>'
+													.replace(
+														'<%- contents %>',
+														pd.info.msg
+													)
+												:
+											''
+											)
+										)
+									)
+
+								)
+
+							)
+
+						)
+					)
+			;
+			return ret;
+		}catch(e){
+			writeHttpResponse(
+				response,
+				e.toString()
+			);
+		}
+	},
+	pgcapfincreate:function(usrdata,tpl_contents,pd){
+		try{
+			var tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
+			var ret=
+					tpl_contents
+					.replace(
+						"<%- title %>",
+						"New Lead"
+					)
+					.replace(
+						'<%- contents %>',
+						'<div class="container">'+
+						'	<div class="row">'+
+						'		<div class="col-sm-12"><%- contents %></div>'+
+						'	</div>'+
+						'</div>'
+					)
+					.replace("<%- contents %>",tpl_card)
+					.replace("<%- header %>","Edit Lead")
+					.replace("<%- title %>","")
+					.replace("<%- text %>",
+						(
+							(
+								'<form action="/" method="get">'+
+								'	name:<input class="form-control" type="text" name="name" value=""><br>'+
+								'	surname: <input class="form-control" type="text" name="surname" value=""><br>'+
+								'	id_Number: <input class="form-control" type="text" name="id_Number" value=""><br>'+
+								'	cell_Number: <input class="form-control" type="text" name="cell_Number" value=""><br>'+
+								'	email_Address: <input class="form-control" type="text" name="email_Address" value=""><br>'+
+								'	ad_Id: <input class="form-control" type="text" name="ad_Id" value=""><br>'+
+								'	<input type="submit" class="btn btn-default" value="Submit">'+
+								'	<input type="hidden" name="cmd" value="capfinsubmitlead" />'+
+								'</form> '
+							)
+							/*
+							.replace("<%- fname %>",usrdata.data.fname)
+							.replace("<%- lname %>",usrdata.data.lname)
+							*/
+						)
+					)
+			;
+			return ret;
+		}catch(e){
+			writeHttpResponse(
+				response,
+				e.toString()
+			);
+		}
+	},
+
+
 
 
 

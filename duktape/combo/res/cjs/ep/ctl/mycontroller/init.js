@@ -1,14 +1,25 @@
 var log=function(a){console.log(new Date().getTime()+" cjs/srv/init.js: "+a);}
-try{
-	log("starting..");
-	Duktape.modSearch=function(id){
-		//res=readFile('res/'+id+'.js');//regular
+Duktape.modSearch=function(id){
+	if(
+		id.indexOf('https:/')>-1|
+		id.indexOf('http:/')>-1
+	){
+		var cpr=require('cjs/cpr/cpr.js');
+		var res=cpr.get(id.split('?')[0]).bod;
+		if(typeof res==='string')
+			return res;
+	}else{
 		res=readFile('res/'+id.split('?')[0]);//cachebusted
 		res=new TextDecoder("utf-8").decode(res);
 		if(typeof res==='string')
 			return res;
-		new log('module not found: '+id);
-	};
+	}
+	new log('module not found: '+id);
+};
+try{
+	log("starting..");
+
+
 	var build=new buildutils_build();
 	log("bldnum: "+build.getBuildNumber());
 	log("blddat: "+build.getBuildDate());

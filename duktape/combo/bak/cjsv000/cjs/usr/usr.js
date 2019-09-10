@@ -420,7 +420,90 @@ module.exports={
 				usrdata.state.pagestate[cmd].data=data;
 				usrdata.state.page='insight_weather';
 				break;
+			case "pgcapfin":
+				this.pgcapfin();
+				break;
+			case "capfindrop":
+				console.log('case "capfindrop"');
+				usrdata.state.pagestate['pgcapfin']={};
+				var table="capfinlead";
+				var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				if(db!=null){
+					db.connect("./db/sqlite/test.db3");
+					console.log("usr.js: Dropping table "+table);
+					db.exec(
+						"DROP TABLE IF EXISTS "+table
+					);
+					console.log("usr.js: done");
+					usrdata.state.pagestate['pgcapfin'].info={
+						msg:"Table Dropped",
+						lvl:"info"
+					}
+					usrdata.state.pagestate['pgcapfin'].error=false;
+					usrdata.state.pagestate['pgcapfin'].data=null;
+				}else{
+					usrdata.state.pagestate['pgcapfin'].error=true;
+					usrdata.state.pagestate['pgcapfin'].message='Failed to open database';
+					console.log("usr.js: failed to load cjs/db/db.js");
+				}
+				usrdata.state.page="pgcapfin";
+				break;
+			case "capfincreate":
+				console.log('case "capfincreate"');
+				usrdata.state.pagestate[cmd]={};
+				usrdata.state.page="pgcapfincreate";
+				break;
 
+			case "capfinsubmitlead":
+				var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				usrdata.state.pagestate[cmd]={};
+				if(db!=null){
+					var arrfields={
+						'name':null,
+						'surname':null,
+						'id_Number':null,
+						'cell_Number':null,
+						'email_Address':null,
+						'ad_Id':null
+					};
+					Object.keys(arrfields).forEach(
+						function(k,i){
+							arrfields[k]=getQueryVariable(request.getQueryString(),k);
+						}
+					);
+					var sqlfld=[]
+					var sqlval=[]
+					Object.keys(arrfields).forEach(
+						function(k,i){
+							sqlfld.push(k);
+							sqlval.push("'"+arrfields[k]+"'");
+						}
+					)
+					console.log(sqlfld);
+					console.log(sqlval);
+					var sqltpl="INSERT INTO <%- tbl -> ( <%- fld -> ) VALUES ( <%- val -> )"
+					var table="capfinlead";
+					var sql=sqltpl
+						.replace(
+							'<%- tbl ->',
+							table
+						)
+						.replace(
+							'<%- fld ->',
+							sqlfld.join(',')
+						)
+						.replace(
+							'<%- val ->',
+							sqlval.join(',')
+						)
+					;
+					console.log(sql);
+					db.connect("./db/sqlite/test.db3");
+					db.exec(sql);
+				}else{
+				}
+				this.pgcapfin();
+				break;
 			default:
 				console.log("invalid command");
 		};
@@ -445,5 +528,54 @@ module.exports={
 		var table='test';
 		db.exec("CREATE TABLE IF NOT EXISTS "+table+"(id INTEGER PRIMARY KEY, value TEXT)");
 		//this.db.exec("INSERT INTO "+table+" VALUES ("+(idx+1)+",'"+Math.random()+"')");
+	},
+	pgcapfin:function(){
+		var cmd='pgcapfin';
+		var table="capfinlead";
+		var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+		usrdata.state.pagestate[cmd]={};
+		if(db!=null){
+			db.connect("./db/sqlite/test.db3");
+			if(db.db.tableExists(table)){
+				console.log("usr.js: Table "+table+" already exists");
+			}else{
+				console.log("usr.js: Creating table "+table);
+				db.exec(
+					"CREATE TABLE IF NOT EXISTS "+table+"("+
+					"	name TEXT,"+
+					"	surname TEXT,"+
+					"	id_Number TEXT,"+
+					"	cell_Number TEXT,"+
+					"	email_Address TEXT,"+
+					"	ad_Id TEXT"+
+					")"
+				);
+				console.log("usr.js: done");
+				usrdata.state.pagestate[cmd].info={
+					msg:"Table created",
+					lvl:"info"
+				}
+				usrdata.state.pagestate[cmd].error=false;
+			}
+		}else{
+			usrdata.state.pagestate[cmd].error=true;
+			usrdata.state.pagestate[cmd].message='Failed to open database';
+			console.log("usr.js: failed to load cjs/db/db.js");
+		}
+		this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+		this.db.connect("./db/sqlite/test.db3");
+		usrdata.state.page='dbls';
+		usrdata.state.pagestate[cmd].data=
+		this.db.db.execAndGet(
+			"SELECT"+
+			"	*"+
+			"FROM"+
+			"	"+table,
+			true
+		);
+		usrdata.state.pagestate[cmd].data.length==0?usrdata.state.pagestate[cmd].info={msg:"No Data",lvl:"info"}:usrdata.state.pagestate[cmd].info=null;
+
+		console.log(usrdata.state.pagestate[cmd].data);
+		usrdata.state.page="pgcapfin";
 	}
 }

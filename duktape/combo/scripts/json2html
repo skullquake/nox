@@ -2,7 +2,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 COOKIEFILE=./res/cookies/cookie.txt
 mkdir -p `dirname $COOKIEFILE`
-URL="http://localhost:8080/duk?src=./res/cjs/cpr/tst/tst.js"
+URL="http://localhost:8080/duk?src=./res/cjs/json2html/tst/tst.js"
 curl \
 	--cookie "foo=bar"\
 	-c $COOKIEFILE\
