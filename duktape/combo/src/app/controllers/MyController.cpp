@@ -127,6 +127,12 @@ namespace app::controllers{
 					dukglue_push(ctx,this->getServer());
 					duk_put_global_string(ctx,"server");
 					app::duktape::util::_register(ctx);
+					//session gctx init script
+					app::duktape::wrappers::push_file_as_string(ctx,"./res/cjs/ep/ctl/mycontroller/ses/init.js");
+					if(duk_peval(ctx)!=0){
+						std::cerr<<"./res/cjs/ep/ctl/mycontroller/ses/init.js: error: "<<std::string(duk_safe_to_string(ctx,-1))<<std::endl;
+					}
+
 					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: done"<<std::endl;
 				}else{
 					ctx=session->getCtx();

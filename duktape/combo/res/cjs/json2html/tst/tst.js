@@ -3,11 +3,10 @@
 //needed to modify res/cjs/json2html/json2html.js
 // there was no global export
 var log=function(a){
-	console.log(new Date().getTime()+" cjs/json2html/tst/tst.js:"+typeof(a)=='object'?JSON.stringify(a):a)
+	console.log(new Date().getTime()+" cjs/json2html/tst/tst.js:"+a)
 };
 try{
 	log('start');
-	Duktape.modLoaded={};//empty out
 	var json2html=require(
 		"cjs/json2html/json2html.js"
 	);

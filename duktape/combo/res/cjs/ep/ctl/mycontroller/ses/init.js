@@ -1,7 +1,12 @@
 /*
  * session context initialization
  */
+
+var log=function(a){console.log(new Date().getTime()+" cjs/ep/ctl/mycontroller/ses/init.js: "+a)};
+log('start');
+log('adding Duktape.modSearch...');
 Duktape.modSearch=function(id){
+	log("loading "+id);
 	if(
 		id.indexOf('https:/')>-1|
 		id.indexOf('http:/')>-1
@@ -18,6 +23,5 @@ Duktape.modSearch=function(id){
 	}
 	new log('module not found: '+id);
 };
-var log=function(a){console.log(new Date().getTime()+" cjs/ep/ctl/mycontroller/ses/init.js: "+a)};
-log('start');
+log('done');
 log('end');

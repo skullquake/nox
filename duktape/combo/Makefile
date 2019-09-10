@@ -2,9 +2,7 @@
 JSONCPP=OFF
 YAML=OFF
 CPR=ON
-
 BUILD_NUMBER_FILE=build-number.txt
-
 FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 CXX=g++
 CC=gcc
@@ -44,11 +42,9 @@ else
 	CXXFLAGS+=\
 		-DNO_JSONCPP
 endif
-
 CFLAGS=$(CXXFLAGS)
 LDFLAGS=\
 	-lcurl
-
 ifneq (,$(findstring mingw,$(MACHINE)))
 LDFLAGS+=\
 	-ldl\
@@ -60,18 +56,14 @@ LDFLAGS+=\
 	-lc\
 	-ldl
 endif
-
 BIN=./bin/a.$(BINEXT)
 # Create an auto-incrementing build number.
-
 BUILD_NUMBER_LDFLAGS  = -Xlinker --defsym -Xlinker __BUILD_DATE=$$(date +'%Y%m%d')
 BUILD_NUMBER_LDFLAGS += -Xlinker --defsym -Xlinker __BUILD_NUMBER=$$(cat $(BUILD_NUMBER_FILE))
-
 # Build number file.  Increment if any object file changes.
 $(BUILD_NUMBER_FILE): $(OBJECTS)
 	@if ! test -f $(BUILD_NUMBER_FILE); then echo 0 > $(BUILD_NUMBER_FILE); fi
 	@echo $$(($$(cat $(BUILD_NUMBER_FILE)) + 1)) > $(BUILD_NUMBER_FILE)
-
 all: $(BIN)
 $(BIN): $(OBJECTS) $(BUILD_NUMBER_FILE)
 	@mkdir -p $(@D)
@@ -100,7 +92,6 @@ $(BUILDDIR)/%.o: %.c
 		-I$(dir $<)\
 		-c $<\
 		-o $@
-
 .phony:\
 	run\
 	clean\
