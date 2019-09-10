@@ -1,11 +1,14 @@
 module.exports={
+	log:function(a){
+		console.log(new Date().getTime()+" cjs/db/db.js: "+a);
+	},
 	connect:function(p){
-		console.log(new Date().getTime()+" cjs/db/db.js:connect()...starting");
+		this.log("connect():starting...");
 		this.db=new Database(p);
-		console.log(new Date().getTime()+" cjs/db/db.js:connect()...ending");
+		this.log("connect():ending...");
 	},
 	select:function(table,sql,hdr){
-		console.log(new Date().getTime()+" cjs/db/db.js:select()...starting");
+		this.log("select():starting...");
 		hdr=hdr==null?false:hdr;
 		var ret=null;
 		try{
@@ -35,10 +38,10 @@ module.exports={
 
 		}
 		return ret;
-		console.log(new Date().getTime()+" cjs/db/db.js:select()...ending");
+		this.log("select():ending...");
 	},
 	exec:function(sql){
-		console.log(new Date().getTime()+" cjs/db/db.js:exec()...starting");
+		this.log("exec():starting...");
 		var ret=false;
 		try{
 			try{
@@ -64,7 +67,7 @@ module.exports={
 			console.log(new Date().getTime()+" cjs/db/db.js: "+e);
 
 		}
-		console.log(new Date().getTime()+" cjs/db/db.js:exec()...ending");
+		this.log("exec():ending...");
 		return ret;
 	},
 	db:null

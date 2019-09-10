@@ -17,6 +17,7 @@
 #include"app/duktape/wrappers/cpr/req.h"
 //#include"cpr/response.h"
 #include"app/duktape/wrappers/fsutils/fs.h"
+#include"app/duktape/wrappers/buildutils/build.h"
 #include<vector>
 #include<iostream>
 namespace app::duktape::util{
@@ -187,6 +188,10 @@ namespace app::duktape::util{
 				//fsutils
 				dukglue_register_constructor<::app::duktape::wrappers::fsutils::Fs>(ctx,"fsutils_fs");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::fsutils::Fs::test,"test");
+				//buildutils
+				dukglue_register_constructor<::app::duktape::wrappers::buildutils::Build>(ctx,"buildutils_build");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::buildutils::Build::getBuildNumber,"getBuildNumber");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::buildutils::Build::getBuildDate,"getBuildDate");
 
 
 

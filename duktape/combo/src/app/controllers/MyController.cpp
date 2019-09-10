@@ -21,7 +21,7 @@ namespace app::controllers{
 	{
 		this->ctx=NULL;
 		//initialization scripts
-		std::string src="./res/cjs/srv/init.js";
+		std::string src="./res/cjs/ep/ctl/mycontroller/init.js";
 		if(src.length()>0){
 			try{
 				duk_context* ctx=NULL;
@@ -58,7 +58,7 @@ namespace app::controllers{
 	MyController::~MyController(){
 		this->ctx=NULL;
 		//initialization scripts
-		std::string src="./res/cjs/srv/deinit.js";
+		std::string src="./res/cjs/ep/ctl/mycontroller/deinit.js";
 		if(src.length()>0){
 			try{
 				duk_context* ctx=NULL;
@@ -103,7 +103,7 @@ namespace app::controllers{
 		addRoute("PUT","/xas",MyController,xas);
 	}
 	void MyController::home(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
-		std::string src="./res/cjs/hdl/home.js";
+		std::string src="./res/cjs/ep/ctl/mycontroller/hdlr/home.js";
 		if(src.length()>0){
 			try{
 				Mongoose::Session* session=this->getSessions()->getPtr(request,response);

@@ -1,6 +1,9 @@
-JSONCPP=OFF
+#todo: filter list and cflags...
+JSONCPP=ON
 YAML=OFF
 CPR=ON
+
+BUILD_NUMBER_FILE=build-number.txt
 
 FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 CXX=g++
@@ -13,6 +16,7 @@ ifneq (,$(findstring mingw,$(MACHINE)))
 else
 	BINEXT=out
 endif
+#todo: filter list and cflags...
 ifeq ($(JSONCPP),ON)
 	SOURCES=$(shell find $(SOURCEDIR) -name "*.cpp" -o -name "*.c" )
 else
@@ -30,7 +34,9 @@ CXXFLAGS=\
 	-I./include/lua\
 	-I./include/sqlite3\
 	-I./include/cpr\
-	-DNO_WEBSOCKET
+	-DNO_WEBSOCKET\
+	-fpermissive
+#todo: filter list and cflags...
 ifeq ($(JSONCPP),ON)
 	CXXFLAGS+=\
 		-I./include/jsoncpp
@@ -56,14 +62,25 @@ LDFLAGS+=\
 endif
 
 BIN=./bin/a.$(BINEXT)
+# Create an auto-incrementing build number.
+
+BUILD_NUMBER_LDFLAGS  = -Xlinker --defsym -Xlinker __BUILD_DATE=$$(date +'%Y%m%d')
+BUILD_NUMBER_LDFLAGS += -Xlinker --defsym -Xlinker __BUILD_NUMBER=$$(cat $(BUILD_NUMBER_FILE))
+
+# Build number file.  Increment if any object file changes.
+$(BUILD_NUMBER_FILE): $(OBJECTS)
+	@if ! test -f $(BUILD_NUMBER_FILE); then echo 0 > $(BUILD_NUMBER_FILE); fi
+	@echo $$(($$(cat $(BUILD_NUMBER_FILE)) + 1)) > $(BUILD_NUMBER_FILE)
+
 all: $(BIN)
-$(BIN): $(OBJECTS)
+$(BIN): $(OBJECTS) $(BUILD_NUMBER_FILE)
 	@mkdir -p $(@D)
 	@printf "generating $@...\n"
 	$(CXX)\
 		$(CXXFLAGS)\
 		$(OBJECTS)\
 		$(LDFLAGS)\
+		$(BUILD_NUMBER_LDFLAGS)\
 		-o $(BIN)
 $(BUILDDIR)/%.o: %.cpp
 	@printf "generating $@...\n"
