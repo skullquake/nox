@@ -9,8 +9,13 @@ Duktape.modSearch=function(id){
 };
 console.log(new Date().getTime()+' cjs/ctl/home.js: creating main handler...');
 Duktape.modLoaded={};//unload mods
+
 mainHdl=require('cjs/ctl/main.js');//?cachebust='+new Date().getTime());
-console.log(mainHdl.filename)
+console.log(mainHdl)
+console.log(mainHdl.foo)
+console.log(mainHdl.bar)
+console.log(mainHdl.baz)
+console.log(Duktape.modLoaded);
 //var hdl=typeof(hdl)=='undefined'?new Hdl:hdl;
 //console.log(new Date().getTime()+' cjs/ctl/home.js: done creating main handler...');
 //console.log(new Date().getTime()+' cjs/ctl/home.js: executing main handler...');

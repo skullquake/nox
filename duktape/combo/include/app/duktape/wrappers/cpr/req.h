@@ -22,6 +22,8 @@ namespace app::duktape::wrappers::cpr{
 			std::string getRequestMethod();
 			void setRequestCookie(std::map<std::string,std::string>);
 			std::map<std::string,std::string> getRequestCookie();
+			void setRequestBody(std::string);
+			std::string getRequestBody();
 			void setRequestTimeout(int);
 			int getRequestTimeout();
 			bool execRequest();
@@ -41,6 +43,7 @@ namespace app::duktape::wrappers::cpr{
 			std::map<std::string,std::string> m_reqck;
 			std::map<std::string,std::string> m_reshdr;
 			std::map<std::string,std::string> m_resck;
+			std::string m_reqb;
 			std::string m_resb;
 			int  m_resstatus;
 			int  m_reserror;

@@ -1,5 +1,5 @@
 #todo: filter list and cflags...
-JSONCPP=ON
+JSONCPP=OFF
 YAML=OFF
 CPR=ON
 

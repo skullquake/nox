@@ -179,6 +179,8 @@ namespace app::duktape::util{
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestCookie,"getRequestCookie");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestTimeout,"setRequestTimeout");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestTimeout,"getRequestTimeout");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::setRequestBody,"setRequestBody");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getRequestBody,"getRequestBody");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::execRequest,"execRequest");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseHeaders,"getResponseHeaders");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::cpr::Req::getResponseBody,"getResponseBody");

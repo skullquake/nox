@@ -28,7 +28,15 @@ namespace app::duktape::wrappers::cpr{
 		//std::cout<<"app::duktape::wrappers::cpr::getRequestUrl()"<<std::endl;
 		return this->m_requrl;
 	}
-
+	void Req::setRequestBody(std::string a){
+		//std::cout<<"app::duktape::wrappers::cpr::setRequestBody()"<<std::endl;
+		this->m_reqb=a;
+		return;
+	}
+	std::string Req::getRequestBody(){
+		//std::cout<<"app::duktape::wrappers::cpr::getRequestBody()"<<std::endl;
+		return this->m_reqb;
+	}
 	void Req::setRequestParameters(std::map<std::string,std::string> a){
 		//std::cout<<"app::duktape::wrappers::cpr::setRequestParameters()"<<std::endl;
 		this->m_reqp=a;
@@ -67,12 +75,35 @@ namespace app::duktape::wrappers::cpr{
 	bool Req::execRequest(){
 		//std::cout<<"app::duktape::wrappers::cpr::execRequest()"<<std::endl;
 		try{
-			::cpr::Cookies c(this->m_reqck);
-			auto r=::cpr::Get(
-				::cpr::Url{this->m_requrl},
-				::cpr::Timeout{this->m_reqt},
-				c
-			);
+			::cpr::Response r;
+			::cpr::Cookies c;//({{"c0","c1"}});//this->m_reqck);
+			::cpr::Header h;//(this->m_reqhdr);//{{"header-key", "header-value"}};
+			for(auto it=this->m_reqhdr.begin();it!=this->m_reqhdr.end();it++){
+				h[it->first]=it->second;
+			}
+			for(auto it=this->m_reqck.begin();it!=this->m_reqck.end();it++){
+				c[it->first]=it->second;
+			}
+			if((this->m_reqm.compare("GET"))==0){
+				r=::cpr::Get(
+					::cpr::Url{this->m_requrl},
+					::cpr::Timeout{this->m_reqt},
+					c,
+					h
+				);
+			}else if((this->m_reqm.compare("POST"))==0){
+				r=::cpr::Post(
+					::cpr::Url{this->m_requrl},
+					::cpr::Timeout{this->m_reqt},
+					::cpr::Body{this->m_reqb},
+					c,
+					h
+				);
+			}else{
+				this->m_reserror=false;
+				this->m_reserrormsg="INVALID_METHOD";
+				return false;
+			}
 			//this->m_reshdr=r.header;
 			std::map<std::string,std::string>::iterator it;
 			for(auto it=r.header.begin();it!=r.header.end();it++){
