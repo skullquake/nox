@@ -1,3 +1,9 @@
+commonjs module loading and js engines
+--------------------------------------------------------------------------------
+	https://www.webreflection.co.uk/blog/2015/11/30/how-to-export-javascript-modules
+build numbering
+	https://www.linuxjournal.com/content/add-auto-incrementing-build-number-your-build-process
+	https://stackoverflow.com/questions/26042634/use-makefile-to-generate-version-info
 --------------------------------------------------------------------------------
 cross compilation:
 	issues around sqlite3 around threads:
