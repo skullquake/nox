@@ -1,9 +1,11 @@
 module.exports={
-	db:null,
 	connect:function(p){
+		console.log(new Date().getTime()+" cjs/db/db.js:connect()...starting");
 		this.db=new Database(p);
+		console.log(new Date().getTime()+" cjs/db/db.js:connect()...ending");
 	},
 	select:function(table,sql,hdr){
+		console.log(new Date().getTime()+" cjs/db/db.js:select()...starting");
 		hdr=hdr==null?false:hdr;
 		var ret=null;
 		try{
@@ -14,27 +16,29 @@ module.exports={
 							if(this.db.tableExists(table)){
 								ret=this.db.execAndGet(sql,hdr);
 							}else{
-								console.error("table "+table+" does not exist");
+								console.log(new Date().getTime()+" cjs/db/db.js: "+"table "+table+" does not exist");
 							}
 						}else{
-							console.error("sql null");
+							console.log("sql null");
 						}
 					}else{
-						console.error("table null");
+						console.log("table null");
 					}
 				}else{
-					console.error("table "+table+" does not exist");
+					console.log(new Date().getTime()+" cjs/db/db.js: "+"table "+table+" does not exist");
 				}
 			}catch(e){
-				console.error("db null");
+				console.log(new Date().getTime()+" cjs/db/db.js: "+"db null");
 			}
 		}catch(e){
-			console.error(e);
+			console.log(new Date().getTime()+" cjs/db/db.js: "+e);
 
 		}
 		return ret;
+		console.log(new Date().getTime()+" cjs/db/db.js:select()...ending");
 	},
 	exec:function(sql){
+		console.log(new Date().getTime()+" cjs/db/db.js:exec()...starting");
 		var ret=false;
 		try{
 			try{
@@ -44,22 +48,24 @@ module.exports={
 							this.db.exec(sql);
 							ret=true;
 						}catch(e){
-							console.error(e);
+							console.log(new Date().getTime()+" cjs/db/db.js: "+e);
 						}finally{
 						}
 					}else{
-						console.error("sql null");
+						console.log(new Date().getTime()+" cjs/db/db.js: "+"sql null");
 					}
 				}else{
-					console.error("table "+table+" does not exist");
+					console.log(new Date().getTime()+" cjs/db/db.js: "+"table "+table+" does not exist");
 				}
 			}catch(e){
-				console.error("db null");
+				console.log(new Date().getTime()+" cjs/db/db.js: "+"db null");
 			}
 		}catch(e){
-			console.error(e);
+			console.log(new Date().getTime()+" cjs/db/db.js: "+e);
 
 		}
+		console.log(new Date().getTime()+" cjs/db/db.js:exec()...ending");
 		return ret;
-	}
+	},
+	db:null
 }

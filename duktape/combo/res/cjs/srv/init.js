@@ -1,14 +1,6 @@
 try{
-	console.log("cjs/srv/init.js: starting..");
-	console.log("cjs/srv/init.js: \n\tenv: "+Duktape.env);
-	function dump() {
-		var i,t;
-		for(i=-1;;i--){
-			t=Duktape.act(i);
-			if(!t){break;}
-			print(i,t.lineNumber,t.function.name,Duktape.enc('jx',t));
-		}
-	}
+	console.log(new Date().getTime()+" cjs/srv/init.js: starting..");
+
 	Duktape.modSearch=function(id){
 		//res=readFile('res/'+id+'.js');//regular
 		res=readFile('res/'+id.split('?')[0]);//cachebusted
@@ -17,40 +9,46 @@ try{
 			return res;
 		new Error('module not found: '+id);
 	};
-	var db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+
+	console.log(new Date().getTime()+" cjs/srv/init.js:ver: "+(Math.floor(Duktape.version/10000))+'.'+(Math.floor(Duktape.version/100))+'.'+(Duktape.version%100));
+	console.log(new Date().getTime()+" cjs/srv/init.js:env: "+Duktape.env);
+	console.log(new Date().getTime()+" cjs/srv/init.js:loading modules...");
+	var db=require('cjs/db/db.js?cachebust='+new Date().getTime());
+	console.log(new Date().getTime()+" cjs/srv/init.js:"+(JSON.stringify(Duktape.modLoaded)));
+	console.log(new Date().getTime()+" cjs/srv/init.js:loading modules done...");
 	if(db!=null){
 		db.connect("./db/sqlite/test.db3");
 		var table='test';
 		if(db.db.tableExists(table)){
-			console.log("cjs/srv/init.js: Table "+table+" already exists");
+			console.log(new Date().getTime()+" cjs/srv/init.js: Table "+table+" already exists");
 		}else{
-			console.log("cjs/srv/init.js: Creating table "+table);
+			console.log(new Date().getTime()+" cjs/srv/init.js: Creating table "+table);
 			db.exec("CREATE TABLE IF NOT EXISTS "+table+"(id INTEGER PRIMARY KEY, value TEXT)");
-			console.log("cjs/srv/init.js: done");
+			console.log(new Date().getTime()+" cjs/srv/init.js: done");
 		}
 		table="usr";
 		if(db.db.tableExists(table)){
-			console.log("cjs/srv/init.js: Table "+table+" already exists");
+			console.log(new Date().getTime()+" cjs/srv/init.js: Table "+table+" already exists");
 		}else{
-			console.log("cjs/srv/init.js: Creating table "+table);
+			console.log(new Date().getTime()+" cjs/srv/init.js: Creating table "+table);
 			db.exec("CREATE TABLE IF NOT EXISTS "+table+"(fname TEXT, lname TEXT, login TEXT, pass TEXT)");
-			console.log("cjs/srv/init.js: done");
+			console.log(new Date().getTime()+" cjs/srv/init.js: done");
 		}
 		table='insight_weather';
 		if(db.db.tableExists(table)){
-			console.log("cjs/srv/init.js: Table "+table+" already exists");
+			console.log(new Date().getTime()+" cjs/srv/init.js: Table "+table+" already exists");
 		}else{
-			console.log("cjs/srv/init.js: Creating table "+table);
+			console.log(new Date().getTime()+" cjs/srv/init.js: Creating table "+table);
 			db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date INTEGER, value TEXT)");
-			console.log("cjs/srv/init.js: done");
+			console.log(new Date().getTime()+" cjs/srv/init.js: done");
 		}
 		table='apod';
 		if(db.db.tableExists(table)){
-			console.log("cjs/srv/init.js: Table "+table+" already exists");
+			console.log(new Date().getTime()+" cjs/srv/init.js: Table "+table+" already exists");
 		}else{
-			console.log("cjs/srv/init.js: Creating table "+table);
+			console.log(new Date().getTime()+" cjs/srv/init.js: Creating table "+table);
 			db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date INTEGER, value TEXT)");
-			console.log("cjs/srv/init.js: done");
+			console.log(new Date().getTime()+" cjs/srv/init.js: done");
 		}
 
 		if(false){
@@ -63,11 +61,11 @@ try{
 				function(dbnam,dbnamidx){
 					table=dbnam;
 					if(db.db.tableExists(table)){
-						console.log("cjs/srv/init.js: Table "+table+" already exists");
+						console.log(new Date().getTime()+" cjs/srv/init.js: Table "+table+" already exists");
 					}else{
-						console.log("cjs/srv/init.js: Creating table "+table);
+						console.log(new Date().getTime()+" cjs/srv/init.js: Creating table "+table+"...");
 						db.exec("CREATE TABLE IF NOT EXISTS "+table+"(date INTEGER, value TEXT)");
-						console.log("cjs/srv/init.js: done");
+						console.log(new Date().getTime()+" cjs/srv/init.js: done");
 					}
 				}
 			);
@@ -76,27 +74,22 @@ try{
 				function(dbnam,dbnamidx){
 					table=dbnam;
 					if(db.db.tableExists(table)){
-						console.log("cjs/srv/init.js: Dropping table "+table);
+						console.log(new Date().getTime()+" cjs/srv/init.js: Dropping table "+table+"...");
 						db.exec("DROP TABLE IF EXISTS "+table);
-						console.log("cjs/srv/init.js: done");
+						console.log(new Date().getTime()+" cjs/srv/init.js: done");
 					}else{
-						console.log("cjs/srv/init.js: Table "+table+" does not exist");
+						console.log(new Date().getTime()+" cjs/srv/init.js: Table "+table+" does not exist");
 					}
 				}
 			);
 		}
 	}else{
-		console.log("cjs/srv/init.js: failed to load cjs/db/db.js");
+		console.log(new Date().getTime()+" cjs/srv/init.js: failed to load  cjs/db/db.js");
 	}
-	//https://duktape.org/guide.html#builtin-duktape-thread
-	///https://wiki.duktape.org/howtofinalization
-	//dump();
-	//Duktape.gc();
-	//dump();
-	//var currFin = Duktape.fin(new String())//db.db);
-	//console.log(currFin);
-	console.log("cjs/srv/init.js: ending..");
+	console.log(new Date().getTime()+" cjs/srv/init.js: ending..");
+	var util=require('cjs/util/duk.js?cachebust='+new Date().getTime());
+	//util.dump();
 }catch(e){
-	console.log("cjs/srv/init.js: Error:");
+	console.log(new Date().getTime()+" cjs/srv/init.js: Error:");
 	console.error(e);
 }

@@ -5,12 +5,12 @@ namespace app::duktape::wrappers::SQLiteCpp{
 	Database::Database(const char* c)
 	: ::SQLite::Database(c,::SQLite::OPEN_READWRITE|::SQLite::OPEN_CREATE)
 	{
-		std::cout<<"app::duktape::wrappers::SQLiteCpp::Database()"<<std::endl;
+		//std::cout<<"app::duktape::wrappers::SQLiteCpp::Database()"<<std::endl;
 		this->name_=std::string(c);
 	}
 	Database::~Database()
 	{
-		std::cout<<"app::duktape::wrappers::SQLiteCpp::~Database()"<<std::endl;
+		//std::cout<<"app::duktape::wrappers::SQLiteCpp::~Database()"<<std::endl;
 	}
 	std::vector<std::vector<std::string>> Database::_execAndGet(std::string a,bool printhdr=false){
 		std::vector<std::vector<std::string>> ret;
