@@ -108,7 +108,6 @@ namespace app::controllers{
 		std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: done"<<std::endl;
 	}
 	void MyController::home(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
-		//std::cout<<"void MyController::home(::Mongoose::Request &request, ::Mongoose::StreamResponse &response)"<<std::endl;
 		std::string src="./res/cjs/ep/ctl/mycontroller/hdlr/home.js";
 		if(src.length()>0){
 			try{
@@ -117,7 +116,7 @@ namespace app::controllers{
 				if(
 					session->getCtx()==NULL
 				){
-					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: creating session root context..."<<std::endl;
+					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: init ses root ctx: start"<<std::endl;
 					session->setCtx(duk_create_heap_default());
 					ctx=session->ctx;
 					dukglue_push(ctx,&(*this));
@@ -130,10 +129,10 @@ namespace app::controllers{
 					//session gctx init script
 					app::duktape::wrappers::push_file_as_string(ctx,"./res/cjs/ep/ctl/mycontroller/ses/init.js");
 					if(duk_peval(ctx)!=0){
-						std::cerr<<"./res/cjs/ep/ctl/mycontroller/ses/init.js: error: "<<std::string(duk_safe_to_string(ctx,-1))<<std::endl;
+						std::cerr<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: init ses root ctx: error: "<<std::string(duk_safe_to_string(ctx,-1))<<std::endl;
+					}else{
+						std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: init ses root ctx: done"<<std::endl;
 					}
-
-					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: done"<<std::endl;
 				}else{
 					ctx=session->getCtx();
 				}
@@ -154,11 +153,12 @@ namespace app::controllers{
 
 				dukglue_push(new_ctx,&request);
 				duk_put_global_string(new_ctx,"request");
-				std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: done"<<std::endl;
+				std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: "<<src<<": start"<<std::endl;
 				app::duktape::wrappers::push_file_as_string(new_ctx,src.c_str());
 				if(duk_peval(new_ctx)!=0){
-					std::cerr<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: error: "<<std::string(duk_safe_to_string(new_ctx,-1))<<std::endl;
-				
+					std::cerr<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: "<<src<<" error: "<<std::string(duk_safe_to_string(new_ctx,-1))<<std::endl;
+				}else{
+					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ct: "<<src<<": done"<<std::endl;
 				}
 				duk_pop(ctx);
 				//duk_destroy_heap(new_ctx);
@@ -230,11 +230,11 @@ namespace app::controllers{
 				dukglue_push(new_ctx,&request);
 				duk_put_global_string(new_ctx,"request");
 				app::duktape::wrappers::push_file_as_string(new_ctx,src.c_str());
-				std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" "<<src<<": start..."<<std::endl;
+				std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" "<<src<<": "<<":starting ..."<<std::endl;
 				if(duk_peval(new_ctx)!=0){
 					std::cerr<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" "<<src<<": error: "<<std::string(duk_safe_to_string(new_ctx,-1))<<std::endl;
 				}else{
-					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" "<<src<<": done..."<<std::endl;
+					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" "<<src<<": "<<":done"<<std::endl;
 				}
 				duk_pop(ctx);
 				//duk_destroy_heap(ctx);

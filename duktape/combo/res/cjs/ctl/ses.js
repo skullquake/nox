@@ -8,7 +8,7 @@
 		this.ses=ses;
 		var Loader=require('cjs/cmd/loader.js');
 		this.loader=new Loader(this);
-		this.data.cmd='default';
+		this.data.cmd='home';
 		this.data.cmdmap={};
 	};
 	CtlSes.prototype.src='res/cjs/ctl/ses';
@@ -19,7 +19,7 @@
 	CtlSes.prototype.exec=function(){
 		this.log('exec()');
 		this.data.cmd=this.urlUtils.getQueryVariable(request.getQueryString(),'cmd');
-		this.data.src=this.urlUtils.getQueryVariable(request.getQueryString(),'src');
+		this.data.cmd=this.data.cmd==null?'home':this.data.cmd;
 		this.err=false;
 		if(this.data.cmd!=null){
 			if(this.data.cmdmap[this.data.cmd]==null){
@@ -37,7 +37,7 @@
 			}
 			if(!this.err){
 				try{
-					this.data.cmdmap[this.data.cmd].exec()
+					this.data.cmdmap[this.data.cmd].exec(this);
 				}catch(e){
 					this.err=true;
 					this.errmsg=this.data.cmd+' failed to execute: '+e.toString();
@@ -52,7 +52,7 @@
 		if(this.err){
 			this.log('Loading error handler');
 			var Cmd=this.loader.load('error.js');
-			var cmd=new Cmd();
+			var cmd=new Cmd(this);
 			if(
 				cmd.exec(this.errmsg)
 			){

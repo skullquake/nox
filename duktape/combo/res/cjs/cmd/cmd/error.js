@@ -1,5 +1,6 @@
 {
-	var Default=function(){
+	var Default=function(ctl){
+		this.ctl=ctl;
 		this.log('Constructor()');
 	};
 	Default.prototype.src='res/cjs/cmd/cmd/default.js';
@@ -11,7 +12,10 @@
 		this.log('exec()');
 		var ret=false;
 		try{
+			//this.ctl.ses.data.msg="Error"+m;
 			_response.setHeader('Content-type','text/html');
+			_response.setHeader('Location','/');
+			_response.setCode(301);
 			_response.write('Error: '+m);
 			var ret=true;
 		}catch(e){

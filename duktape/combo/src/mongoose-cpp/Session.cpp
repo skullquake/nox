@@ -10,12 +10,12 @@ namespace Mongoose
 	Session::Session()
 	:ctx(NULL)
 	{
-		std::cout<<"Session()"<<std::endl;
+		//std::cout<<"Session()"<<std::endl;
 		ping();
 	}
 	Session::~Session()
 	{
-		std::cout<<"~Session()"<<std::endl;
+		//std::cout<<"~Session()"<<std::endl;
 	}
 
 	void Session::ping()
