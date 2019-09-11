@@ -5,11 +5,11 @@ URL="http://localhost:8081/xas?cmd=duk&src=./scr/srv.js"
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/sessions.js"
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/lsses.js"
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/dummy.js"
-URL="http://localhost:8080/"
+URL="http://localhost:8080/foo"
 NREQ=65536
 NCON=8
 bombardier\
 	-n $NREQ\
 	-c $NCON\
-	--header="Cookie: sessid=c1OFh"\
+	--header="Cookie: sessid=z1Bqy2sPgsCVA9b3Vcp1EC1OqbvjDW"\
 	$URL 
