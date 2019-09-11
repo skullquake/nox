@@ -35,7 +35,7 @@ try{
 				"Grant_Type=client_credentials"
 			).bod)
 	;
-	console.log(res.access_token);
+	console.log(res);
 	res=cpr.post(
 				"http://apizadmz.capfin.co.za/api/v1/application/lead",
 				//"http://apizadmz.capfin.co.za/oauth2/api/oauth2/token",
