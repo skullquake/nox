@@ -1,15 +1,15 @@
 #!/bin/bash
 #!/data/data/com.termux/files/usr/bin/bash
-COOKIEFILE=./cookie.txt
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/usrproc.js"
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/srv.js"
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/sessions.js"
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/lsses.js"
 URL="http://localhost:8081/xas?cmd=duk&src=./scr/dummy.js"
-URL="http://localhost:8080/duk"
+URL="http://localhost:8080/"
+NREQ=65536
+NCON=8
 bombardier\
-	-n 4096\
-	-c 256\
+	-n $NREQ\
+	-c $NCON\
+	--header="Cookie: sessid=c1OFh"\
 	$URL 
-#	-r 4096\
-#-H "Cookie: foo=bar;"\

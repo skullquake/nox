@@ -137,8 +137,9 @@ namespace app::controllers{
 				}else{
 					ctx=session->getCtx();
 				}
-				/* new ctx */
-				std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: creating session child context..."<<std::endl;
+				// new ctx 
+				/*
+				*/
 				duk_context *new_ctx;
 				duk_push_thread(ctx);
 				//duk_push_thread_new_globalenv(ctx);
@@ -159,8 +160,21 @@ namespace app::controllers{
 					std::cerr<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: error: "<<std::string(duk_safe_to_string(new_ctx,-1))<<std::endl;
 				
 				}
-				//duk_pop(ctx);
-				//duk_destroy_heap(ctx);
+				duk_pop(ctx);
+				//duk_destroy_heap(new_ctx);
+
+
+				//old ctx
+				/*
+				std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: creating session child context..."<<std::endl;
+				duk_context *new_ctx=ctx;
+				std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: done"<<std::endl;
+				app::duktape::wrappers::push_file_as_string(new_ctx,src.c_str());
+				if(duk_peval(new_ctx)!=0){
+					std::cerr<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: error: "<<std::string(duk_safe_to_string(new_ctx,-1))<<std::endl;
+				
+				}
+				*/
 			}catch(std::exception e){
 				std::cerr<<e.what()<<std::endl;
 			}

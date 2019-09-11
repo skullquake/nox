@@ -8,6 +8,7 @@ namespace app::duktape::wrappers::buildutils{
 	Build::~Build(){
 	}
 	int Build::getBuildNumber(){
+		//return (unsigned long) &__BUILD_NUMBER;
 		return (unsigned long) &__BUILD_NUMBER;
 
 	}
