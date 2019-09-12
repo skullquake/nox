@@ -75,8 +75,9 @@
 		return this._children;
 	};
 	container.prototype.getDescendents=function(){
+		//log('getDescendents(): start');
 		var ret=[];
-		if(this.data.children!=null){
+		if(this._children!=null){
 			this._children.forEach(
 				function(a,b){
 					ret.push(a);
@@ -91,6 +92,7 @@
 				}
 			);
 		}
+		//log('getDescendents(): end');
 		return ret;
 	};
 	module.exports=container;

@@ -112,6 +112,7 @@
 
 
 		//redir test - now working yet [cmd prvcmd etc]
+		/*
 		if(
 			request.getUrl()!='/'||
 			request.getQueryString()!=''
@@ -122,7 +123,6 @@
 			_response.setCode(301);
 		}else{
 		}
-		/*
 		*/
 	}
 

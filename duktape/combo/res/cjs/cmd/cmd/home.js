@@ -2,14 +2,8 @@
 	var Home=function(ctlP){
 		this.log('Constructor()');
 		this.ctl=ctlP;
-	};
-	Home.prototype.src='res/cjs/cmd/cmd/home.js';
-	Home.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
-	}
-	Home.prototype.data={};
-	Home.prototype.exec=function(){
-		this.log('exec()');
+		var UrlUtils=require('cjs/url/urlutils.js');
+		this.urlUtils=new UrlUtils();
 ;		this.tpl_page=new TextDecoder("utf-8").decode(readFile('./res/tpl/page.html'));
 		this.tpl_menu=new TextDecoder("utf-8").decode(readFile('./res/tpl/menu.html'));
 		this.tpl_contents=new TextDecoder("utf-8").decode(readFile('./res/tpl/contents.html'));
@@ -45,27 +39,44 @@
 					d.addChild(e);
 				}
 				for(var k=0;k<2;k++){
-					var e=new Anchor(null);
-					e.setCmd(this.ctl.data.cmd);
-					e.setText('anchor');
-					d.addChild(e);
+					var f=new Anchor(null);
+					f.setCmd(this.ctl.data.cmd);
+					f.setText('anchor');
+					f.onClick=function(){this.log(this.uuid+': hello:)');};
+					d.addChild(f);
 				}
 
 			}
 		}
+
+	};
+	Home.prototype.src='res/cjs/cmd/cmd/home.js';
+	Home.prototype.log=function(a){
+		console.log(new Date().getTime()+" "+this.src+": "+a);
+	}
+	Home.prototype.data={};
+	Home.prototype.exec=function(){
+		this.log('exec()');
+
+		//console.log('----------------------------------------')
+		//console.log('this.container.getParent()');
+		//console.log(this.container.getParent());
+		//console.log('this.container.getChildren()');
+		//console.log(this.container.getChildren());
+		//console.log(this.container.getChildren().length);
+		//console.log('this.container.getDescendents()');
+		//console.log(this.container.getDescendents());
+		//console.log(JSON.stringify(this.container.getDescendents()));
+		//console.log(this.container.getDescendents().length);
+		//console.log('----------------------------------------')
+		//console.log(this.container.toString());
 		console.log('----------------------------------------')
-		console.log('this.container.getParent()');
-		console.log(this.container.getParent());
-		console.log('this.container.getChildren()');
-		console.log(this.container.getChildren());
-		console.log(this.container.getChildren().length);
-		console.log('this.container.getDescendents()');
-		console.log(this.container.getDescendents());
-		console.log(JSON.stringify(this.container.getDescendents()));
-		console.log(this.container.getDescendents().length);
+		console.log('Query');
 		console.log('----------------------------------------')
-		console.log(this.container.toString());
-		console.log('----------------------------------------')
+		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
+		var _this=this;
+		var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
+		typeof(o)!='undefined'&&typeof(o.onClick)=='function'?o.onClick():null;
 		_response.setHeader('Content-type','text/html');
 		_response.write(
 			this._.template(this.tpl_page)(
