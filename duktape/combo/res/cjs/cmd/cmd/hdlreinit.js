@@ -1,6 +1,7 @@
 {
-	var ReInitHdlr=function(){
+	var ReInitHdlr=function(ctlP){
 		this.log('Constructor()');
+		this.ctl=ctlP;
 	};
 	ReInitHdlr.prototype.src='res/cjs/cmd/cmd/hdlreinit.js';
 	ReInitHdlr.prototype.log=function(a){
@@ -12,6 +13,10 @@
 		//???recurse//try{reinit();}catch(e){};
 		this.ctl.ses.hdl.reinit=true;//handled on ep/ctl/mycontroller/hdlr/home
 		this.log('ep/ctl/mycontroller/hdlr/home reinitialized');
+		//this.ctl.ses.data.msg='Invalid command';
+		_response.setHeader('Content-type','text/html');
+		_response.setHeader('Location','/');
+		_response.setCode(301);
 	}
 	ReInitHdlr.prototype.update=function(){
 		this.data.modified=new Date().getTime();

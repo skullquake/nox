@@ -194,6 +194,8 @@ namespace app::duktape::util{
 				dukglue_register_constructor<::app::duktape::wrappers::buildutils::Build>(ctx,"buildutils_build");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::buildutils::Build::getBuildNumber,"getBuildNumber");
 				dukglue_register_method(ctx,&::app::duktape::wrappers::buildutils::Build::getBuildDate,"getBuildDate");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::buildutils::Build::getBuildNumberCjs,"getBuildNumberCjs");
+				dukglue_register_method(ctx,&::app::duktape::wrappers::buildutils::Build::getBuildDateCjs,"getBuildDateCjs");
 
 
 

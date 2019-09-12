@@ -12,6 +12,8 @@ namespace app::duktape::wrappers::buildutils{
 			~Build();
 			int getBuildNumber();
 			std::string getBuildDate();
+			int getBuildNumberCjs();
+			std::string getBuildDateCjs();
 	};
 }
 #endif

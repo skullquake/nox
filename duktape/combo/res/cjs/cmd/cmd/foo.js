@@ -1,6 +1,7 @@
 {
-	var Foo=function(){
+	var Foo=function(ctlP){
 		this.log('Constructor()');
+		this.ctl=ctlP;
 	};
 	Foo.prototype.src='res/cjs/cmd/cmd/foo.js';
 	Foo.prototype.log=function(a){
@@ -29,9 +30,7 @@
 					{"title":"Amadeus","year":"1984"}
 				];
 				var html=json2html.transform(d,t);
-				console.log(html);
 				_response.write(html);
-				console.log('--------------------------------------------------------------------------------');
 			}
 			{
 				var transform = {'<>':'li','html':[{'<>':'span','html':'${name} (${age})'}]};
@@ -41,9 +40,7 @@
 					{'name':'Bill','age':65},
 					{'name':'Robert','age':24}
 				];
-				console.log(json2html.transform(data,transform));
 				_response.write(json2html.transform(data,transform));
-				console.log('--------------------------------------------------------------------------------');
 			}
 			{
 				var data = [
@@ -68,8 +65,6 @@
 					},
 					'child':{'<>':'span','html':'${name}'}
 				};
-				console.log(json2html.transform(data,transforms.parent));
-				console.log('--------------------------------------------------------------------------------');
 				_response.write(json2html.transform(data,transforms.parent))
 			}
 

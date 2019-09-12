@@ -14,4 +14,3 @@ function reinit(){
 	init();
 }
 typeof(hdl)=='undefined'?init():hdl.reinit?reinit():init();//set from cjs/cmd/reinit.js
-

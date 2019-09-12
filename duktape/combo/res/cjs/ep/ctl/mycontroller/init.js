@@ -23,6 +23,8 @@ try{
 	var build=new buildutils_build();
 	log("bldnum: "+build.getBuildNumber());
 	log("blddat: "+build.getBuildDate());
+	log("cjsnum: "+build.getBuildNumberCjs());
+	log("cjsdat: "+build.getBuildDateCjs());
 	log("dukver: "+(Math.floor(Duktape.version/10000))+'.'+(Math.floor(Duktape.version/100))+'.'+(Duktape.version%100));
 	log("dukenv: "+Duktape.env);
 	log("loading modules...");

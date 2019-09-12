@@ -158,7 +158,7 @@ namespace app::controllers{
 				if(duk_peval(new_ctx)!=0){
 					std::cerr<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: "<<src<<" error: "<<std::string(duk_safe_to_string(new_ctx,-1))<<std::endl;
 				}else{
-					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ct: "<<src<<": done"<<std::endl;
+					std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: "<<src<<": done"<<std::endl;
 				}
 				duk_pop(ctx);
 				//duk_destroy_heap(new_ctx);

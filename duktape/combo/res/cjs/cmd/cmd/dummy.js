@@ -1,6 +1,7 @@
 {
-	var Dummy=function(){
+	var Dummy=function(ctlP){
 		this.log('Constructor()');
+		this.ctl=ctlP;
 	};
 	Dummy.prototype.src='res/cjs/cmd/cmd/dummy.js';
 	Dummy.prototype.log=function(a){

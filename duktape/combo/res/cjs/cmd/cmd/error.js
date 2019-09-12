@@ -1,23 +1,26 @@
 {
-	var Default=function(ctl){
-		this.ctl=ctl;
+	var Default=function(ctlP){
+		this.ctl=ctlP;
 		this.log('Constructor()');
 	};
-	Default.prototype.src='res/cjs/cmd/cmd/default.js';
+	Default.prototype.src='res/cjs/cmd/cmd/error.js';
 	Default.prototype.log=function(a){
 		console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Default.prototype.data={};
-	Default.prototype.exec=function(m){
+	Default.prototype.exec=function(){
 		this.log('exec()');
 		var ret=false;
 		try{
-			//this.ctl.ses.data.msg="Error"+m;
+			this.ctl.data.cmd=null;//ses.data.msg='Invalid command';
+			this.ctl.ses.data.msg="Invalid command";//function(){ses.data.msg;return 'Invalid command';)};
+			/*
 			_response.setHeader('Content-type','text/html');
 			_response.setHeader('Location','/');
 			_response.setCode(301);
-			_response.write('Error: '+m);
+			*/
 			var ret=true;
+			return 'home';
 		}catch(e){
 			ret=false;
 		}

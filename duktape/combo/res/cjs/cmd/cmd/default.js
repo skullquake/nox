@@ -1,5 +1,6 @@
 {
-	var Error=function(){
+	var Error=function(ctlP){
+		this.ctl=ctlP;
 		this.log('Constructor()');
 	};
 	Error.prototype.src='res/cjs/cmd/cmd/error.js';

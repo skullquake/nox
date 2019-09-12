@@ -2,7 +2,6 @@
 JSONCPP=OFF
 YAML=OFF
 CPR=ON
-BUILD_NUMBER_FILE=build-number.txt
 FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 CXX=g++
 CC=gcc
@@ -58,6 +57,7 @@ LDFLAGS+=\
 endif
 BIN=./bin/a.$(BINEXT)
 # Create an auto-incrementing build number.
+BUILD_NUMBER_FILE=build-number.txt
 BUILD_NUMBER_LDFLAGS=\
 	-Xlinker\
 	--defsym\
@@ -77,8 +77,31 @@ $(BUILD_NUMBER_FILE): $(OBJECTS)
 	@echo \
 		$$(($$(cat $(BUILD_NUMBER_FILE)) + 1)) >\
 		$(BUILD_NUMBER_FILE)
-all: $(BIN)
-$(BIN): $(OBJECTS) $(BUILD_NUMBER_FILE)
+CJSSOURCEDIR=./res/cjs
+SOURCESCJS=$(shell find $(CJSSOURCEDIR) -name "*.js")
+BUILD_NUMBER_CJS_FILE=build-number-cjs.txt
+BUILD_NUMBER_CJS_LDFLAGS=\
+	-Xlinker\
+	--defsym\
+	-Xlinker\
+	__CJS_BUILD_DATE=$$(date +'%Y%m%d')
+BUILD_NUMBER_CJS_LDFLAGS+=\
+	-Xlinker\
+	--defsym\
+	-Xlinker\
+	__CJS_BUILD_NUMBER=$$(cat $(BUILD_NUMBER_CJS_FILE))
+$(BUILD_NUMBER_CJS_FILE): $(SOURCESCJS)
+	@if ! test -f $(BUILD_NUMBER_CJS_FILE); then\
+		echo 0 >\
+		$(BUILD_NUMBER_CJS_FILE);\
+	fi
+	@echo \
+		$$(($$(cat $(BUILD_NUMBER_CJS_FILE)) + 1)) >\
+		$(BUILD_NUMBER_CJS_FILE)
+default:all
+#       	$(BUILD_NUMBER_CJS_FILE)
+all: $(BIN) $(BUILD_NUMBER_FILE)
+$(BIN): $(OBJECTS) $(BUILD_NUMBER_FILE) $(BUILD_NUMBER_CJS_FILE)
 	@mkdir -p $(@D)
 	@printf "generating $@...\n"
 	$(CXX)\
@@ -86,6 +109,7 @@ $(BIN): $(OBJECTS) $(BUILD_NUMBER_FILE)
 		$(OBJECTS)\
 		$(LDFLAGS)\
 		$(BUILD_NUMBER_LDFLAGS)\
+		$(BUILD_NUMBER_CJS_LDFLAGS)\
 		-o $(BIN)
 $(BUILDDIR)/%.o: %.cpp
 	@printf "generating $@...\n"
