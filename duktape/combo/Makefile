@@ -101,7 +101,8 @@ $(BUILD_NUMBER_CJS_FILE): $(SOURCESCJS)
 default:all
 #       	$(BUILD_NUMBER_CJS_FILE)
 all: $(BIN) $(BUILD_NUMBER_FILE)
-$(BIN): $(OBJECTS) $(BUILD_NUMBER_FILE) $(BUILD_NUMBER_CJS_FILE)
+	# $(BUILD_NUMBER_CJS_FILE)
+$(BIN): $(OBJECTS) $(BUILD_NUMBER_FILE)
 	@mkdir -p $(@D)
 	@printf "generating $@...\n"
 	$(CXX)\
