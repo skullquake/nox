@@ -2,6 +2,8 @@
 JSONCPP=OFF
 YAML=OFF
 CPR=ON
+CURSES=OFF
+CACA=OFF
 FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 CXX=g++
 CC=gcc

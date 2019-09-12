@@ -42,23 +42,22 @@
 					var f=new Anchor(null);
 					f.setCmd(this.ctl.data.cmd);
 					f.setText('anchor');
-					f.onClick=function(){
-						this.log(this.uuid+': hello:)');
-						this.setText('changed');
-					};
+					f.onClick=function(){this.log(this.uuid+': hello:)');};
 					d.addChild(f);
 				}
 
 			}
 		}
+
 	};
-	Home.prototype.src='res/cjs/app/home.js';
+	Home.prototype.src='res/cjs/cmd/cmd/home.js';
 	Home.prototype.log=function(a){
 		console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Home.prototype.data={};
 	Home.prototype.exec=function(){
 		this.log('exec()');
+
 		//console.log('----------------------------------------')
 		//console.log('this.container.getParent()');
 		//console.log(this.container.getParent());
