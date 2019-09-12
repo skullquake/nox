@@ -19,6 +19,7 @@
 		var Text=require('cjs/wid/text.js');
 		var Model=require('cjs/mod/mod.js');
 		var View=require('cjs/view/view.js');
+		/*
 		this.links=[
 			{'cmd':'hdlreinit'},
 			{'cmd':'home'},
@@ -26,43 +27,47 @@
 			{'cmd':'json2htmlajax'},
 			{'cmd':'pgtst'},
 		];
+		*/
 		this.container=new Container(null);
-		for(var i=0;i<4;i++){
-			var c=new Container(null);
-			this.container.addChild(c);
-			for(var j=0;j<4;j++){
-				var d=new Container(null);
-				d.addAttribute('class','btn-group');
-				c.addChild(d);
-				for(var k=0;k<2;k++){
-					var e=new Button(null);
-					e.setText('btn');
-					d.addChild(e);
-				}
-				for(var k=0;k<2;k++){
-					var e=new Container(null);
-					e.addAttribute('class','btn-group');
-					d.addChild(e);
-					for(var k=0;k<32;k++){
-						var f=new Anchor(null);
-						f.setCmd(this.ctl.data.cmd);
-						f.setText('0');
-						f.onClick=function(){
-							if(this.getText()=='anchor'){
-								this.setText('0');
-							}
-							if(this.getText()=='0'){
-								this.setText('1');
-							}else{
-								this.setText('0');
-							}
-							this.log(this.uuid+': hello:)');
-						};
-						e.addChild(f);
-					}
-				}
+		this.menu=new Menu();
+		this.menu.setCmd(this.ctl.data.cmd);
 
+		this.menu.addMenuItem(
+			[
+				{'name':'Reinit','cmd':'hdlreinit'},
+				{'name':'Home','cmd':'home'},
+				{'name':'Json2Html','cmd':'json2html'},
+				{'name':'Json2HtmlAjax','cmd':'json2htmlajax'},
+				{'name':'PgTest','cmd':'pgtst'}
+			]
+
+		)
+		this.container.addChild(this.menu);
+		for(var j=0;j<4;j++){
+			var d=new Container(null);
+			for(var k=0;k<2;k++){
+				var e=new Container(null);
+				e.addAttribute('class','btn-group');
+				d.addChild(e);
+				for(var k=0;k<8;k++){
+					var f=new Anchor(null);
+					f.setCmd(this.ctl.data.cmd);
+					f.setText('0');
+					f.onClick=function(){
+						if(this.getText()=='anchor'){
+							this.setText('0');
+						}
+						if(this.getText()=='0'){
+							this.setText('1');
+						}else{
+							this.setText('0');
+						}
+						this.log(this.uuid+': hello:)');
+					};
+					e.addChild(f);
+				}
 			}
+			this.container.addChild(d);
 		}
 	};
 	apphome.prototype.src='res/cjs/app/apphome.js';
@@ -73,21 +78,6 @@
 	apphome.prototype.exec=function(){
 		this.log('exec(): start');
 		var t0=new Date();
-		//console.log('----------------------------------------')
-		//console.log('this.container.getParent()');
-		//console.log(this.container.getParent());
-		//console.log('this.container.getChildren()');
-		//console.log(this.container.getChildren());
-		//console.log(this.container.getChildren().length);
-		//console.log('this.container.getDescendents()');
-		//console.log(this.container.getDescendents());
-		//console.log(JSON.stringify(this.container.getDescendents()));
-		//console.log(this.container.getDescendents().length);
-		//console.log('----------------------------------------')
-		//console.log(this.container.toString());
-		console.log('----------------------------------------')
-		console.log('Query');
-		console.log('----------------------------------------')
 		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
 		var _this=this;
 		var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
@@ -98,11 +88,9 @@
 				{
 					'contents':
 					this._.template(
-						'<%= msg %><br/><%= links %><br/><%= test %>'
+						'<%= test %>'
 					)(
 						{
-							'msg':this.ctl.ses.data.msg==null?'':this.ctl.ses.data.msg,
-							'links':this.json2html.transform(this.links,{'<>':'li','html':'<a href="/?cmd=${cmd}">${cmd}</a>'}),
 							'test':this.container.toString()
 						}
 					)

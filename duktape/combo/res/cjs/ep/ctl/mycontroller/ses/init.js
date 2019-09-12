@@ -2,6 +2,7 @@
  * session context initialization
  */
 
+//console.log=function(){};//shutdown logs
 var log=function(a){console.log(new Date().getTime()+" cjs/ep/ctl/mycontroller/ses/init.js: "+a)};
 log('start');
 log('adding Duktape.modSearch...');

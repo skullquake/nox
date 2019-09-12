@@ -11,6 +11,7 @@
 		this._parent=p==null?[]:p;
 		this.log(this.uuid);
 		this.attributes=[];
+		this.text='';
 	};
 	node.prototype.src='res/cjs/wid/node.js';
 	node.prototype.log=function(a){
@@ -22,6 +23,12 @@
 		//var ret=this.data;//{};
 		//return ret;
 		return {'msg':'unimplemented serializer'};
+	}
+	node.prototype.setNodeName=function(a){
+		this.nodename=typeof(a)=='string'?a:'';
+	}
+	node.prototype.setText=function(a){
+		this.text=typeof(a)=='string'?a:'';
 	}
 	node.prototype.addAttribute=function(k,v){
 		this.attributes.push(
@@ -43,6 +50,9 @@
 			}
 		);
 		ret+='>';
+		ret+='\n';
+		for(var i=0;i<idx+1;i++)ret+=idt;
+		ret+=this.text;
 		ret+='\n';
 		this._children.forEach(function(a,b){
 			ret+=a.toString(idx+1,idt);
@@ -69,13 +79,10 @@
 	node.prototype.addChild=function(c){
 		this.log('addChild(): start');
 		if(c!=null){
-			this.log('a');
 			try{
 				c.data._parent=this;
 				this._children.push(c);
-				this.log('b');
 			}catch(e){
-				this.log('c');
 				this.log('addChild(): '+e);
 			}
 		}else{

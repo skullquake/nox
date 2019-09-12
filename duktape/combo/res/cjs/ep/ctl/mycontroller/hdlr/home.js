@@ -1,3 +1,4 @@
+var t0=new Date();
 var Hdl;
 var hdl;
 function init(){
@@ -14,3 +15,5 @@ function reinit(){
 	init();
 }
 typeof(hdl)=='undefined'?init():hdl.reinit?reinit():init();//set from cjs/cmd/reinit.js
+var t1=new Date();
+console.log('Total: '+(t1-t0)/1000);
