@@ -7,7 +7,7 @@
 	};
 	Loader.prototype.src='res/cjs/cmd/loader.js';
 	Loader.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Loader.prototype.data={
 	};

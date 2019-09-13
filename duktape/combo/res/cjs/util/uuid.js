@@ -4,7 +4,7 @@
 	};
 	Uuid.prototype.src='res/cjs/util/Uuid.js';
 	Uuid.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Uuid.prototype.data={
 		lastuuid:null

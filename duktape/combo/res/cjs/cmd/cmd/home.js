@@ -7,7 +7,7 @@
 	};
 	Home.prototype.src='res/cjs/cmd/cmd/home.js';
 	Home.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Home.prototype.data={};
 	Home.prototype.exec=function(){

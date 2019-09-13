@@ -44,6 +44,7 @@
 		var Node=require('cjs/wid/node.js');
 		var Container=require('cjs/wid/container.js');
 		var nodeJumbotron=new Node();
+		this.addChild(nodeJumbotron);
 		nodeJumbotron.setNodeName('div');
 		nodeJumbotron.addAttribute('class','jumbotron');
 		var nodeTitle=new Node();

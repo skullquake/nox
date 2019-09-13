@@ -3,7 +3,9 @@
  */
 
 //console.log=function(){};//shutdown logs
-var log=function(a){console.log(new Date().getTime()+" cjs/ep/ctl/mycontroller/ses/init.js: "+a)};
+var log=function(a){
+	//console.log(new Date().getTime()+" cjs/ep/ctl/mycontroller/ses/init.js: "+a)
+};
 log('start');
 log('adding Duktape.modSearch...');
 Duktape.modSearch=function(id){

@@ -1,17 +1,21 @@
 {
 	var apphome=function(ctlP){
 		this.log('Constructor()');
+		this.somedata='lorem ipsum';
 		this.ajax=false;
 		this.ctl=ctlP;
 		var UrlUtils=require('cjs/url/urlutils.js');
 		this.urlUtils=new UrlUtils();
-;		this.tpl_page=new TextDecoder("utf-8").decode(readFile('./res/tpl/page.html'));
+		this.tpl_page=new TextDecoder("utf-8").decode(readFile('./res/tpl/page.html'));
 		this.tpl_menu=new TextDecoder("utf-8").decode(readFile('./res/tpl/menu.html'));
 		this.tpl_contents=new TextDecoder("utf-8").decode(readFile('./res/tpl/contents.html'));
 		this.tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
 		this._=require('cjs/lodash/lodash.js');
 		this.json2html=require("cjs/json2html/json2html.js");
 		var Node=require('cjs/wid/node.js');
+		var NodeS0=require('cjs/wid/nodes0.js');
+		var NodeS1=require('cjs/wid/nodes1.js');
+		var NodeS2=require('cjs/wid/nodes2.js');
 		var Anchor=require('cjs/wid/anchor.js');
 		var Button=require('cjs/wid/button.js');
 		var Container=require('cjs/wid/container.js');
@@ -22,7 +26,8 @@
 		var Text=require('cjs/wid/text.js');
 		var Model=require('cjs/mod/mod.js');
 		var View=require('cjs/view/view.js');
-		this.container=new Container(null);
+		this.container=new Container(null,'qwer');//ctx inh test (qwer)
+		this.container.setCtx(this);
 		this.menu=new Menu();
 		this.menu.setCmd(this.ctl.data.cmd);
 		this.menu.addMenuItem(
@@ -30,29 +35,40 @@
 				{'name':'Reinit','cmd':'hdlreinit'},
 				{'name':'Home','cmd':'home'},
 				{'name':'Json2Html','cmd':'json2html'},
+				{'name':'Callback','cmd':
+					function(){
+						console.log('Callback test');
+						console.log(this.src);
+						console.log(typeof(this.ctx));
+						console.log(this.ctx.somedata);
+					}
+				},
 				{'name':'Json2HtmlAjax','cmd':'json2htmlajax'},
 				{'name':'PgTest','cmd':'pgtst'}
 			]
 
-		)
+		);
 		this.container.addChild(this.menu);
 		this.jumbotron=new Jumbotron();
 		this.jumbotron.setTitle('AppHome');
 		this.jumbotron.setSubTitle('Application Home');
 		this.container.addChild(this.jumbotron);
 		for(var j=0;j<4;j++){
-			var d=new Container(null);
+			var d=new Container();
+			this.container.addChild(d);
 			for(var k=0;k<2;k++){
-				var e=new Container(null);
+				var e=new Container();
 				e.addAttribute('class','btn-group');
 				d.addChild(e);
-				for(var k=0;k<16;k++){
-					var f=new Anchor(null);
+				for(var k=0;k<8;k++){
+					var f=new Anchor();
+					e.addChild(f);
 					f.setCmd(this.ctl.data.cmd);
 					f.addAttribute('class','btn btn-default');
 					      
 					f.setText('0');
 					f.onClick=function(){
+						//this.hide();
 						if(this.getText()=='anchor'){
 							this.setText('0');
 						}
@@ -65,15 +81,15 @@
 						}
 						this.log(this.uuid+': hello:)');
 					};
-					e.addChild(f);
 				}
 			}
-			this.container.addChild(d);
 		}
+		/*
+		*/
 	};
 	apphome.prototype.src='res/cjs/app/apphome.js';
 	apphome.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	apphome.prototype.data={};
 	apphome.prototype.exec=function(){
@@ -82,7 +98,16 @@
 		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
 		var _this=this;
 		var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
-		typeof(o)!='undefined'&&typeof(o.onClick)=='function'?o.onClick():null;
+		switch(
+			typeof(o)
+		){
+			case 'object':
+				if(typeof(o.onClick)=='function')
+					o.onClick();
+				break;
+			default:
+				break;
+		};
 		_response.setHeader('Content-type','text/html');
 		_response.write(
 			this._.template(this.tpl_page)(

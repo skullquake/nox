@@ -30,21 +30,23 @@
 		}
 	};
 	button.prototype.toString=function(idx,idt){
+		var ret='';
 		idt=idt==null?'\t':idt;
 		idx=idx==null?0:idx;
-		var ret='';
-		for(var i=0;i<idx;i++)ret+=idt;
-		ret+='<button id="'+this.uuid+'">';
-		ret+='\n';
-		for(var i=0;i<idx+1;i++)ret+=idt;
-		ret+=this.text;
-		ret+='\n';
-		this._children.forEach(function(a,b){
-			ret+=a.toString(idx+1,idt);
-		});
-		for(var i=0;i<idx;i++)ret+=idt;
-		ret+='</button>';
-		ret+='\n';
+		if(!this.hidden){
+			for(var i=0;i<idx;i++)ret+=idt;
+			ret+='<button id="'+this.uuid+'">';
+			ret+='\n';
+			for(var i=0;i<idx+1;i++)ret+=idt;
+			ret+=this.text;
+			ret+='\n';
+			this._children.forEach(function(a,b){
+				ret+=a.toString(idx+1,idt);
+			});
+			for(var i=0;i<idx;i++)ret+=idt;
+			ret+='</button>';
+			ret+='\n';
+		}
 		return ret;
 	}
 

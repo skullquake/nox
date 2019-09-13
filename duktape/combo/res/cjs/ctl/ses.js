@@ -14,7 +14,7 @@
 	};
 	CtlSes.prototype.src='res/cjs/ctl/ses';
 	CtlSes.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	CtlSes.prototype.data={};
 	CtlSes.prototype._exec=function(cmd){

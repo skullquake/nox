@@ -9,7 +9,7 @@
 	};
 	Hdl.prototype.src='res/cjs/ctl/main.js';
 	Hdl.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Hdl.prototype.data={};
 	Hdl.prototype.update=function(){
