@@ -28,11 +28,13 @@
 		this.log('menu.prototype.addMenuItem(): end')
 	};
 	menu.prototype.toString=function(idx,idt){
+		this.log('toString(): start');
 		var t0=new Date();
 		this.log('start');
 		if(typeof(this.cache)!='undefined'){
 			var t1=new Date();
 			this.log('end: '+(t1-t0)/1000+' s');
+			this.log('toString(): end');
 			return this.cache;
 		}
 		this.cache='';
@@ -95,6 +97,7 @@
 		var t1=new Date();
 		this.log('end: '+(t1-t0)/1000+' s');
 		this.cache=nav.toString();
+		this.log('toString(): end');
 		return this.cache;
 	};
 	module.exports=menu;

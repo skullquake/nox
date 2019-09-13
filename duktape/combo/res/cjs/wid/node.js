@@ -10,15 +10,15 @@
 		}
 		this._parent=p==null?[]:p;
 		this.log(this.uuid);
-		this.attributes=[];
 		this.text='';
+		this.attributes={};
 	};
 	node.prototype.src='res/cjs/wid/node.js';
 	node.prototype.log=function(a){
 		console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
-	node.prototype.data={
-	};
+	node.prototype.data={};
+	node.prototype.attributes={};
 	node.prototype.toJson=function(){
 		//var ret=this.data;//{};
 		//return ret;
@@ -31,24 +31,32 @@
 		this.text=typeof(a)=='string'?a:'';
 	}
 	node.prototype.addAttribute=function(k,v){
-		this.attributes.push(
-			{
-				'k':k,
-				'v':v
+		console.log('addAttribute(): start');
+		if(typeof(this.attributes)=='undefined'){
+			this.attributes={};
+		}
+		this.attributes[k]=v;
+		console.log('addAttribute(): end');
+	}
+	node.prototype.attributesToString=function(){
+		var ret=' ';
+		var _this=this;
+		Object.keys(this.attributes).forEach(
+			function(a,b){
+				ret+=a+'="'+_this.attributes[a]+'" '
 			}
 		);
+		return ret;
+
 	}
 	node.prototype.toString=function(idx,idt){
+		this.log('toString(): start');
 		idt=idt==null?'\t':idt;
 		idx=idx==null?0:idx;
 		var ret='';
 		for(var i=0;i<idx;i++)ret+=idt;
 		ret+='<'+this.nodename+' id="'+this.uuid+'" '
-		this.attributes.forEach(
-			function(a,b){
-				ret+=a.k+'="'+a.v+'" '
-			}
-		);
+		ret+=this.attributesToString();
 		ret+='>';
 		if(this.text!=null&&this.text!=''){
 			ret+='\n';
@@ -62,6 +70,7 @@
 		for(var i=0;i<idx;i++)ret+=idt;
 		ret+='</'+this.nodename+'>';
 		ret+='\n';
+		this.log('toString(): end');
 		return ret;
 	}
 	node.prototype.setParent=function(c){

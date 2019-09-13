@@ -37,11 +37,7 @@
 		for(var i=0;i<idx;i++)ret+=idt;
 		ret+='<a id="'+this.uuid+'" ';
 		ret+='href="'+(this.cmd!=null?'/?cmd='+this.cmd+'&id='+this.uuid:'#')+'"';
-		this.attributes.forEach(
-			function(a,b){
-				ret+=' '+a.k+'="'+a.v+'"'
-			}
-		);
+		ret+=this.attributesToString();
 		ret+='>';
 		ret+='\n';
 		for(var i=0;i<idx+1;i++)ret+=idt;

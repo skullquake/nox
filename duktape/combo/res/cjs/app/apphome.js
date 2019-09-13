@@ -11,6 +11,7 @@
 		this.tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
 		this._=require('cjs/lodash/lodash.js');
 		this.json2html=require("cjs/json2html/json2html.js");
+		var Node=require('cjs/wid/node.js');
 		var Anchor=require('cjs/wid/anchor.js');
 		var Button=require('cjs/wid/button.js');
 		var Container=require('cjs/wid/container.js');
@@ -24,7 +25,6 @@
 		this.container=new Container(null);
 		this.menu=new Menu();
 		this.menu.setCmd(this.ctl.data.cmd);
-
 		this.menu.addMenuItem(
 			[
 				{'name':'Reinit','cmd':'hdlreinit'},
@@ -46,7 +46,7 @@
 				var e=new Container(null);
 				e.addAttribute('class','btn-group');
 				d.addChild(e);
-				for(var k=0;k<8;k++){
+				for(var k=0;k<16;k++){
 					var f=new Anchor(null);
 					f.setCmd(this.ctl.data.cmd);
 					f.addAttribute('class','btn btn-default');
@@ -57,8 +57,10 @@
 							this.setText('0');
 						}
 						if(this.getText()=='0'){
+							this.addAttribute('class','btn btn-danger');
 							this.setText('1');
 						}else{
+							this.addAttribute('class','btn btn-info');
 							this.setText('0');
 						}
 						this.log(this.uuid+': hello:)');
