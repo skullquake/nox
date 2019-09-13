@@ -1,6 +1,7 @@
 {
 	var apphome=function(ctlP){
 		this.log('Constructor()');
+		this.ajax=false;
 		this.ctl=ctlP;
 		var UrlUtils=require('cjs/url/urlutils.js');
 		this.urlUtils=new UrlUtils();
@@ -13,21 +14,13 @@
 		var Anchor=require('cjs/wid/anchor.js');
 		var Button=require('cjs/wid/button.js');
 		var Container=require('cjs/wid/container.js');
+		var Jumbotron=require('cjs/wid/jumbotron.js');
 		var Layout=require('cjs/wid/layout.js');
 		var Menu=require('cjs/wid/menu.js');
 		var Table=require('cjs/wid/table.js');
 		var Text=require('cjs/wid/text.js');
 		var Model=require('cjs/mod/mod.js');
 		var View=require('cjs/view/view.js');
-		/*
-		this.links=[
-			{'cmd':'hdlreinit'},
-			{'cmd':'home'},
-			{'cmd':'json2html'},
-			{'cmd':'json2htmlajax'},
-			{'cmd':'pgtst'},
-		];
-		*/
 		this.container=new Container(null);
 		this.menu=new Menu();
 		this.menu.setCmd(this.ctl.data.cmd);
@@ -43,6 +36,10 @@
 
 		)
 		this.container.addChild(this.menu);
+		this.jumbotron=new Jumbotron();
+		this.jumbotron.setTitle('AppHome');
+		this.jumbotron.setSubTitle('Application Home');
+		this.container.addChild(this.jumbotron);
 		for(var j=0;j<4;j++){
 			var d=new Container(null);
 			for(var k=0;k<2;k++){
@@ -52,6 +49,8 @@
 				for(var k=0;k<8;k++){
 					var f=new Anchor(null);
 					f.setCmd(this.ctl.data.cmd);
+					f.addAttribute('class','btn btn-default');
+					      
 					f.setText('0');
 					f.onClick=function(){
 						if(this.getText()=='anchor'){

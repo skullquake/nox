@@ -35,7 +35,14 @@
 		idx=idx==null?0:idx;
 		var ret='';
 		for(var i=0;i<idx;i++)ret+=idt;
-		ret+='<a class="btn btn-default" id="'+this.uuid+'" href="/?cmd='+this.cmd+'&id='+this.uuid+'">';
+		ret+='<a id="'+this.uuid+'" ';
+		ret+='href="'+(this.cmd!=null?'/?cmd='+this.cmd+'&id='+this.uuid:'#')+'"';
+		this.attributes.forEach(
+			function(a,b){
+				ret+=' '+a.k+'="'+a.v+'"'
+			}
+		);
+		ret+='>';
 		ret+='\n';
 		for(var i=0;i<idx+1;i++)ret+=idt;
 		ret+=this.text;

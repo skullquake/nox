@@ -34,7 +34,7 @@
 		idx=idx==null?0:idx;
 		var ret='';
 		for(var i=0;i<idx;i++)ret+=idt;
-		ret+='<button class="btn btn-default" id="'+this.uuid+'">';
+		ret+='<button id="'+this.uuid+'">';
 		ret+='\n';
 		for(var i=0;i<idx+1;i++)ret+=idt;
 		ret+=this.text;

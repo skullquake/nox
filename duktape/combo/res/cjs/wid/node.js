@@ -43,16 +43,18 @@
 		idx=idx==null?0:idx;
 		var ret='';
 		for(var i=0;i<idx;i++)ret+=idt;
-		ret+='<'+this.nodename+' id="'+this.uuid+'"'
+		ret+='<'+this.nodename+' id="'+this.uuid+'" '
 		this.attributes.forEach(
 			function(a,b){
 				ret+=a.k+'="'+a.v+'" '
 			}
 		);
 		ret+='>';
-		ret+='\n';
-		for(var i=0;i<idx+1;i++)ret+=idt;
-		ret+=this.text;
+		if(this.text!=null&&this.text!=''){
+			ret+='\n';
+			for(var i=0;i<idx+1;i++)ret+=idt;
+			ret+=this.text;
+		}
 		ret+='\n';
 		this._children.forEach(function(a,b){
 			ret+=a.toString(idx+1,idt);

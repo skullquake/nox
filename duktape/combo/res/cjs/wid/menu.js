@@ -28,12 +28,20 @@
 		this.log('menu.prototype.addMenuItem(): end')
 	};
 	menu.prototype.toString=function(idx,idt){
+		var t0=new Date();
+		this.log('start');
+		if(typeof(this.cache)!='undefined'){
+			var t1=new Date();
+			this.log('end: '+(t1-t0)/1000+' s');
+			return this.cache;
+		}
+		this.cache='';
 
 		/*
 <nav class='navbar navbar-expand-lg navbar-light bg-light'>
 			  <a class='navbar-brand' href='#'>Navbar</a>
 			  <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle naviga
-		    <span class='navbar-toggler-icon'></span>
+				    <span class='navbar-toggler-icon'></span>
 			  </button>
 
 			  <div class='collapse navbar-collapse' id='navbarSupportedContent'>
@@ -76,24 +84,31 @@
 		nav.addAttribute('class','navbar navbar-expand-lg navbar-light bg-dark');
 		var navbarbrand=new Anchor();
 		navbarbrand.addAttribute('class','navbar-brand');
-		navbarbrand.setCmd(this.cmd);
+		navbarbrand.setCmd(null);
+		navbarbrand.setText('Home');
 		nav.addChild(navbarbrand);
+
+		//predec for data-target...\/
+		var navbarcollapse=new Node();
+
+
 		var navbarToggler=new Node();
 		navbarToggler.setNodeName('button');
 		navbarToggler.addAttribute('class','navbar-toggler');
 		navbarToggler.addAttribute('data-toggle','collapse');
 		navbarToggler.addAttribute('data-toggle','collapse');
-		navbarToggler.addAttribute('data-target','#navbarSupportedContent');
-		navbarToggler.addAttribute('aria-controls','navbarSupportedContent');
+		navbarToggler.addAttribute('data-target','#'+navbarcollapse.uuid);
+		navbarToggler.addAttribute('aria-controls',navbarcollapse.uuid);
 		navbarToggler.addAttribute('aria-expanded','false');
 		navbarToggler.addAttribute('aria-label','Toggle navigation');
-		navbarToggler.setText('Home');
-		navbarbrand.addChild(navbarToggler);
+		nav.addChild(navbarToggler);
 		var navbarTogglerIcon=new Node();
 		navbarTogglerIcon.setNodeName('span');
 		navbarTogglerIcon.addAttribute('class','navbar-toggler-icon');
 		navbarToggler.addChild(navbarTogglerIcon);
-		var navbarcollapse=new Node();
+
+		//predec for data-target.../\
+
 		navbarcollapse.setNodeName('div');
 		navbarcollapse.addAttribute('class','collapse navbar-collapse');//id='navbarSupportedContent'
 		nav.addChild(navbarcollapse);
@@ -114,7 +129,10 @@
 				navbarNav.addChild(navbarItem);
 			}
 		);
-		return nav.toString();
+		var t1=new Date();
+		this.log('end: '+(t1-t0)/1000+' s');
+		this.cache=nav.toString();
+		return this.cache;
 	};
 	module.exports=menu;
 }
