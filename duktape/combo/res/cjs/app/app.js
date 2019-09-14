@@ -1,13 +1,20 @@
 {
-	var App=require('cjs/app/app.js?applogin');
-	var applogin=App;
-	applogin.prototype.init=function(ctlp){
+	var app=function(ctlp){
+		this.log('Constructor():start');
+		this.init(ctlp);
+		var UrlUtils=require('cjs/url/urlutils.js');
+		this.urlUtils=new UrlUtils();
+		this.log('Constructor():end');
+	};
+	app.prototype.src='res/cjs/app/app.js';
+	app.prototype.log=function(a){
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
+	}
+	app.prototype.init=function(ctlp){
 		this.log('init():start');
 		this.somedata='lorem ipsum';
 		this.ajax=false;
 		this.ctl=ctlp;
-		var UrlUtils=require('cjs/url/urlutils.js');
-		this.urlUtils=new UrlUtils();
 		this.tpl_page=new TextDecoder("utf-8").decode(readFile('./res/tpl/page.html'));
 		this.tpl_contents=new TextDecoder("utf-8").decode(readFile('./res/tpl/contents.html'));
 		this._=require('cjs/lodash/lodash.js');
@@ -271,6 +278,66 @@
 		this.containerSignup.hide();
 		this.log('init():end');
 	};
-	module.exports=applogin;
+	app.prototype.data={};
+	app.prototype.render=function(){
+		_response.setHeader('Content-type','text/html');
+		_response.write(
+			this._.template(this.tpl_page)(
+				{
+					'contents':
+					this._.template(
+						'<%= test %>'
+					)(
+						{
+							'test':this.container.toString()
+						}
+					)
+				}
+			)
+		);
+		var t1=new Date();
+		this.log('exec(): end ['+((t1-t0)/1000)+' s]');
+	}
+	app.prototype.procreq=function(){
+		var ret=null;
+		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
+		var _this=this;
+		var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
+		console.log('----------------------------------------');
+		console.log(request.getQueryString());
+		//console.log(id);
+		//console.log(o);
+		console.log('----------------------------------------');
+		switch(
+			typeof(o)
+		){
+			case 'object':
+				if(typeof(o.onClick)=='function')
+					ret=o.onClick();
+				break;
+			default:
+				break;
+		};
+		return ret;
+	};
+	app.prototype.exec=function(){
+		this.log('exec(): start');
+		var ret=null;
+		ret=this.procreq();
+		if(ret==null){
+			this.render();
+		}
+		return ret;
+	}
+	app.prototype.update=function(){
+		this.data.modified=new Date().getTime();
+	}
+	app.prototype.toJson=function(){
+		var ret={};
+		return ret;
+	}
+	app.prototype.toString=function(a,b){
+		return JSON.stringify(this.toJson(),a==null?-1:a,b==null?'':b);
+	}
+	module.exports=app;
 }
-

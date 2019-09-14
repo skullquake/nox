@@ -1,34 +1,5 @@
 {
 	var src='res/cjs/wid/node.js';
-	/*
-	var node=function(p,c){
-		this.log('var node=function(p,c);
-		for(var i=0;i<this._constructors.length;i++){
-			this._constructors[i](p,c,this);
-		}
-	}
-	node.prototype._constructor=function(p,c,_this){
-		console.log(new Date().getTime()+': '+src+' test Constructor()');
-		var Uuid=require('cjs/util/uuid.js');
-		var uuid=new Uuid();
-		_this.uuid=uuid.uuidv4();
-		_this._children=[];
-		if(p!=null){
-			p._children.push(_this);
-		}
-		if(c!=null){
-			_this.ctx=c;
-		}
-		_this._parent=p==null?[]:p;
-		_this.log(_this.uuid);
-		_this.text='';
-		_this.attributes={};
-		_this.hidden=false;
-		//console.log('ctx: '+_this.src+":"+(_this.ctx!=null));
-	};
-	node.prototype._constructors=[];
-	node.prototype._constructors.push(node.prototype._constructor);
-	*/
 	var node=function(p,c){
 		this.log('constructor():start');
 		var Uuid=require('cjs/util/uuid.js');
@@ -60,30 +31,34 @@
 	node.prototype.attributes={};
 	node.prototype.hidden=false;
 	node.prototype.toJson=function(){
-		//var ret=this.data;//{};
-		//return ret;
 		return {'msg':'unimplemented serializer'};
 	}
 	node.prototype.setNodeName=function(a){
 		this.nodename=typeof(a)=='string'?a:'';
+		return this;
 	}
 	node.prototype.setCtx=function(c){
 		this.ctx=c;
+		return this;
 	}
 	node.prototype.getCtx=function(){
 		return this.ctx;
 	}
 	node.prototype.setText=function(a){
 		this.text=typeof(a)=='string'?a:'';
+		return this;
 	}
 	node.prototype.hide=function(){
 		this.hidden=true;
+		return this;
 	}
 	node.prototype.show=function(){
 		this.hidden=false;
+		return this;
 	}
 	node.prototype.toggleHidden=function(){
 		this.hidden=!this.hidden;
+		return this;
 	}
 	node.prototype.addAttribute=function(k,v){
 		this.log('addAttribute(): start');
@@ -92,6 +67,7 @@
 		}
 		this.attributes[k]=v;
 		this.log('addAttribute(): end');
+		return this;
 	}
 	node.prototype.attributesToString=function(){
 		var ret=' ';
@@ -144,6 +120,7 @@
 			this.log('setParent(): c null');
 		}
 		this.log('setParent(): done');
+		return this;
 	};
 	node.prototype.addChild=function(c){
 		var ret=c;//for passthrough, e.g. var foo=this.container.addChild(new Node());...
@@ -193,5 +170,17 @@
 		//log('getDescendents(): end');
 		return ret;
 	};
+	/*
+	node.prototype.onClick=function(t){
+		if(typeof(t)=='function'){
+			this.log('onClick(): executing');
+			this.onClick==null?null:this.onClick();
+		}else{
+			this.log('onClick(): not a function');
+		}
+		return this;
+	};
+	*/
+
 	module.exports=node;
 }

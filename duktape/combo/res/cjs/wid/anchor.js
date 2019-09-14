@@ -6,21 +6,23 @@
 	anchor.prototype.text='';
 	anchor.prototype.setText=function(t){
 		this.text=t!=null?t:'';
+		return this;
 	};
 	anchor.prototype.getText=function(){
 		return this.text;
 	};
 	anchor.prototype.setOnClick=function(t){
-		//calback
-		if(typeof(t)='function'){
+		if(typeof(t)=='function'){
 			this.log('setOnClick(): attaching function');
 			this.onClick=t;
 		}else{
 			this.log('setOnClick(): not a function');
 		}
+		return this;
 	};
 	anchor.prototype.setCmd=function(c){
 		this.cmd=c;//==null?'null':typeof(c)=='string':c:typeof(c)=='function':try{c()}catch(e){this.log(e)}finally{'null'};
+		return this;
 	}
 	anchor.prototype.onClick=function(t){
 		if(typeof(t)=='function'){

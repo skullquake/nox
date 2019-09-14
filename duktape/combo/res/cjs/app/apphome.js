@@ -1,6 +1,8 @@
 
 {
-	var apphome=function(ctlp){
+	var App=require('cjs/app/app.js?apphome');
+	var apphome=App;
+	apphome.prototype.init=function(ctlp){
 		this.log('Constructor()');
 		this.somedata='lorem ipsum';
 		this.ajax=false;
@@ -13,45 +15,124 @@
 		this.tpl_card=new TextDecoder("utf-8").decode(readFile('./res/tpl/card.html'));
 		this._=require('cjs/lodash/lodash.js');
 		this.json2html=require("cjs/json2html/json2html.js");
-		var Node=require('cjs/wid/node.js');
-		var Anchor=require('cjs/wid/anchor.js');
-		var Button=require('cjs/wid/button.js');
-		var Container=require('cjs/wid/container.js');
-		var Jumbotron=require('cjs/wid/jumbotron.js');
-		var Menu=require('cjs/wid/menu.js');
-		this.container=new Container(null,'qwer');//ctx inh test (qwer)
+
+		this.Node=require('cjs/wid/node.js');
+		this.Anchor=require('cjs/wid/anchor.js');
+		this.Button=require('cjs/wid/button.js');
+		this.Container=require('cjs/wid/container.js');
+		this.Jumbotron=require('cjs/wid/jumbotron.js');
+		this.Menu=require('cjs/wid/menu.js');
+
+		this.container=new this.Container(null,'qwer');//ctx inh test (qwer)
 		this.container.setCtx(this);
-		this.menu=new Menu();
+
+		this.buildMenu();
+		this.buildJumbotron();
+
+		this.pages={
+			'home':this.buildPageHome(),
+			'numbers':this.buildPageNumbers(),
+			'bionode':this.buildPageBioNode(),
+			'tables':this.buildPageTables()
+		};
+	};
+	apphome.prototype.showPage=function(a){
+		if(typeof(a)=='string'){
+			if(this.pages[a]!=null){
+				var _this=this;
+				Object.keys(this.pages).forEach(
+					function(b,c){
+						_this.pages[b].hide();
+					}
+				);
+				this.pages[a].show();
+			}else{
+				this.log('page not found');
+			}
+		}else{
+			this.log('invalid pagespec');
+		}
+	}
+	apphome.prototype.buildMenu=function(){
+		this.menu=new this.Menu();
 		this.menu.setCmd(this.ctl.data.cmd);
 		this.menu.addMenuItem(
 			[
 				{'name':'Reinit','cmd':'hdlreinit'},
-				{'name':'Home','cmd':'home'},
+				{'name':'Home','cmd':function(){
+					this.ctx.jumbotron.setTitle('Home');
+					this.ctx.jumbotron.setSubTitle('');
+					this.ctx.showPage('home');
+				}},
+				{'name':'BioNode','cmd':function(){
+					this.ctx.jumbotron.setTitle('BioNode');
+					this.ctx.jumbotron.setSubTitle('');
+					this.ctx.showPage('bionode');
+				}},
+				{'name':'Tables','cmd':function(){
+					this.ctx.jumbotron.setTitle('Tables');
+					this.ctx.jumbotron.setSubTitle('');
+					this.ctx.showPage('tables');
+				}},
+
+				{'name':'Numbers','cmd':function(){
+					this.ctx.jumbotron.setTitle('Buttons Test');
+					this.ctx.jumbotron.setSubTitle('');
+					this.ctx.showPage('numbers');
+				}},
 				{'name':'Logout','cmd':'logout'},
-				{'name':'Callback','cmd':
-					function(){
-						console.log('Callback test');
-						console.log(this.src);
-						console.log(typeof(this.ctx));
-						console.log(this.ctx.somedata);
-					}
-				}
 			]
 		);
 		this.container.addChild(this.menu);
-		this.jumbotron=new Jumbotron();
+		return this.menu;
+	}
+	apphome.prototype.buildJumbotron=function(){
+		this.jumbotron=new this.Jumbotron();
 		this.jumbotron.setTitle('AppHome');
 		this.jumbotron.setSubTitle('Application Home');
 		this.container.addChild(this.jumbotron);
+		return this.jumbotron;
+	};
+	apphome.prototype.buildPageHome=function(){
+		this.containerHome=this.container.addChild(new this.Container());
+		this.containerHome.setText('<h3>HOME</h3>');
+		this.containerHome.hide();
+		return this.containerHome;
+	};
+	apphome.prototype.buildPageTables=function(){
+		this.containerTables=this.container.addChild(new this.Container());
+		this.containerTables.setText('<h3>Test - chained stuff, tables later</h3>');
+		for(var i=0;i<20;i++){//new chained syntax
+			this.containerTables
+				.addChild(new this.Anchor())
+				.setText('hello')
+				.setCmd(this.ctl.data.cmd)
+				.show()
+				.setOnClick(function(){
+					this.setText(this.getText()=='hello'?'byebye':'hello');
+				});
+		}
+		this.containerTables.hide();
+		return this.containerTables;
+	}
+	apphome.prototype.buildPageBioNode=function(){
+		this.containerBioNode=this.container.addChild(new this.Container());
+		this.containerBioNode.setText('<h3>BioNode</h3>');
+		this.containerBioNode.hide();
+		return this.containerBioNode;
+	}
+
+	apphome.prototype.buildPageNumbers=function(){
+		this.containerNumbers=this.container.addChild(new this.Container());
 		for(var j=0;j<4;j++){
-			var d=new Container();
-			this.container.addChild(d);
+			var d=new this.Container();
+			this.containerNumbers.addChild(d);
 			for(var k=0;k<2;k++){
-				var e=new Container();
+				var e=new this.Container();
 				e.addAttribute('class','btn-group');
 				d.addChild(e);
 				for(var k=0;k<8;k++){
-					var f=new Anchor();
+					var f=new this.Anchor();
 					e.addChild(f);
 					f.setCmd(this.ctl.data.cmd);
 					f.addAttribute('class','btn btn-default');
@@ -75,59 +156,8 @@
 				}
 			}
 		}
-	};
-	apphome.prototype.src='res/cjs/app/apphome.js';
-	apphome.prototype.log=function(a){
-		//console.log(new Date().getTime()+" "+this.src+": "+a);
-	}
-	apphome.prototype.data={};
-	apphome.prototype.procreq=function(){
-		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
-		var _this=this;
-		var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
-		switch(
-			typeof(o)
-		){
-			case 'object':
-				if(typeof(o.onClick)=='function')
-					o.onClick();
-				break;
-			default:
-				break;
-		};
-
-	};
-	apphome.prototype.exec=function(){
-		this.log('exec(): start');
-		var t0=new Date();
-		this.procreq();
-		_response.setHeader('Content-type','text/html');
-		_response.write(
-			this._.template(this.tpl_page)(
-				{
-					'contents':
-					this._.template(
-						'<%= test %>'
-					)(
-						{
-							'test':this.container.toString()
-						}
-					)
-				}
-			)
-		);
-		var t1=new Date();
-		this.log('exec(): end ['+((t1-t0)/1000)+' s]');
-	}
-	apphome.prototype.update=function(){
-		this.data.modified=new Date().getTime();
-	}
-	apphome.prototype.toJson=function(){
-		var ret={};
-		return ret;
-	}
-	apphome.prototype.toString=function(a,b){
-		return JSON.stringify(this.toJson(),a==null?-1:a,b==null?'':b);
+		this.containerNumbers.hide();
+		return this.containerNumbers;
 	}
 	module.exports=apphome;
 }
