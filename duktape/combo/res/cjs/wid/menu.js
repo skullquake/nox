@@ -1,9 +1,9 @@
-
 {
 	var Node=require('cjs/wid/node.js?menu');//fake copy for inheritance
 	var menu=Node;
-	menu.prototype.menuitems={};
+	//menu.prototype.menuitems=[];
 	menu.prototype.init=function(){
+			typeof(this.menuitems)=='undefined'?this.menuitems=[]:null;
 			var Node=require('cjs/wid/node.js');
 			var Container=require('cjs/wid/container.js');
 			var Anchor=require('cjs/wid/anchor.js');
@@ -95,7 +95,6 @@
 	*/
 	menu.prototype.src='res/cjs/ses/menu.js';
 	menu.prototype.nodename='div';
-	menu.prototype.menuitems=[];
 	this.cmd='';
 	menu.prototype.setCmd=function(a){
 		this.cmd=typeof('a')=='string'?a:'';
@@ -117,6 +116,7 @@
 				);
 				*/
 			}else{
+				typeof(this.menuitems)=='undefined'?this.menuitems=[]:null;
 				this.menuitems.push({'name':a.name,'cmd':a.cmd});
 			}
 		}else{

@@ -28,7 +28,8 @@
 		this.menu.addMenuItem(
 			[
 				{'name':'Reinit','cmd':'hdlreinit'},
-				{'name':'Login','cmd':'home'},
+				{'name':'Login','cmd':'login'},
+				{'name':'Home','cmd':'home'},
 				{'name':'Signup','cmd':
 					function(){
 						console.log('Callback test');
@@ -44,10 +45,6 @@
 		this.jumbotron.setTitle('App Login');
 		this.jumbotron.setSubTitle('Application Login');
 		this.container.addChild(this.jumbotron);
-		this.jumbotron2=new Jumbotron();
-		this.jumbotron2.setTitle('App Login2');
-		this.jumbotron2.setSubTitle('Application Login2');
-		this.container.addChild(this.jumbotron2);
 
 	};
 	applogin.prototype.src='res/cjs/app/applogin.js';

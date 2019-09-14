@@ -14,7 +14,7 @@
 	};
 	CtlSes.prototype.src='res/cjs/ctl/ses';
 	CtlSes.prototype.log=function(a){
-		//console.log(new Date().getTime()+" "+this.src+": "+a);
+		console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	CtlSes.prototype.data={};
 	CtlSes.prototype._exec=function(cmd){
@@ -33,6 +33,12 @@
 			this.data.cmd=qcmd;
 		}else{
 			this.log('qcmd: null');
+		}
+		if(cmd!=null){
+			this.log('cmdarg: '+qcmd);
+			this.data.cmd=cmd;
+		}else{
+			this.log('cmdarg: null');
 		}
 		this.data.cmd=this.data.cmd==null?'home':this.data.cmd;
 		this.log('curcmd: '+this.data.cmd);
@@ -92,16 +98,18 @@
 		}
 		ctx=this;
 		//ctx.data.cmd=null;//clear important, loops
+		console.log('queue');
+		console.log(cmdqueue);
 		cmdqueue.forEach(
 			function(cmd,cmdidx){
-				this.log('executing queue item ['+cmd+']');
+				console.log('executing queue item ['+cmd+']');
 				try{
-					//console.log(ctx.data.cmdmap);
-					ctx.data.cmdmap[cmd].exec(ctx);
+					console.log('executing '+cmd);
+					ctx._exec(cmd);
 				}catch(e){
-					this.err=true;
-					this.errmsg='data.cmd null';
-					log('executing queue item ['+cmd+'] failed:'+e);
+					ctx.err=true;
+					ctx.errmsg='data.cmd null';
+					console.log('executing queue item ['+cmd+'] failed:'+e);
 				}
 			}
 		);

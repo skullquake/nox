@@ -26,6 +26,7 @@
 			[
 				{'name':'Reinit','cmd':'hdlreinit'},
 				{'name':'Home','cmd':'home'},
+				{'name':'Logout','cmd':'logout'},
 				{'name':'Callback','cmd':
 					function(){
 						console.log('Callback test');
