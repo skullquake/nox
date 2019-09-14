@@ -81,66 +81,201 @@
 
 		//login
 		this.containerLogin=col.addChild(new Container());
-		//this.container.addChild(this.containerLogin);
-		this.alertLogin=this.containerLogin.addChild(new Node());
+		this.alertLogin=this.containerLogin.addChild(new Container());
+		this.alertLogin.hide();
 		this.alertLogin.setNodeName('div');
 		this.alertLogin.addAttribute('class','alert alert-info');
 		this.alertLogin.setText('enter credentials');
-		this.alertLogin.show();
+		this.alertLogin.hide();
 		this.formLogin=this.containerLogin.addChild(new Form());
 		this.formLogin.init();
-		this.formLogin.addField('usr','text','');
-		this.formLogin.addField('pas','password','');
+		this.formLogin.addField('login','text','');
+		this.formLogin.addField('password','password','');
 		this.formLogin.onClick=function(){
 			console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 			try{
 				this.ctx.alertLogin.hide();
-				var usr=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'usr');
-				var pas=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'pas');
-				if(usr=='qwer'&&pas=='asdf'){
-					this.ctx.ctl.ses.data.ual=1;
-					return 'home';
+				var login=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'login');
+				var pass=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'password');
+				this.addField('login','text',login);//same as set
+				this.addField('password','password',pass);//same as set
+				var errmsg=[]
+				var valid=true;
+				if(login==null||login==''){valid=false;errmsg.push('login not specified')}
+				if(pass==null||pass==''){valid=false;errmsg.push('password not specified')}
+				if(valid){
+					var db=require('cjs/db/db.js');
+					db.connect("./db/sqlite/test.db3");
+					var table='usr';
+					var res;
+					var sql='';
+					sql=
+						"SELECT COUNT(*) FROM <%= table %> WHERE login LIKE '<%= login %>'"
+						.replace(
+							'<%= table %>',
+							table
+						)
+						.replace(
+							'<%= login %>',
+							login
+						)
+					;
+					console.log(sql);
+					res=db.select(table,sql);//[0];
+					if(parseInt(res[0])!=0){
+						sql=
+							"SELECT COUNT(*) FROM <%= table %> WHERE login LIKE '<%= login %>' AND pass LIKE '<%= pass %>'"
+							.replace(
+								'<%= table %>',
+								table
+							)
+							.replace(
+								'<%= login %>',
+								login
+							)
+							.replace(
+								'<%= pass %>',
+								pass
+							)
+						;
+						res=db.select(table,sql);//[0];
+						if(parseInt(res[0])!=0){
+						}else{
+							valid=false;
+							errmsg.push('Invalid password');
+						}
+					}else{
+						valid=false;
+						errmsg.push('No such user exists');
+					}
 				}else{
-					var msg='';
-					msg+=usr==null||usr==''?'usr not specified':'';
-					msg+=(pas==null||pas=='')&&(usr==null||usr=='')?'<br/>':'';
-					msg+=pas==null||pas==''?'pas not specified':'';
-					this.ctx.alertLogin.setText(msg);
-					this.ctx.alertLogin.addAttribute('class','alert alert-danger');
-					this.ctx.alertLogin.show();
-					this.ctx.ctl.ses.data.ual=0;
-					this.addField('usr','text',usr);
-					this.addField('pas','password',pas);
-					return null;
 				}
+
 			}catch(e){
 				console.log(e);
+			}
+			if(!valid){
+				this.ctx.alertLogin.show();
+				this.ctx.alertLogin.addAttribute('class','alert alert-danger');
+				this.ctx.alertLogin.setText(errmsg.join('<br/>'));
+			}else{
+				//clear fields
+				this.addField('login','text','');//same as set
+				this.addField('password','password','');//same as set
+				this.ctx.ctl.ses.data.ual=1;
+				return 'home';
 			}
 		}
 		this.formLogin.setAction('login');
 
 		//signup
-		this.containerSignup=new Container();
+		this.containerSignup=col.addChild(new Container());
+		this.alertSignup=this.containerSignup.addChild(new Container());
+		this.alertSignup.hide();
 		this.formSignup=this.containerSignup.addChild(new Form());
 		this.formSignup.init();
-		this.formSignup.addField('usr','text','');
-		this.formSignup.addField('pas','password','');
+		this.formSignup.addField('name','text','');
+		this.formSignup.addField('surname','text','');
+		this.formSignup.addField('login','text','');
+		this.formSignup.addField('password','password','');
 		this.formSignup.onClick=function(){
 			console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-			var usr=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'usr');
-			var pas=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'pas');
-			if(usr=='qwer'&&pas=='asdf'){
+			var fname=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'name');
+			var lname=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'surname');
+			var login=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'login');
+			var pass=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'password');
+			this.addField('name','text',fname);//same as set
+			this.addField('surname','text',lname);//same as set
+			this.addField('login','text',login);//same as set
+			this.addField('password','password',pass);//same as set
+			var errmsg=[]
+			var valid=true;
+			if(fname==null||fname==''){valid=false;errmsg.push('name not specified')}
+			if(lname==null||lname==''){valid=false;errmsg.push('surname not specified')}
+			if(login==null||login==''){valid=false;errmsg.push('login not specified')}
+			if(pass==null||pass==''){valid=false;errmsg.push('password not specified')}
+			if(valid){
+				var db=require('cjs/db/db.js');
+				db.connect("./db/sqlite/test.db3");
+				var table='usr';
+				var sql=
+					"SELECT COUNT(*) FROM <%= table %> WHERE login LIKE '<%= login %>'"
+					.replace(
+						'<%= table %>',
+						table
+					)
+					.replace(
+						'<%= login %>',
+						login
+					)
+				;
+				var res=db.select(table,sql);//[0];
+				if(parseInt(res[0])==0){
+					try{
+						console.log("user does not exist: creating...");
+						sql=	
+							(
+								"INSERT INTO <%- table %>("+
+								"	fname,"+
+								"	lname,"+
+								"	login,"+
+								"	pass"+
+								") "+
+								" VALUES ("+
+								"	'<%- fname %>',"+
+								"	'<%- lname %>',"+
+								"	'<%- login %>',"+
+								"	'<%- pass %>'"+
+								")"
+							)
+							.replace(
+								'<%- table %>',
+								table
+							)
+							.replace(
+								'<%- fname %>',
+								fname
+							)
+							.replace(
+								'<%- lname %>',
+								lname
+							)
+							.replace(
+								'<%- login %>',
+								login
+							)
+							.replace(
+								'<%- pass %>',
+								pass
+							)
+						;
+						db.exec(sql);
+						valid=true;
+					}catch(e){
+						console.log(e);
+					}
+				}else{
+					valid=false;
+					errmsg.push('usr already exists');
+				}
+			}else{
+			}
+			if(!valid){
+				this.ctx.alertSignup.show();
+				this.ctx.alertSignup.addAttribute('class','alert alert-danger');
+				this.ctx.alertSignup.setText(errmsg.join('<br/>'));
+			}else{
+				//clear fields
+				this.addField('name','text','');//same as set
+				this.addField('surname','text','');//same as set
+				this.addField('login','text','');//same as set
+				this.addField('password','password','');//same as set
 				this.ctx.ctl.ses.data.ual=1;
 				return 'home';
-			}else{
-				this.ctx.ctl.ses.data.ual=0;
-				return null;
 			}
-		}
+		};
 		this.formSignup.setAction('login');
 		this.containerSignup.hide();
-		this.container.addChild(this.containerSignup);
-		this.containerSignup.setText('containerSignup');
 		this.log('init():end');
 	};
 	applogin.prototype.data={};
@@ -208,5 +343,102 @@
 	module.exports=applogin;
 }
 
+/*
+			case "signup":
+				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				this.db.connect("./db/sqlite/test.db3");
+				usrdata.data.fname=getQueryVariable(request.getQueryString(),'fname')!=null?getQueryVariable(request.getQueryString(),'fname'):usrdata.data.fname;
+				usrdata.data.lname=getQueryVariable(request.getQueryString(),'lname')!=null?getQueryVariable(request.getQueryString(),'lname'):usrdata.data.lname;
+				usrdata.data.login=getQueryVariable(request.getQueryString(),'login')!=null?getQueryVariable(request.getQueryString(),'login'):usrdata.data.login;
+				usrdata.data.pass=getQueryVariable(request.getQueryString(),'pass')!=null?getQueryVariable(request.getQueryString(),'pass'):usrdata.data.pass;
+				var table='usr';
+				var sql="SELECT COUNT(*) FROM "+table+" WHERE login LIKE '"+usrdata.data.login+"'";
+				console.log(sql);
+				if(parseInt(this.db.select(table,sql)[0])==0){
+					try{
+						console.log("user does not exist: creating...");
+						console.log("done");
+						sql=	
+							(
+								"INSERT INTO <%- table %>("+
+								"	fname,"+
+								"	lname,"+
+								"	login,"+
+								"	pass"+
+								") "+
+								" VALUES ("+
+								"	'<%- fname %>',"+
+								"	'<%- lname %>',"+
+								"	'<%- login %>',"+
+								"	'<%- pass %>'"+
+								")"
+							)
+							.replace(
+								'<%- table %>',
+								table
+							)
+							.replace(
+								'<%- fname %>',
+								usrdata.data.fname
+							)
+							.replace(
+								'<%- lname %>',
+								usrdata.data.lname
+							)
+							.replace(
+								'<%- login %>',
+								usrdata.data.login
+							)
+							.replace(
+								'<%- pass %>',
+								usrdata.data.pass
+							)
+						;
+						this.db.exec(sql);
+						console.log("signing in...");
+						usrdata.state.clearancelevel=1;
+						usrdata.state.page="home";
+						usrdata.state.pagestate[cmd]={};
+					}catch(e){
+						console.log(e);
+					}
+				}else{
+					usrdata.state.pagestate[cmd]={};
+					usrdata.state.pagestate[cmd].error=true;
+					usrdata.state.pagestate[cmd].message='User already exists';
+					usrdata.state.page=cmd;
+					usrdata.state.clearancelevel=0;
+					console.log("user exists: not creating");
+				}
+				break;
 
 
+
+			case "login":
+				usrdata.data.login=getQueryVariable(request.getQueryString(),'login')!=null?getQueryVariable(request.getQueryString(),'login'):usrdata.data.login;
+				usrdata.data.pass=getQueryVariable(request.getQueryString(),'pass')!=null?getQueryVariable(request.getQueryString(),'pass'):usrdata.data.pass;
+				this.db=require('cjs/db/db.js?cachebust="'+new Date().getTime());
+				this.db.connect("./db/sqlite/test.db3");
+				var table='usr';
+				var sql="SELECT COUNT(*) FROM "+table+" WHERE login LIKE '"+usrdata.data.login+"' and pass LIKE '"+usrdata.data.pass+"'";
+				var count=parseInt(this.db.select(table,sql)[0]);
+				usrdata.state.pagestate[cmd]={};
+				if(count>0){
+					var sql="SELECT * FROM "+table+" WHERE login LIKE '"+usrdata.data.login+"' and pass LIKE '"+usrdata.data.pass+"' LIMIT 1";
+					var usrdatadb=this.db.select(table,sql,true);
+					for(var i=0;i<usrdatadb[0].length;i++){
+						usrdata.data[usrdatadb[0][i]]=usrdatadb[1][i];
+					}
+					usrdata.state.clearancelevel=1;
+					usrdata.state.page="home";
+					usrdata.state.pagestate[cmd].error=false;
+					usrdata.state.pagestate[cmd].message=null;
+				}else{
+					usrdata.state.pagestate[cmd].error=true;
+					usrdata.state.pagestate[cmd].message='Invalid Credentials';
+					usrdata.state.page=cmd;
+					usrdata.state.clearancelevel=0;
+				}
+				break;
+
+*/
