@@ -13,7 +13,7 @@
 	};
 	Ses.prototype.src='res/cjs/ses/ses.js';
 	Ses.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Ses.prototype.data={
 		sessid:null,		//session id

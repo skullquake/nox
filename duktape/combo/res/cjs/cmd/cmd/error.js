@@ -5,7 +5,7 @@
 	};
 	Default.prototype.src='res/cjs/cmd/cmd/error.js';
 	Default.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	Default.prototype.data={};
 	Default.prototype.exec=function(){

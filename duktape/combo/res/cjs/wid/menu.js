@@ -2,6 +2,7 @@
 {
 	var Node=require('cjs/wid/node.js?menu');//fake copy for inheritance
 	var menu=Node;
+	menu.prototype.menuitems={};
 	menu.prototype.init=function(){
 			var Node=require('cjs/wid/node.js');
 			var Container=require('cjs/wid/container.js');
@@ -100,15 +101,21 @@
 		this.cmd=typeof('a')=='string'?a:'';
 	}
 	menu.prototype.addMenuItem=function(a){
+		//this.menuitems={};
 		this.log('menu.prototype.addMenuItem(): start')
 		if(typeof(a)=='object'){
 			if(typeof(a.length)=='number'){
+				for(i=0;i<a.length;i++){
+					this.addMenuItem(a[i]);
+				}
+				/*
 				var _this=this;
 				a.forEach(
 					function(b,c){
 						_this.addMenuItem(b);
 					}
 				);
+				*/
 			}else{
 				this.menuitems.push({'name':a.name,'cmd':a.cmd});
 			}

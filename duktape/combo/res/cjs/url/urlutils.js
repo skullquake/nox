@@ -4,7 +4,7 @@
 	};
 	UrlUtils.prototype.src='res/cjs/url/urlutils.js';
 	UrlUtils.prototype.log=function(a){
-		console.log(new Date().getTime()+" "+this.src+": "+a);
+		//console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	UrlUtils.prototype.getQueryVariable=function(query,variable){
 		var vars=query.split('&');

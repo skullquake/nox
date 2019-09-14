@@ -33,12 +33,14 @@
 		this.log('toString(): start');
 		var t0=new Date();
 		this.log('start');
+		/*
 		if(typeof(this.cache)!='undefined'){
 			var t1=new Date();
 			this.log('end: '+(t1-t0)/1000+' s');
 			this.log('toString(): end');
 			return this.cache;
 		}
+		*/
 		this.cache='';
 
 		var Node=require('cjs/wid/node.js');

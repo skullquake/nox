@@ -3,7 +3,11 @@
 		this.log('Constructor()');
 		this.ctl=ctlP;
 		var AppHome=require('cjs/app/apphome.js');
+		var AppLogin=require('cjs/app/applogin.js');
 		this.appHome=new AppHome(ctlP);
+		this.appLogin=new AppLogin(ctlP);
+		this.appLoginz=new AppLogin(ctlP);
+		console.log(this.appHome.menu.menuitems);
 	};
 	Home.prototype.src='res/cjs/cmd/cmd/home.js';
 	Home.prototype.log=function(a){
@@ -12,8 +16,9 @@
 	Home.prototype.data={};
 	Home.prototype.exec=function(){
 		this.log('exec()');
-		console.log(this.appHome);
-		this.appHome.exec();
+		//console.log(this.appHome);
+		//this.appHome.exec();
+		this.appLogin.exec();
 	}
 	Home.prototype.update=function(){
 		this.data.modified=new Date().getTime();

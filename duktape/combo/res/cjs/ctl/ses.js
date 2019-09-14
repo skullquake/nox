@@ -96,7 +96,7 @@
 			function(cmd,cmdidx){
 				this.log('executing queue item ['+cmd+']');
 				try{
-					console.log(ctx.data.cmdmap);
+					//console.log(ctx.data.cmdmap);
 					ctx.data.cmdmap[cmd].exec(ctx);
 				}catch(e){
 					this.err=true;
