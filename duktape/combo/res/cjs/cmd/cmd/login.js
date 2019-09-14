@@ -1,13 +1,14 @@
 {
 	var login=function(ctlP){
-		this.log('Constructor()');
+		this.log('Constructor():start');
 		this.ctl=ctlP;
 		var Applogin=require('cjs/app/applogin.js');
 		this.applogin=new Applogin(ctlP);
+		this.log('Constructor():end');
 	};
 	login.prototype.src='res/cjs/cmd/cmd/login.js';
 	login.prototype.log=function(a){
-		//console.log(new Date().getTime()+" "+this.src+": "+a);
+		console.log(new Date().getTime()+" "+this.src+": "+a);
 	}
 	login.prototype.data={};
 	login.prototype.exec=function(){

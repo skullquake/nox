@@ -31,11 +31,8 @@
 		var Text=require('cjs/wid/text.js');
 		var Model=require('cjs/mod/mod.js');
 		var View=require('cjs/view/view.js');
-		var row=new Container();
-		row.addAttribute('class','row');
-		var col=row.addChild(new Container());
-		col.addAttribute('class','col-sm-12');
-		this.container=col.addChild(new Container();//ctx inh test (qwer)
+
+		this.container=new Container();
 		this.container.setCtx(this);
 		this.menu=new Menu();
 		this.menu.setCmd(this.ctl.data.cmd);
@@ -75,10 +72,16 @@
 		this.jumbotron.setTitle('App Login');
 		this.jumbotron.setSubTitle('Application Login');
 		this.container.addChild(this.jumbotron);
+		var container=this.container.addChild(new Container());
+		container.addAttribute('class','container');
+		var row=container.addChild(new Container());
+		row.addAttribute('class','row');
+		var col=row.addChild(new Container());
+		col.addAttribute('class','col-sm-12');
 
 		//login
-		this.containerLogin=new Container();
-		this.container.addChild(this.containerLogin);
+		this.containerLogin=col.addChild(new Container());
+		//this.container.addChild(this.containerLogin);
 		this.alertLogin=this.containerLogin.addChild(new Node());
 		this.alertLogin.setNodeName('div');
 		this.alertLogin.addAttribute('class','alert alert-info');
@@ -86,8 +89,8 @@
 		this.alertLogin.show();
 		this.formLogin=this.containerLogin.addChild(new Form());
 		this.formLogin.init();
-		this.formLogin.addField('usr');
-		this.formLogin.addField('pas');
+		this.formLogin.addField('usr','text','');
+		this.formLogin.addField('pas','password','');
 		this.formLogin.onClick=function(){
 			console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 			try{
@@ -98,10 +101,16 @@
 					this.ctx.ctl.ses.data.ual=1;
 					return 'home';
 				}else{
-					this.ctx.alertLogin.setText('Invalid Credentials');
+					var msg='';
+					msg+=usr==null||usr==''?'usr not specified':'';
+					msg+=(pas==null||pas=='')&&(usr==null||usr=='')?'<br/>':'';
+					msg+=pas==null||pas==''?'pas not specified':'';
+					this.ctx.alertLogin.setText(msg);
 					this.ctx.alertLogin.addAttribute('class','alert alert-danger');
 					this.ctx.alertLogin.show();
 					this.ctx.ctl.ses.data.ual=0;
+					this.addField('usr','text',usr);
+					this.addField('pas','password',pas);
 					return null;
 				}
 			}catch(e){
@@ -114,8 +123,8 @@
 		this.containerSignup=new Container();
 		this.formSignup=this.containerSignup.addChild(new Form());
 		this.formSignup.init();
-		this.formSignup.addField('usr');
-		this.formSignup.addField('pas');
+		this.formSignup.addField('usr','text','');
+		this.formSignup.addField('pas','password','');
 		this.formSignup.onClick=function(){
 			console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
 			var usr=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'usr');

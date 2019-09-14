@@ -46,27 +46,54 @@
 			this.inputAction.addAttribute('value','');
 		}
 	};
-	form.prototype.addField=function(a,b){
+	form.prototype.addField=function(a,b,c){
 		if(this.divFields==null){
 			this.divFields=this.addChild(new Node());
 			this.divFields.setNodeName('div');
 		}
+
 		if(typeof(a)=='string'){
-			var formType='text'
-			if(typeof(b)=='string'){
-				formType=b;
+			if(this.fieldmap==null){
+				this.fieldmap={};
 			}
-			var Node=require('cjs/wid/node.js');//fake orig
-			var span=this.divFields.addChild(new Node());
-			span.setNodeName('span');
-			span.setText(a);
-			var input=this.divFields.addChild(new Node());
-			input.setNodeName('input');
-			input.addAttribute('type',formType);
-			input.addAttribute('class','form-control');
-			input.addAttribute('name',a);
-			var br=this.divFields.addChild(new Node());
-			br.setNodeName('br');
+			var inputName=''
+			if(typeof(a)=='string'){
+				inputName=a;
+			}
+
+			var inputType='text'
+			if(typeof(b)=='string'){
+				inputType=b;
+			}
+			var inputValue=''
+			if(typeof(c)=='string'){
+				inputValue=c;
+			}
+			if(this.fieldmap[a]==null){
+				if(this.fieldmap[a]==null){
+					this.fieldmap[inputName]={};
+				}
+				var Node=require('cjs/wid/node.js');//fake orig
+				var span=this.divFields.addChild(new Node());
+				span.setNodeName('span');
+				span.setText(inputName);
+				var input=this.divFields.addChild(new Node());
+				input.setNodeName('input');
+				input.addAttribute('type',inputType);
+				input.addAttribute('class','form-control');
+				input.addAttribute('name',inputName);
+				input.addAttribute('value',inputValue);
+				var br=this.divFields.addChild(new Node());
+				br.setNodeName('br');
+				this.fieldmap[inputName].span=span;
+				this.fieldmap[inputName].input=input;
+			}else{
+				this.fieldmap[a].span.setText(inputName);
+				this.fieldmap[a].input.addAttribute('type',inputType);
+				this.fieldmap[a].input.addAttribute('name',inputName);
+				this.fieldmap[a].input.addAttribute('value',inputValue);
+
+			}
 		}else{
 			this.log('invalid field name');
 		}
