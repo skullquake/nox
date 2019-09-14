@@ -28,14 +28,26 @@
 		this.menu.addMenuItem(
 			[
 				{'name':'Reinit','cmd':'hdlreinit'},
-				{'name':'Login','cmd':'login'},
+				{'name':'Login','cmd':
+					function(){
+						try{
+							this.ctx.containerSignup.hide();
+							this.ctx.containerLogin.show();
+						}catch(e){
+							console.log(e);
+						}
+					}
+
+				},
 				{'name':'Home','cmd':'home'},
 				{'name':'Signup','cmd':
 					function(){
-						console.log('Callback test');
-						console.log(this.src);
-						console.log(typeof(this.ctx));
-						console.log(this.ctx.somedata);
+						try{
+							this.ctx.containerSignup.show();
+							this.ctx.containerLogin.hide();
+						}catch(e){
+							console.log(e);
+						}
 					}
 				}
 			]
@@ -45,6 +57,15 @@
 		this.jumbotron.setTitle('App Login');
 		this.jumbotron.setSubTitle('Application Login');
 		this.container.addChild(this.jumbotron);
+
+		this.containerLogin=new Container();
+		this.container.addChild(this.containerLogin);
+		this.containerLogin.setText('containerLogin');
+		this.containerSignup=new Container();
+		this.containerSignup.hide();
+
+		this.container.addChild(this.containerSignup);
+		this.containerSignup.setText('containerSignup');
 
 	};
 	applogin.prototype.src='res/cjs/app/applogin.js';

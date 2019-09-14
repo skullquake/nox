@@ -82,7 +82,7 @@
 	node.prototype.show=function(){
 		this.hidden=false;
 	}
-	node.prototype.toggleHIdden=function(){
+	node.prototype.toggleHidden=function(){
 		this.hidden=!this.hidden;
 	}
 	node.prototype.addAttribute=function(k,v){
