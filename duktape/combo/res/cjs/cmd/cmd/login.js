@@ -12,7 +12,7 @@
 	login.prototype.data={};
 	login.prototype.exec=function(){
 		this.log('exec()');
-		this.applogin.exec();
+		return this.applogin.exec();
 	}
 	login.prototype.update=function(){
 		this.data.modified=new Date().getTime();

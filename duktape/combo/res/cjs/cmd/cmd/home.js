@@ -12,7 +12,7 @@
 	Home.prototype.data={};
 	Home.prototype.exec=function(){
 		this.log('exec()');
-		this.appHome.exec();
+		return this.appHome.exec();
 	}
 	Home.prototype.update=function(){
 		this.data.modified=new Date().getTime();

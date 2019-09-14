@@ -19,7 +19,6 @@
 		this.log('exec()');
 		this.ses.ctl.exec();
 		this.update();
-		//this.log(this.toString(0,'\t'));
 	}
 	Hdl.prototype.toJson=function(){
 		var ret={};

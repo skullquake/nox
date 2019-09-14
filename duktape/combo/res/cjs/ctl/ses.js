@@ -40,7 +40,8 @@
 		}else{
 			this.log('cmdarg: null');
 		}
-		this.data.cmd=this.data.cmd==null?'home':this.data.cmd;
+		//todo: structured ual/app/cmd stuff
+		this.data.cmd=this.data.cmd==null?this.ses.data.ual==0?'login':'home':this.data.cmd;
 		this.log('curcmd: '+this.data.cmd);
 		this.err=false;
 		if(this.data.cmd!=null){

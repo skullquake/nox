@@ -146,6 +146,7 @@
 		this.log('setParent(): done');
 	};
 	node.prototype.addChild=function(c){
+		var ret=c;//for passthrough, e.g. var foo=this.container.addChild(new Node());...
 		if(c!=null){
 			try{
 				c.data._parent=this;
@@ -163,6 +164,7 @@
 		}else{
 			this.log('addChild(): c null');
 		}
+		return ret;
 	};
 	node.prototype.getParent=function(){
 		return this.data._parent;
