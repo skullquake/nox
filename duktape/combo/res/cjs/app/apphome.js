@@ -22,6 +22,7 @@
 		this.Container=require('cjs/wid/container.js');
 		this.Jumbotron=require('cjs/wid/jumbotron.js');
 		this.Menu=require('cjs/wid/menu.js');
+		this.Form=require('cjs/wid/form.js');
 
 		this.container=new this.Container(null,'qwer');//ctx inh test (qwer)
 		this.container.setCtx(this);
@@ -124,6 +125,77 @@
 	apphome.prototype.buildPageBioNode=function(){
 		this.containerBioNode=this.container.addChild(new this.Container());
 		this.containerBioNode.setText('<h3>BioNode</h3>');
+		this.containerBioNode
+			.addChild(new this.Container(),'alert')
+			.setClass('alert alert-info')
+			.setText('test')
+			.hide()
+		;
+		this.containerBioNode
+			.addChild(new this.Container(),'output')
+			.hide()
+		;
+		this.formBioTest=this.containerBioNode.addChild(new this.Form());
+		this.formBioTest.init();
+		this.formBioTest.addField('seq','text','');
+		this.formBioTest.setAction('home');
+		this.formBioTest.onClick=function(){
+			console.log('#######################');
+			var seq=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'seq');
+			this.addField('seq','text',seq);//same as set
+			var errmsg=[]
+			var valid=true;
+			if(seq==null||seq==''){valid=false;errmsg.push('seq not specified')}
+			if(valid){
+				typeof(this._parent.getChild('alert'))!='undefined'
+					?
+					this
+						._parent
+						.getChild('alert')
+						.setText('')
+						.hide()
+						
+					:
+					console.log('alert not found')
+				;
+
+				var _seqmsg='';
+				try{
+					var _seq=require('cjs/bionode/bionode-seq.min.js');
+					_seqmsg=_seq.checkType(seq);
+				}catch(e){
+					console.log(e.toString());
+					_seqmsg=e.toString();
+				}
+				typeof(this._parent.getChild('alert'))!='undefined'
+					?
+					this
+						._parent
+						.getChild('output')
+						.setText(_seqmsg)
+						.show()
+						
+					:
+					console.log('alert not found')
+				;
+
+			}else{
+				typeof(this._parent.getChild('alert'))!='undefined'
+					?
+					this
+						._parent
+						.getChild('alert')
+						.setText(errmsg.join('<br/>'))
+						.show()
+						
+					:
+					console.log('alert not found')
+				;
+			}
+			console.log('#######################');
+		};
+
+
 		this.containerBioNode.hide();
 		return this.containerBioNode;
 	}
