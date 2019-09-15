@@ -123,42 +123,32 @@
 		return this.containerTables;
 	}
 	apphome.prototype.buildPageBioNode=function(){
-		this.containerBioNode=this.container.addChild(new this.Container());
-		this.containerBioNode.setText('<h3>BioNode</h3>');
+		this.containerBioNode=this
+			.container
+			.addChild(new this.Container())
+			.setClass('container')
+			.addChild(new this.Container())
+			.setClass('row')
+			.addChild(new this.Container())
+			.setClass('col-sm-12')
+		;
+		this.formBioTest=this.containerBioNode.addChild(new this.Form());
 		this.containerBioNode
 			.addChild(new this.Container(),'alert')
 			.setClass('alert alert-info')
 			.setText('test')
 			.hide()
 		;
-		this.containerBioNode
-			.addChild(new this.Container(),'output')
-			.hide()
-		;
-		this.formBioTest=this.containerBioNode.addChild(new this.Form());
 		this.formBioTest.init();
 		this.formBioTest.addField('seq','text','');
 		this.formBioTest.setAction('home');
 		this.formBioTest.onClick=function(){
-			console.log('#######################');
 			var seq=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'seq');
 			this.addField('seq','text',seq);//same as set
 			var errmsg=[]
 			var valid=true;
 			if(seq==null||seq==''){valid=false;errmsg.push('seq not specified')}
 			if(valid){
-				typeof(this._parent.getChild('alert'))!='undefined'
-					?
-					this
-						._parent
-						.getChild('alert')
-						.setText('')
-						.hide()
-						
-					:
-					console.log('alert not found')
-				;
-
 				var _seqmsg='';
 				try{
 					var _seq=require('cjs/bionode/bionode-seq.min.js');
@@ -171,7 +161,8 @@
 					?
 					this
 						._parent
-						.getChild('output')
+						.getChild('alert')
+						.setClass('alert alert-info')
 						.setText(_seqmsg)
 						.show()
 						
@@ -185,6 +176,7 @@
 					this
 						._parent
 						.getChild('alert')
+						.setClass('alert alert-danger')
 						.setText(errmsg.join('<br/>'))
 						.show()
 						
@@ -192,10 +184,7 @@
 					console.log('alert not found')
 				;
 			}
-			console.log('#######################');
 		};
-
-
 		this.containerBioNode.hide();
 		return this.containerBioNode;
 	}
