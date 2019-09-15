@@ -84,8 +84,18 @@
 		this.formLogin.init();
 		this.formLogin.addField('login','text','');
 		this.formLogin.addField('password','password','');
+		this.formLogin
+			.divButtons
+			.addChild(new Anchor())
+			.setText('Signup')
+			.setCmd('login')
+			.setClass('btn btn-default')
+			.setOnClick(function(){
+				this.ctx.containerSignup.show();
+				this.ctx.containerLogin.hide();
+			})
+		;
 		this.formLogin.onClick=function(){
-			console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 			try{
 				this.ctx.alertLogin.hide();
 				var login=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'login');
@@ -171,8 +181,19 @@
 		this.formSignup.addField('surname','text','');
 		this.formSignup.addField('login','text','');
 		this.formSignup.addField('password','password','');
+		this.formSignup
+			.divButtons
+			.addChild(new Anchor())
+			.setText('Login')
+			.setCmd('login')
+			.setClass('btn btn-default')
+			.setOnClick(function(){
+				this.ctx.containerSignup.hide();
+				this.ctx.containerLogin.show();
+			})
+		;
+
 		this.formSignup.onClick=function(){
-			console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
 			var fname=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'name');
 			var lname=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'surname');
 			var login=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'login');

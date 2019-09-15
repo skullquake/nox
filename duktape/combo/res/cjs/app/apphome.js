@@ -104,12 +104,18 @@
 		this.containerTables.setText('<h3>Test - chained stuff, tables later</h3>');
 		for(var i=0;i<20;i++){//new chained syntax
 			this.containerTables
-				.addChild(new this.Anchor())
+				.addChild(new this.Anchor(),'a'+i)
+				.setClass('btn btn-default')
 				.setText('hello')
 				.setCmd(this.ctl.data.cmd)
 				.show()
 				.setOnClick(function(){
-					this.setText(this.getText()=='hello'?'byebye':'hello');
+					try{
+						this.setText(this.getText()=='hello'?'byebye':'hello');
+						typeof(this._parent.getChild('a0'))!='undefined'?this._parent.getChild('a0').setText('cviaid: '+new Date().getTime()):console.log('a0 not found');//this.getChild('a0').setText('via id');
+					}catch(e){
+						console.log(e.toString());
+					}
 				});
 		}
 		this.containerTables.hide();

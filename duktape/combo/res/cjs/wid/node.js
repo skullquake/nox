@@ -68,7 +68,14 @@
 		this.attributes[k]=v;
 		this.log('addAttribute(): end');
 		return this;
-	}
+	};
+	node.prototype.setClass=function(v){//not working
+		if(typeof(this.attributes)=='undefined'){
+			this.attributes={};
+		}
+		this.attributes['class']=v;
+		return this;//this.setText('qwer');//this.addAttribute('class',v);
+	};
 	node.prototype.attributesToString=function(){
 		var ret=' ';
 		var _this=this;
@@ -122,13 +129,20 @@
 		this.log('setParent(): done');
 		return this;
 	};
-	node.prototype.addChild=function(c){
+	node.prototype.addChild=function(c,id){//todo: id is query spec put on hashmap
 		var ret=c;//for passthrough, e.g. var foo=this.container.addChild(new Node());...
 		if(c!=null){
 			try{
-				c.data._parent=this;
+				//c.data._parent=this;
+				c._parent=this;
 				c.depth=this.depth+1;
 				c.ctx=this.ctx;
+				if(typeof(id)=='string'){
+					if(typeof(this.childrenmap)=='undefined'){
+						this.childrenmap={};
+					}
+					this.childrenmap[id]=c;
+				}
 				this._children.push(c);
 				var _this=this;
 				this.getDescendents().forEach(
@@ -143,11 +157,21 @@
 		}
 		return ret;
 	};
+	node.prototype.addSibling=function(c){//todo
+	};
+	node.prototype.addSiblingBefore=function(c){//todo
+	};
 	node.prototype.getParent=function(){
 		return this.data._parent;
 	}
 	node.prototype.getChildren=function(){
 		return this._children;
+	};
+	node.prototype.getChild=function(id){//get child from childrenmap via id
+		if(typeof(this.childrenmap)=='undefined'){
+			this.childrenmap={};
+		}
+		return this.childrenmap[id];
 	};
 	node.prototype.getDescendents=function(){
 		var ret=[];
