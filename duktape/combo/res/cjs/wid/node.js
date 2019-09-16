@@ -27,11 +27,28 @@
 		//console.log(new Date().getTime()+' '+this.src+': '+a);
 	}
 	//node.prototype.ctx=null;
-	node.prototype.data={};
+	//node.prototype.data={};
+	node.prototype.setData=function(a,b){
+		if(typeof(this.data)=='undefined')
+			this.data={};
+		this.data[a]=b;
+		return this;
+	};//for chaining
+	node.prototype.getData=function(a){
+		if(typeof(this.data)=='undefined')
+			this.data={};
+		return this.data[a];
+	}
 	node.prototype.attributes={};
 	node.prototype.hidden=false;
 	node.prototype.toJson=function(){
-		return {'msg':'unimplemented serializer'};
+		return {
+			'id':this.uuid,
+			'refresh':this.refresh,
+			'attr':this.attributes,
+			'onClick':this.hasOnClick,
+			'text':this.text
+		};
 	}
 	node.prototype.setNodeName=function(a){
 		this.nodename=typeof(a)=='string'?a:'';
@@ -167,11 +184,25 @@
 	node.prototype.getChildren=function(){
 		return this._children;
 	};
-	node.prototype.getChild=function(id){//get child from childrenmap via id
+	node.prototype.getChild=function(id){//get child from childrenmap via id, recursive, still needs testing
 		if(typeof(this.childrenmap)=='undefined'){
 			this.childrenmap={};
 		}
-		return this.childrenmap[id];
+		var ret=this.childrenmap[id];
+		if(typeof(ret)=='undefined'){
+			console.log('> NOT FOUND')
+			var d=this.getChildren();
+			for(var i=0;i<d.length;i++){
+				try{
+				ret=d[i].getChild(id);
+				if(typeof(ret)!='undefined')break;
+				}catch(e){
+				}
+			}
+		}else{
+			console.log('> FOUND')
+		}
+		return ret;
 	};
 	node.prototype.getDescendents=function(){
 		var ret=[];
@@ -194,7 +225,27 @@
 		//log('getDescendents(): end');
 		return ret;
 	};
-	/*
+	node.prototype.hasOnClick=false;
+	node.prototype.setOnClick=function(t){
+		if(typeof(t)=='function'){
+			this.log('setOnClick(): attaching function');
+			this.onClick=t;
+			this.hasOnClick=true;
+			//this.addAttribute('data','true');
+			this.addAttribute('data-srvact',true);
+			      
+		}else{
+			this.log('setOnClick(): not a function');
+			this.hasOnClick=false;
+			this.addAttribute('data-srvact',false);
+		}
+		console.log(this.attributesToString());
+		return this;
+	};
+	node.prototype.setCmd=function(c){
+		this.cmd=c;//==null?'null':typeof(c)=='string':c:typeof(c)=='function':try{c()}catch(e){this.log(e)}finally{'null'};
+		return this;
+	}
 	node.prototype.onClick=function(t){
 		if(typeof(t)=='function'){
 			this.log('onClick(): executing');
@@ -202,9 +253,14 @@
 		}else{
 			this.log('onClick(): not a function');
 		}
-		return this;
 	};
-	*/
-
+	node.prototype.refresh=function(){
+		this._refresh=true;//this._refresh==null?false:true;
+		this.getDescendents().forEach(
+			function(o,oidx){
+				o.refresh();
+			}
+		);
+	}
 	module.exports=node;
 }

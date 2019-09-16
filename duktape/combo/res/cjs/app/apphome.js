@@ -1,4 +1,3 @@
-
 {
 	var App=require('cjs/app/app.js?apphome');
 	var apphome=App;
@@ -34,7 +33,8 @@
 			'home':this.buildPageHome(),
 			'numbers':this.buildPageNumbers(),
 			'bionode':this.buildPageBioNode(),
-			'tables':this.buildPageTables()
+			'tables':this.buildPageTables(),
+			'ajaxtest':this.buildPageAjaxTest()
 		};
 	};
 	apphome.prototype.showPage=function(a){
@@ -75,11 +75,15 @@
 					this.ctx.jumbotron.setSubTitle('');
 					this.ctx.showPage('tables');
 				}},
-
 				{'name':'Numbers','cmd':function(){
 					this.ctx.jumbotron.setTitle('Buttons Test');
 					this.ctx.jumbotron.setSubTitle('');
 					this.ctx.showPage('numbers');
+				}},
+				{'name':'Ajax Test','cmd':function(){
+					this.ctx.jumbotron.setTitle('Buttons Test');
+					this.ctx.jumbotron.setSubTitle('');
+					this.ctx.showPage('ajaxtest');
 				}},
 				{'name':'Logout','cmd':'logout'},
 			]
@@ -136,6 +140,7 @@
 		this.containerBioNode
 			.addChild(new this.Container(),'alert')
 			.setClass('alert alert-info')
+			.addAttribute('style','margin-top:8px;')
 			.setText('test')
 			.hide()
 		;
@@ -150,6 +155,7 @@
 			if(seq==null||seq==''){valid=false;errmsg.push('seq not specified')}
 			if(valid){
 				var _seqmsg='';
+				var _seqmsgerr=false;
 				try{
 					var _seq=require('cjs/bionode/bionode-seq.min.js');
 					_seqmsg=_seq.checkType(seq);
@@ -157,12 +163,14 @@
 					console.log(e.toString());
 					_seqmsg=e.toString();
 				}
+				_seqmsgerr=_seqmsg==''||_seqmsg==null;
+				_seqmsg==''||_seqmsg==null?_seqmsg='Invalid sequence':null;
 				typeof(this._parent.getChild('alert'))!='undefined'
 					?
 					this
 						._parent
 						.getChild('alert')
-						.setClass('alert alert-info')
+						.setClass(_seqmsgerr==true?'alert alert-danger':'alert alert-info')
 						.setText(_seqmsg)
 						.show()
 						
@@ -188,7 +196,6 @@
 		this.containerBioNode.hide();
 		return this.containerBioNode;
 	}
-
 	apphome.prototype.buildPageNumbers=function(){
 		this.containerNumbers=this.container.addChild(new this.Container());
 		for(var j=0;j<4;j++){
@@ -225,7 +232,34 @@
 		}
 		this.containerNumbers.hide();
 		return this.containerNumbers;
-	}
+	};
+	apphome.prototype.buildPageAjaxTest=function(){
+		this.containerHome=this.container.addChild(new this.Container());
+		this.containerHome.setText('<h3>Ajax Test</h3>');
+		this
+			.containerHome.addChild(new this.Anchor())
+			.setCmd(null)
+			.setText('ajaxtest')
+			//.addAttribute('onclick',"alert('test');")
+			.addAttribute('href','#')
+			.addAttribute('class','btn btn-default')
+			.addAttribute('onclick',
+"\
+$.post('/log',this).then(function(a){console.log(a);});\
+"
+			)
+			.setOnClick(
+				function(){
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+					var ajax=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'ajax');
+					console.log(ajax);
+					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+				}
+			)
+		;
+		this.containerHome.hide();
+		return this.containerHome;
+	};
 	module.exports=apphome;
 }
 

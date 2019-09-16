@@ -105,6 +105,7 @@ namespace app::controllers{
 		addRoute("GET","/xas",MyController,xas);
 		addRoute("POST","/xas",MyController,xas);
 		addRoute("PUT","/xas",MyController,xas);
+		addRoute("POST","/log",MyController,log);
 		std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: done"<<std::endl;
 	}
 	void MyController::home(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
@@ -274,6 +275,8 @@ namespace app::controllers{
 
 	}
 #endif
-
+	void MyController::log(::Mongoose::Request &request, ::Mongoose::StreamResponse &response){
+		std::cout<<std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()<<" ctl: log: "<<request.getData()<<std::endl;
+	}
 }
 

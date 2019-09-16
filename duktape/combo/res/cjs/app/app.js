@@ -92,7 +92,6 @@
 		this.formLogin.addField('login','text','');
 		this.formLogin.addField('password','password','');
 		this.formLogin.onClick=function(){
-			console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 			try{
 				this.ctx.alertLogin.hide();
 				var login=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'login');
@@ -120,7 +119,6 @@
 							login
 						)
 					;
-					console.log(sql);
 					res=db.select(table,sql);//[0];
 					if(parseInt(res[0])!=0){
 						sql=
@@ -179,7 +177,6 @@
 		this.formSignup.addField('login','text','');
 		this.formSignup.addField('password','password','');
 		this.formSignup.onClick=function(){
-			console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
 			var fname=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'name');
 			var lname=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'surname');
 			var login=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'login');
@@ -212,7 +209,6 @@
 				var res=db.select(table,sql);//[0];
 				if(parseInt(res[0])==0){
 					try{
-						console.log("user does not exist: creating...");
 						sql=	
 							(
 								"INSERT INTO <%- table %>("+
@@ -299,33 +295,72 @@
 		this.log('exec(): end ['+((t1-t0)/1000)+' s]');
 	}
 	app.prototype.procreq=function(){
+		console.log('app.prototype.procreq=function():start');
 		var ret=null;
 		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
 		var _this=this;
 		var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
-		console.log('----------------------------------------');
 		console.log(request.getQueryString());
-		//console.log(id);
-		//console.log(o);
-		console.log('----------------------------------------');
 		switch(
 			typeof(o)
 		){
 			case 'object':
-				if(typeof(o.onClick)=='function')
+				console.log("case 'object':");
+				if(typeof(o.onClick)=='function'){
+					console.log("case function':");
+					//o.refresh();
 					ret=o.onClick();
+				}
 				break;
 			default:
 				break;
 		};
+		console.log('app.prototype.procreq=function():end');
 		return ret;
 	};
 	app.prototype.exec=function(){
 		this.log('exec(): start');
 		var ret=null;
 		ret=this.procreq();
-		if(ret==null){
-			this.render();
+		if(this.urlUtils.getQueryVariable(request.getQueryString(),'ajax')=='true'){
+			console.log('----------------');
+			try{
+				/*
+				var _this=this;
+				var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
+				var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
+				arrobj.push(o.toJson());
+				arrobj.push(o.toJson());
+				arrobj.push(o.toJson());
+				*/
+				/*
+				*/
+				var _this=this;
+				var arrobj=[];
+				var arrobjjson=[];
+				arrobj=this._.filter(this.container.getDescendents(), function(o) { return o._refresh==true;});
+				arrobj.forEach(
+					function(obj,objidx){
+						arrobjjson.push(obj.toJson());
+					}
+				);
+				_response.setHeader('Content-type','application/json');
+				_response.write(
+						JSON.stringify(arrobjjson)
+				);
+				arrobj.forEach(
+					function(obj,objidx){
+						obj._refresh=false;
+					}
+				);
+			}catch(e){
+				console.log(e.toString());
+			}
+			console.log('----------------');
+		}else{
+			if(ret==null){
+				this.render();
+			}
 		}
 		return ret;
 	}

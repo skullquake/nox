@@ -24,6 +24,7 @@
 		var Text=require('cjs/wid/text.js');
 		var Model=require('cjs/mod/mod.js');
 		var View=require('cjs/view/view.js');
+		var AjaxTest=require('cjs/wid/custom/ajaxtest.js');
 
 		this.container=new Container();
 		this.container.setCtx(this);
@@ -61,9 +62,17 @@
 			]
 		);
 		this.container.addChild(this.menu);
+		//this.ajaxtest(this.container);
+		this.container.addChild(new AjaxTest().init());
+		console.log('################################################################################################################################');
 		this.jumbotron=new Jumbotron();
 		this.jumbotron.setTitle('App Login');
 		this.jumbotron.setSubTitle('Application Login');
+		this.jumbotron.setOnClick(function(){
+			for(var i=0;i<20;i++){
+				console.log('yaaaas');
+			}
+		});
 		this.container.addChild(this.jumbotron);
 		var container=this.container.addChild(new Container());
 		container.addAttribute('class','container');
@@ -80,7 +89,11 @@
 		this.alertLogin.addAttribute('class','alert alert-info');
 		this.alertLogin.setText('enter credentials');
 		this.alertLogin.hide();
+
+
 		this.formLogin=this.containerLogin.addChild(new Form());
+
+
 		this.formLogin.init();
 		this.formLogin.addField('login','text','');
 		this.formLogin.addField('password','password','');
@@ -292,6 +305,71 @@
 		this.containerSignup.hide();
 		this.log('init():end');
 	};
+	applogin.prototype.ajaxtest=function(a){
+		this.progressdata={
+			min:0,
+			max:100,
+			cur:0,
+			btns:[],
+			nbtns:8
+		}
+		var Anchor=require('cjs/wid/anchor.js');
+		var Node=require('cjs/wid/node.js');
+		a.addChild(new Node())
+			.setNodeName('script')
+			.setText(
+				new TextDecoder("utf-8").decode(readFile('./res/wjs/wcli.js'))
+			)
+		;
+		var _this=this;
+		var arrbtn=[];
+		var progress=
+			a
+			.addChild(new Node(),'progress')
+			.setNodeName('div')
+			.setClass('progress')
+			.addChild(new Node(),'progressbar')
+			.setNodeName('div')
+			.setClass('progress-bar progress-bar-striped progress-bar-animated')
+			.addAttribute('style','width:25%')
+			.addAttribute('aria-valuenow','25')
+			.addAttribute('aria-valuemin','0')
+			.addAttribute('aria-valuemax','100')
+		;
+		for(var i=0;i<this.progressdata.nbtns;i++){
+			var asdf=i;
+			var btn=
+			a
+			.addChild(new Anchor(),'btn'+i)
+				.setCmd(null)
+				.setText(i)
+				//.setData('idx',''+i)//asdf)//(function(){var ii=i;return i;})())
+				.setData('idx',i)//asdf)//(function(){var ii=i;return i;})())
+				.addAttribute('class','btn btn-default')
+				.addAttribute('href','#')
+				.setOnClick(
+					function(){
+						var _this=this;
+						this.setText(this.getData('idx'));
+						this.ctx.progressdata.btns.forEach(
+							function(b,bidx){
+								b.setClass('btn '+(b.getData('idx')<_this.getData('idx')?'btn-danger':'btn-default'));
+								b.refresh();
+							}
+						);
+						var classes=['info','warning','danger','success']
+						var _class='danger';
+						this.setClass('btn btn-'+_class);
+						this._parent.getChild('btn0').refresh();
+						this._parent.getChild('progressbar').addAttribute('style','width:'+this.getData('idx')*10+'%;');
+						this._parent.getChild('progressbar').refresh();
+					}
+				)
+			;
+			this.progressdata.btns.push(btn);
+		}
+
+	}
 	module.exports=applogin;
 }
 

@@ -11,6 +11,7 @@
 	anchor.prototype.getText=function(){
 		return this.text;
 	};
+	/*
 	anchor.prototype.setOnClick=function(t){
 		if(typeof(t)=='function'){
 			this.log('setOnClick(): attaching function');
@@ -20,6 +21,7 @@
 		}
 		return this;
 	};
+	*/
 	anchor.prototype.setCmd=function(c){
 		this.cmd=c;//==null?'null':typeof(c)=='string':c:typeof(c)=='function':try{c()}catch(e){this.log(e)}finally{'null'};
 		return this;
@@ -39,7 +41,8 @@
 			idx=idx==null?0:idx;
 			for(var i=0;i<idx;i++)ret+=idt;
 			ret+='<a id="'+this.uuid+'" ';
-			ret+='href="'+(this.cmd!=null?'/?cmd='+this.cmd+'&id='+this.uuid:'#')+'"';
+			//ret+='href="'+(this.cmd!=null?'/?cmd='+this.cmd+'&id='+this.uuid:'#')+'"';
+			ret+=this.cmd!=null?' href="/?cmd='+this.cmd+'&id='+this.uuid+'"':'';
 			ret+=this.attributesToString();
 			ret+='>';
 			ret+='\n';
