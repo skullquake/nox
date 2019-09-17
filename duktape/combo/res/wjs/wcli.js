@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
 	window.srvlog=function(a){
 		$.post(
@@ -9,7 +8,6 @@ $(document).ready(function(){
 	$(window).on('click',function(a){
 		if($(a.target).attr('data-srvact')=='true'){
 			var url='/?cmd=login&id='+a.target.id+'&ajax=true';
-			window.srvlog(url);
 			$.get(
 				url
 			).then(
@@ -27,29 +25,53 @@ $(document).ready(function(){
 							}
 							arrobj.forEach(
 								function(obj,objidx){
-									console.log(obj);
-									//obj.id!=null?$(a.target).attr('id',obj.id):null;
-									Object.keys(obj.attr).forEach(
-										function(attr,attridx){
-											obj.attr[attr]!=null
-												?
-												$('#'+obj.id).attr(attr,obj.attr[attr])
-												:
-												$('#'+obj.id).removeAttr(attr);
+									try{
+										if($('#'+obj.id).prop('tagName')=='SCRIPT'){
+											srvlog('script PROC:'+$('#'+obj.id).prop('tagName'));
+											//js payload
+											if(typeof(obj.wjs)=='object'){
+												if(typeof(obj.wjs.length)!='undefined'){
+													srvlog('arrscript');
+													obj.wjs.forEach(
+														function(src,srcidx){
+															eval(src);
+														}
+													);
+												}else{
+													srvlog('onescript');
+												}
+											}else if(typeof(obj.wjs)=='string'){
+												srvlog('stringscript');
+												srvlog(eval(obj.wjs))
+											}else{
+												srvlog('noscript');
+											}
+										}else{
+											//wslog(obj);
+											//obj.id!=null?$(a.target).attr('id',obj.id):null;
+											Object.keys(obj.attr).forEach(
+												function(attr,attridx){
+													obj.attr[attr]!=null
+														?
+														$('#'+obj.id).attr(attr,obj.attr[attr])
+														:
+														$('#'+obj.id).removeAttr(attr);
+												}
+											);
+											if(obj.text!=null){
+												$('#'+obj.id).text(obj.text);
+											}
 										}
-									);
-									$('#'+obj.id).text(obj.text)
-
+									}catch(e){
+										srvlog(e.toString());
+									}
 								}
-
 							);
 						}catch(e){
-							console.error(e);
+							srvlog('script: '+e.toString());
 						}
 					}else{
 					}
-					/*$(a.target).replaceWith(r);*/
-					/*$(a.target).css('background','red');*/
 				}
 			);
 

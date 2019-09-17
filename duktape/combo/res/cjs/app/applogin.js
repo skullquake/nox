@@ -64,7 +64,6 @@
 		this.container.addChild(this.menu);
 		//this.ajaxtest(this.container);
 		this.container.addChild(new AjaxTest().init());
-		console.log('################################################################################################################################');
 		this.jumbotron=new Jumbotron();
 		this.jumbotron.setTitle('App Login');
 		this.jumbotron.setSubTitle('Application Login');
@@ -315,12 +314,16 @@
 		}
 		var Anchor=require('cjs/wid/anchor.js');
 		var Node=require('cjs/wid/node.js');
+		/*
 		a.addChild(new Node())
 			.setNodeName('script')
 			.setText(
 				new TextDecoder("utf-8").decode(readFile('./res/wjs/wcli.js'))
 			)
+			//.queuecmd('alert("1")')
+			//.queuecmd('alert("2")')
 		;
+		*/
 		var _this=this;
 		var arrbtn=[];
 		var progress=

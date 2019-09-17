@@ -295,6 +295,7 @@
 		this.log('exec(): end ['+((t1-t0)/1000)+' s]');
 	}
 	app.prototype.procreq=function(){
+		//todo: interceptors
 		console.log('app.prototype.procreq=function():start');
 		var ret=null;
 		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
@@ -323,7 +324,6 @@
 		var ret=null;
 		ret=this.procreq();
 		if(this.urlUtils.getQueryVariable(request.getQueryString(),'ajax')=='true'){
-			console.log('----------------');
 			try{
 				/*
 				var _this=this;
@@ -356,7 +356,6 @@
 			}catch(e){
 				console.log(e.toString());
 			}
-			console.log('----------------');
 		}else{
 			if(ret==null){
 				this.render();
