@@ -238,33 +238,49 @@
 	apphome.prototype.buildPageAjaxTest=function(){
 		console.log('apphome.prototype.buildPageAjaxTest=function():start');
 		if(typeof(this.containerAjax)=='undefined'){//avoid rebuilding
+			//root container
 			this.containerAjax=this.container.addChild(new this.Container());
 			this.containerAjax.addChild(
 				new this.Ajax()
 				.init()
 				.putToken('<%= cmd %>','home')
-			);
+			);//ajaxing widget (under development)
+			//some child widgets with callbacks that are going to ajax
 			this.containerAjax
-			.addChild(new this.Node())
-				.setNodeName('div')
-				.setText('d0')
-				.addStyleAttribute('background','green')
-				.addStyleAttribute('padding','8px')
-				.setOnClick(
-					function(){
-						console.log('________________________________________');
-						console.log('________________________________________');
-						console.log('________________________________________');
-						console.log('________________________________________');
-						this.addStyleAttribute('background',this.getStyleAttribute('background')=='green'?'red':'green')
-						this.refresh();
-						console.log('________________________________________');
-						console.log('________________________________________');
-						console.log('________________________________________');
-						console.log('________________________________________');
-					}
-				)
+				.addChild(new this.Container(),'msgcontainer')
+				.setText('Click on the squares')
+				.addAttribute('class','alert alert-primary')
 			;
+			this.containerAjax
+				.addChild(new this.Container(),'boxescontainer')
+				.addStyleAttribute('display','flex')
+				.addStyleAttribute('flex-wrap','wrap');
+			for(var i=0;i<128;i++){
+				this.containerAjax.getChild('boxescontainer')
+				.addChild(new this.Node())
+					.setNodeName('div')
+					.setCtx(this)
+					.setText('')
+					.addStyleAttribute('background','green')
+					.addStyleAttribute('padding','16px')
+					.addStyleAttribute('margin','8px')
+					.setOnClick(
+						function(){
+							console.log('________________________________________');
+							console.log('ajax rEx                                ');
+							console.log('________________________________________');
+							this.addStyleAttribute('background',this.getStyleAttribute('background')=='green'?'red':'green')
+							this.refresh();
+							//this.ctx.getChild('msgcontainer').setText('asdf');
+							//this.ctx.getChild('msgcontainer').refresh();
+							console.log(this.ctx.containerAjax.getChild('msgcontainer').setText('Server callback for '+this.uuid));
+							this.ctx.containerAjax.getChild('msgcontainer').refresh();
+							console.log('________________________________________');
+						}
+					)
+				;
+			}
+			//hide for navigation
 			this.containerAjax.hide();
 		console.log('apphome.prototype.buildPageAjaxTest=function():end');
 			return this.containerAjax;

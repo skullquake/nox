@@ -221,7 +221,7 @@
 				//c.data._parent=this;
 				c._parent=this;
 				c.depth=this.depth+1;
-				c.ctx=this.ctx;
+				if(c.ctx==null)c.ctx=this.ctx;//??how to deal
 				if(typeof(id)=='string'){
 					if(typeof(this.childrenmap)=='undefined'){
 						this.childrenmap={};
