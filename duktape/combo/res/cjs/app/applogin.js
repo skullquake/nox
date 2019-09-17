@@ -103,8 +103,10 @@
 			.setCmd('login')
 			.setClass('btn btn-default')
 			.setOnClick(function(){
+				console.log('xxxxxxxxxxxxxxxxxxxxxxxx');
 				this.ctx.containerSignup.show();
 				this.ctx.containerLogin.hide();
+				console.log('xxxxxxxxxxxxxxxxxxxxxxxx');
 			})
 		;
 		this.formLogin.onClick=function(){
@@ -185,6 +187,9 @@
 
 		//signup
 		this.containerSignup=col.addChild(new Container());
+		/*
+		this.containerSignup.addChild(new Container().setText('asdf'));
+		*/
 		this.alertSignup=this.containerSignup.addChild(new Container());
 		this.alertSignup.hide();
 		this.formSignup=this.containerSignup.addChild(new Form());

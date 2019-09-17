@@ -66,13 +66,13 @@
 		return this;
 	}
 	node.prototype.hide=function(){
-		this.addAttribute('hidden','true');
 		this.hidden=true;
+		//this.addAttribute('hidden','true');
 		return this;
 	}
 	node.prototype.show=function(){
 		this.hidden=false;
-		this.addAttribute('hidden','false');
+		//this.addAttribute('hidden','false');
 		return this;
 	}
 	node.prototype.toggleHidden=function(){

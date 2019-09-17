@@ -79,7 +79,6 @@
 							console.log(e.toString());
 						}
 						console.log('////////////////////////////////////////');
-
 						try{
 							var _this=this;
 							this.setText(this.getData('idx'));
