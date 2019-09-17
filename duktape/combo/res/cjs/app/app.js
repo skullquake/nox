@@ -299,21 +299,24 @@
 		console.log('app.prototype.procreq=function():start');
 		var ret=null;
 		var id=this.urlUtils.getQueryVariable(request.getQueryString(),'id');
+		console.log('id:'+id);
 		var _this=this;
-		var o=this._.find(this.container.getDescendents(), function(o) { return o.uuid==id;});
-		console.log(request.getQueryString());
+		var o=this._.find(this.container.getDescendents(),function(o){return o.uuid==id;});
 		switch(
 			typeof(o)
 		){
 			case 'object':
-				console.log("case 'object':");
+				console.log("found");
 				if(typeof(o.onClick)=='function'){
-					console.log("case function':");
+					console.log('executing callback');
 					//o.refresh();
 					ret=o.onClick();
+				}else{
+					console.log('callback null');
 				}
 				break;
 			default:
+				console.log("not found");
 				break;
 		};
 		console.log('app.prototype.procreq=function():end');

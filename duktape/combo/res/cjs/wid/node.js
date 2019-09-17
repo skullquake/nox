@@ -42,10 +42,21 @@
 	node.prototype.attributes={};
 	node.prototype.hidden=false;
 	node.prototype.toJson=function(){
+		var attr={};
+		var _this=this;
+		Object.keys(this.attributes).forEach(
+			function(a,b){
+				if(a!='style'){
+					attr[a]=_this.attributes[a]
+				}
+			}
+		);
+		if(typeof(this.attributes['style']=='string'))
+			attr["style"]=(this.attributes['style']!=null?this.attributes['style']+';':'')+this.styleAttributesToString();
 		return {
 			'id':this.uuid,
 			'refresh':this.refresh,
-			'attr':this.attributes,
+			'attr':attr,//this.attributes,
 			'onClick':this.hasOnClick,
 			'text':this.text
 		};
@@ -84,8 +95,40 @@
 		if(typeof(this.attributes)=='undefined'){
 			this.attributes={};
 		}
+		if(typeof(v)=='undefined'){
+			v='';
+		}
 		this.attributes[k]=v;
 		this.log('addAttribute(): end');
+		return this;
+	};
+	node.prototype.addStyleAttribute=function(k,v){
+		this.log('addStyleAttribute(): start');
+		if(typeof(this.styleattributes)=='undefined'){
+			this.styleattributes={};
+		}
+		if(typeof(v)=='undefined'){
+			v='';
+		}
+		this.styleattributes[k]=v;
+		this.log('addStyleAttribute(): end');
+		return this;
+	};
+	node.prototype.getStyleAttribute=function(k){
+		this.log('getStyleAttribute(): start');
+		if(typeof(this.styleattributes)=='undefined'){
+			this.styleattributes={};
+		}
+		return this.styleattributes[k];
+	};
+
+	node.prototype.remAttribute=function(k,v){
+		this.log('remAttribute(): start');
+		if(typeof(this.attributes)=='undefined'){
+			this.attributes={};
+		}
+		delete this.attributes[k];//=v;
+		this.log('remAttribute(): end');
 		return this;
 	};
 	node.prototype.setClass=function(v){//not working
@@ -95,12 +138,35 @@
 		this.attributes['class']=v;
 		return this;//this.setText('qwer');//this.addAttribute('class',v);
 	};
+	node.prototype.styleAttributesToString=function(){
+		var ret='';
+		if(typeof(this.styleattributes)=='undefined'){
+			this.styleattributes={};
+		}
+		try{
+			var _this=this;
+			Object.keys(this.styleattributes).forEach(
+				function(a,b){
+					ret+=a+':'+_this.styleattributes[a]+';'
+				}
+			);
+		}catch(e){
+			console.log(e.toString());
+		}
+		return ret;
+
+	}
+
 	node.prototype.attributesToString=function(){
 		var ret=' ';
+		if(typeof(this.attributes['style']=='string'))
+			ret+='style="'+(this.attributes['style']!=null?this.attributes['style']:'')+this.styleAttributesToString()+'" ';
 		var _this=this;
 		Object.keys(this.attributes).forEach(
 			function(a,b){
-				ret+=a+'="'+_this.attributes[a]+'" '
+				if(a!='style'){
+					ret+=a+'="'+_this.attributes[a]+'" ';
+				}
 			}
 		);
 		return ret;

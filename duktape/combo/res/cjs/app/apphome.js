@@ -4,7 +4,7 @@
 	apphome.prototype.init=function(ctlp){
 		this.log('Constructor()');
 		this.somedata='lorem ipsum';
-		this.ajax=false;
+		this.ajax=true;//false;
 		this.ctl=ctlp;
 		var UrlUtils=require('cjs/url/urlutils.js');
 		this.urlUtils=new UrlUtils();
@@ -22,8 +22,9 @@
 		this.Jumbotron=require('cjs/wid/jumbotron.js');
 		this.Menu=require('cjs/wid/menu.js');
 		this.Form=require('cjs/wid/form.js');
+		this.Ajax=require('cjs/wid/ajax.js');
 
-		this.container=new this.Container(null,'qwer');//ctx inh test (qwer)
+		this.container=new this.Container(null);//ctx inh test (qwer)
 		this.container.setCtx(this);
 
 		this.buildMenu();
@@ -36,6 +37,7 @@
 			'tables':this.buildPageTables(),
 			'ajaxtest':this.buildPageAjaxTest()
 		};
+         
 	};
 	apphome.prototype.showPage=function(a){
 		if(typeof(a)=='string'){
@@ -81,7 +83,7 @@
 					this.ctx.showPage('numbers');
 				}},
 				{'name':'Ajax Test','cmd':function(){
-					this.ctx.jumbotron.setTitle('Buttons Test');
+					this.ctx.jumbotron.setTitle('Ajax Test');
 					this.ctx.jumbotron.setSubTitle('');
 					this.ctx.showPage('ajaxtest');
 				}},
@@ -234,31 +236,42 @@
 		return this.containerNumbers;
 	};
 	apphome.prototype.buildPageAjaxTest=function(){
-		this.containerHome=this.container.addChild(new this.Container());
-		this.containerHome.setText('<h3>Ajax Test</h3>');
-		this
-			.containerHome.addChild(new this.Anchor())
-			.setCmd(null)
-			.setText('ajaxtest')
-			//.addAttribute('onclick',"alert('test');")
-			.addAttribute('href','#')
-			.addAttribute('class','btn btn-default')
-			.addAttribute('onclick',
-"\
-$.post('/log',this).then(function(a){console.log(a);});\
-"
-			)
-			.setOnClick(
-				function(){
-					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-					var ajax=this.ctx.urlUtils.getQueryVariable(request.getQueryString(),'ajax');
-					console.log(ajax);
-					console.log('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
-				}
-			)
-		;
-		this.containerHome.hide();
-		return this.containerHome;
+		console.log('apphome.prototype.buildPageAjaxTest=function():start');
+		if(typeof(this.containerAjax)=='undefined'){//avoid rebuilding
+			this.containerAjax=this.container.addChild(new this.Container());
+			this.containerAjax.addChild(
+				new this.Ajax()
+				.init()
+				.putToken('<%= cmd %>','home')
+			);
+			this.containerAjax
+			.addChild(new this.Node())
+				.setNodeName('div')
+				.setText('d0')
+				.addStyleAttribute('background','green')
+				.addStyleAttribute('padding','8px')
+				.setOnClick(
+					function(){
+						console.log('________________________________________');
+						console.log('________________________________________');
+						console.log('________________________________________');
+						console.log('________________________________________');
+						this.addStyleAttribute('background',this.getStyleAttribute('background')=='green'?'red':'green')
+						this.refresh();
+						console.log('________________________________________');
+						console.log('________________________________________');
+						console.log('________________________________________');
+						console.log('________________________________________');
+					}
+				)
+			;
+			this.containerAjax.hide();
+		console.log('apphome.prototype.buildPageAjaxTest=function():end');
+			return this.containerAjax;
+		}else{
+		console.log('apphome.prototype.buildPageAjaxTest=function():end');
+			return null;
+		}
 	};
 	module.exports=apphome;
 }

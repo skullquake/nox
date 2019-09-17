@@ -1,0 +1,81 @@
+$(document).ready(function(){
+	window.srvlog=function(a){
+		$.post(
+			'/log',
+			JSON.stringify(a)
+		);
+	};
+	$(window).on('click',function(a){
+		if($(a.target).attr('data-srvact')=='true'){
+			var url='/?cmd=<%= cmd %>&id='+a.target.id+'&ajax=true';
+			$.get(
+				url
+			).then(
+				function(r){
+					//window.srvlog(r.toString());
+					/*$(a.target).replaceWith(r);*/
+					if(r!=null){
+						try{
+							r=JSON.parse(r);
+							var arrobj=[];
+							if(typeof(r.length)=='undefined'){
+								arrobj.push(r);
+							}else{
+								arrobj=r;
+							}
+							arrobj.forEach(
+								function(obj,objidx){
+									try{
+										if($('#'+obj.id).prop('tagName')=='SCRIPT'){
+											srvlog('script PROC:'+$('#'+obj.id).prop('tagName'));
+											//js payload
+											if(typeof(obj.wjs)=='object'){
+												if(typeof(obj.wjs.length)!='undefined'){
+													srvlog('arrscript');
+													obj.wjs.forEach(
+														function(src,srcidx){
+															eval(src);
+														}
+													);
+												}else{
+													srvlog('onescript');
+												}
+											}else if(typeof(obj.wjs)=='string'){
+												srvlog('stringscript');
+												srvlog(eval(obj.wjs))
+											}else{
+												srvlog('noscript');
+											}
+										}else{
+											//wslog(obj);
+											//obj.id!=null?$(a.target).attr('id',obj.id):null;
+											Object.keys(obj.attr).forEach(
+												function(attr,attridx){
+													obj.attr[attr]!=null
+														?
+														$('#'+obj.id).attr(attr,obj.attr[attr])
+														:
+														$('#'+obj.id).removeAttr(attr);
+												}
+											);
+											if(obj.text!=null){
+												$('#'+obj.id).text(obj.text);
+											}
+										}
+									}catch(e){
+										srvlog(e.toString());
+									}
+								}
+							);
+						}catch(e){
+							srvlog('script: '+e.toString());
+						}
+					}else{
+					}
+				}
+			);
+
+		}else{
+		}
+	});
+});

@@ -2,12 +2,21 @@
 	var Node=require('cjs/wid/node.js?wid/custom/ajaxtest');
 	var ajaxtest=Node;
 	ajaxtest.prototype.init=function(){
-		this.setCtx(this);//is own root, for getting proto functions
-		var Container=require('cjs/wid/container.js');
-		var Anchor=require('cjs/wid/anchor.js');
-		var Node=require('cjs/wid/node.js');
-		var Script=require('cjs/wid/script.js');
-		this.setNodeName('div');
+		this
+			.setNodeName('div')
+			.addAttribute('style','border:1px solid white;')
+			.addStyleAttribute('background','red')
+			.addStyleAttribute('width','32px')
+			.addStyleAttribute('height','32px')
+			.setOnClick(
+				function(){
+					console.log('yyyyyyyyyyyyyyyyyyyyy');
+				}
+			)
+		;
+		console.log('##############################')
+		console.log(this.uuid);
+		console.log('##############################')
 		this.progressdata={
 			min:0,
 			max:100,
@@ -15,19 +24,19 @@
 			btns:[],
 			nbtns:16
 		}
-		/*
-		this.addChild(new Node())
-			.setNodeName('script')
-			.setText(
-				new TextDecoder("utf-8").decode(readFile('./res/wjs/wcli.js'))
-			)
-		;
-		*/
+		//this.setCtx(this);//is own root, for getting proto functions
+		this.setCtx();//is own root, for getting proto functions
+		var Container=require('cjs/wid/container.js');
+		var Anchor=require('cjs/wid/anchor.js');
+		var Node=require('cjs/wid/node.js');
+		var Script=require('cjs/wid/script.js');
 		this.script=
 			this
 			.addChild(new Script())
-			.init('./res/wjs/wcli.js')
+			.init('./res/tpl/wcli.js')
+
 		;
+		/*
 		var _this=this;
 		var arrbtn=[];
 		var colorcontainer=
@@ -118,6 +127,7 @@
 			;
 			this.progressdata.btns.push(btn);
 		}
+		*/
 		return this;
 	}
 	ajaxtest.prototype.HSVToRGB=function(h,s,v){

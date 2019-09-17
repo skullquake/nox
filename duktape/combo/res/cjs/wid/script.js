@@ -3,6 +3,7 @@
 	var script=Node;
 	//script.prototype._cmdqueue=[];
 	script.prototype.cmdqueue=[];
+	script.prototype.nodename='script';
 	script.prototype.queuecmd=function(c){//,a){
 		if(typeof(this._queuecmd)=='undefined'){
 			this._cmdqueue=[];

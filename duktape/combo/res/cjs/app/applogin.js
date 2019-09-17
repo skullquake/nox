@@ -24,8 +24,7 @@
 		var Text=require('cjs/wid/text.js');
 		var Model=require('cjs/mod/mod.js');
 		var View=require('cjs/view/view.js');
-		var AjaxTest=require('cjs/wid/custom/ajaxtest.js');
-
+		//var AjaxTest=require('cjs/wid/custom/ajaxtest.js');
 		this.container=new Container();
 		this.container.setCtx(this);
 		this.menu=new Menu();
@@ -63,7 +62,7 @@
 		);
 		this.container.addChild(this.menu);
 		//this.ajaxtest(this.container);
-		this.container.addChild(new AjaxTest().init());
+		//this.container.addChild(new AjaxTest().init());
 		this.jumbotron=new Jumbotron();
 		this.jumbotron.setTitle('App Login');
 		this.jumbotron.setSubTitle('Application Login');
