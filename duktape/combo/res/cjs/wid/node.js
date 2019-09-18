@@ -204,7 +204,7 @@
 			try{
 				c._children.push(c);
 				this._parent=(c);
-				this.ctx=_parent.ctx;
+				this.ctx==null?this.ctx==_parent.ctx:null;
 			}catch(e){
 				this.log('setParent(): '+e);
 			}
@@ -232,7 +232,7 @@
 				var _this=this;
 				this.getDescendents().forEach(
 					function(a,b){
-						a.ctx=_this.ctx;
+						if(a.ctx==null)a.ctx=_this.ctx;
 					}
 				);
 			}catch(e){

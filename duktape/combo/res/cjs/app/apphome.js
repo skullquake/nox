@@ -34,8 +34,8 @@
 			'home':this.buildPageHome(),
 			'numbers':this.buildPageNumbers(),
 			'bionode':this.buildPageBioNode(),
-			'tables':this.buildPageTables(),
-			'ajaxtest':this.buildPageAjaxTest()
+			'ajaxtest':this.buildPageAjaxTest(),
+			'table':this.buildPageTable()
 		};
          
 	};
@@ -75,7 +75,7 @@
 				{'name':'Tables','cmd':function(){
 					this.ctx.jumbotron.setTitle('Tables');
 					this.ctx.jumbotron.setSubTitle('');
-					this.ctx.showPage('tables');
+					this.ctx.showPage('table');
 				}},
 				{'name':'Numbers','cmd':function(){
 					this.ctx.jumbotron.setTitle('Buttons Test');
@@ -106,28 +106,6 @@
 		this.containerHome.hide();
 		return this.containerHome;
 	};
-	apphome.prototype.buildPageTables=function(){
-		this.containerTables=this.container.addChild(new this.Container());
-		this.containerTables.setText('<h3>Test - chained stuff, tables later</h3>');
-		for(var i=0;i<20;i++){//new chained syntax
-			this.containerTables
-				.addChild(new this.Anchor(),'a'+i)
-				.setClass('btn btn-default')
-				.setText('hello')
-				.setCmd(this.ctl.data.cmd)
-				.show()
-				.setOnClick(function(){
-					try{
-						this.setText(this.getText()=='hello'?'byebye':'hello');
-						typeof(this._parent.getChild('a0'))!='undefined'?this._parent.getChild('a0').setText('cviaid: '+new Date().getTime()):console.log('a0 not found');//this.getChild('a0').setText('via id');
-					}catch(e){
-						console.log(e.toString());
-					}
-				});
-		}
-		this.containerTables.hide();
-		return this.containerTables;
-	}
 	apphome.prototype.buildPageBioNode=function(){
 		this.containerBioNode=this
 			.container
@@ -289,6 +267,28 @@
 			return null;
 		}
 	};
+	apphome.prototype.buildPageTable=function(){
+		if(typeof(this.containerTable)=='undefined'){//avoid rebuilding
+			this.Table=require('cjs/wid/table.js');
+			this.containerTable=this.container.addChild(new this.Container());;
+			var d=[];
+			for(var i=0;i<32;i++){
+				var r=[];
+				for(var j=0;j<8;j++){
+					r.push(i*32+j);
+				}
+				d.push(r);
+			}
+			this.containerTable.addChild(new this.Table(),'table')
+				.init()
+				.setData(
+					d
+				)
+			;
+			this.containerTable.hide();
+		}
+		return this.containerTable;
+	}
 	module.exports=apphome;
 }
 
