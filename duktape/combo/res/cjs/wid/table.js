@@ -13,6 +13,9 @@
 		return this;
 	}
 	table.prototype.setData=function(a){
+		var Dbo=require('cjs/db/dbo.js');
+		var dbo=new Dbo();
+		dbo.setup({'db':'','tbl':''});
 		this.data=a;
 		var _this=this;
 

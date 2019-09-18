@@ -258,7 +258,7 @@
 		}
 		var ret=this.childrenmap[id];
 		if(typeof(ret)=='undefined'){
-			console.log('> NOT FOUND')
+			this.log('> NOT FOUND')
 			var d=this.getChildren();
 			for(var i=0;i<d.length;i++){
 				try{
@@ -268,7 +268,7 @@
 				}
 			}
 		}else{
-			console.log('> FOUND')
+			this.log('> FOUND')
 		}
 		return ret;
 	};
@@ -307,7 +307,6 @@
 			this.hasOnClick=false;
 			this.addAttribute('data-srvact',false);
 		}
-		console.log(this.attributesToString());
 		return this;
 	};
 	node.prototype.setCmd=function(c){
